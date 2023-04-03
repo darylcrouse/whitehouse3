@@ -1,7 +1,7 @@
 class TagsController < ApplicationController
 
-  before_filter :admin_required
-  before_filter :get_all
+  before_action :admin_required
+  before_action :get_all
   
   # GET /tags
   # GET /tags.xml

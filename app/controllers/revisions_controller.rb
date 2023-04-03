@@ -1,8 +1,8 @@
 class RevisionsController < ApplicationController
 
-  before_filter :get_point
-  before_filter :login_required, :except => [:show, :clean]
-  before_filter :admin_required, :only => [:destroy, :update, :edit]
+  before_action :get_point
+  before_action :login_required, :except => [:show, :clean]
+  before_action :admin_required, :only => [:destroy, :update, :edit]
 
   # GET /points/1/revisions
   def index

@@ -1,4 +1,4 @@
-class CreatePosts < ActiveRecord::Migration
+class CreatePosts < ActiveRecord::Migration[7.0]
   def self.up
     create_table :posts, :force => true do |t|
       t.column :name, :string

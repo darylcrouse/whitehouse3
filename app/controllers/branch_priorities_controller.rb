@@ -1,6 +1,6 @@
 class BranchPrioritiesController < ApplicationController
 
-  before_filter :get_branch
+  before_action :get_branch
 
   # GET /branches/1/priorities/top
   def top

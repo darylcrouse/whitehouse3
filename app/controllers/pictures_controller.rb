@@ -2,7 +2,7 @@ class PicturesController < ApplicationController
   
   layout false
   
-  before_filter :get_picture
+  before_action :get_picture
 
   require 'RMagick'
 

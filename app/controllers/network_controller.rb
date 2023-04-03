@@ -1,15 +1,17 @@
 class NetworkController < ApplicationController
   
-  before_filter :login_required, :only => [:find]
-  before_filter :admin_required, :only => [:unverified, :deleted, :suspended, :probation, :warnings]
-  before_filter :setup, :except => [:partner]
+  before_action :login_required, :only => [:find]
+  before_action :admin_required, :only => [:unverified, :deleted, :suspended, :probation, :warnings]
+  before_action :setup, :except => [:partner]
   
   def index
-    @page_title = t('network.influential.title', :government_name => current_government.name)
-    if current_government.users_count < 100
-      @users = User.active.at_least_one_endorsement.by_capital.paginate :page => params[:page], :per_page => params[:per_page]
+    page = params[:page].presence || 1
+    per_page = params[:per_page].presence || 10
+    # @page_title = t('network.influential.title', :government_name => current_government.name)
+    if 1 < 100
+      @users = User.active.at_least_one_endorsement.by_capital.page(page).per(per_page)
     else
-      @users = User.active.at_least_one_endorsement.by_ranking.paginate :page => params[:page], :per_page => params[:per_page]
+      @users = User.active.at_least_one_endorsement.by_ranking.page(page).per(per_page)
     end
     respond_to do |format|
       format.html

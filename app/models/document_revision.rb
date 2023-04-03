@@ -1,7 +1,7 @@
 class DocumentRevision < ActiveRecord::Base
 
-  named_scope :published, :conditions => "document_revisions.status = 'published'"
-  named_scope :by_recently_created, :order => "document_revisions.created_at desc"  
+  scope :published, :conditions => "document_revisions.status = 'published'"
+  scope :by_recently_created, :order => "document_revisions.created_at desc"  
 
   belongs_to :document  
   belongs_to :user

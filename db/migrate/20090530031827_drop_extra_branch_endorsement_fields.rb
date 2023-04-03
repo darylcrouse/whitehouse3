@@ -1,4 +1,4 @@
-class DropExtraBranchEndorsementFields < ActiveRecord::Migration
+class DropExtraBranchEndorsementFields < ActiveRecord::Migration[7.0]
   def self.up
     remove_column :branch_endorsement_charts, :up_count
     remove_column :branch_endorsement_charts, :down_count

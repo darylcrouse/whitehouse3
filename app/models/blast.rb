@@ -1,19 +1,19 @@
 class Blast < ActiveRecord::Base
-  
+  include AASM
   belongs_to :user
   
-  acts_as_state_machine :initial => :pending, :column => :status
+  aasm column: :status, :initial => :pending do
+    state :pending
+    state :sent, :enter => :do_send
+    state :notsent
   
-  state :pending
-  state :sent, :enter => :do_send
-  state :notsent
+    event :send do
+      transitions :from => [:pending], :to => :sent
+    end
   
-  event :send do
-    transitions :from => [:pending], :to => :sent
-  end
-  
-  event :dont_send do
-    transitions :from => [:pending], :to => :notsent
+    event :dont_send do
+      transitions :from => [:pending], :to => :notsent
+    end
   end
   
   before_create :make_code

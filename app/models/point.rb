@@ -1,16 +1,16 @@
 class Point < ActiveRecord::Base
 
-  named_scope :published, :conditions => "points.status = 'published'"
-  named_scope :by_helpfulness, :order => "points.score desc"
-  named_scope :by_endorser_helpfulness, :conditions => "points.endorser_score > 0", :order => "points.endorser_score desc"
-  named_scope :by_neutral_helpfulness, :conditions => "points.neutral_score > 0", :order => "points.neutral_score desc"    
-  named_scope :by_opposer_helpfulness, :conditions => "points.opposer_score > 0", :order => "points.opposer_score desc"
-  named_scope :up, :conditions => "points.endorser_score > 0"
-  named_scope :neutral, :conditions => "points.neutral_score > 0"
-  named_scope :down, :conditions => "points.opposer_score > 0"    
-  named_scope :by_recently_created, :order => "points.created_at desc"
-  named_scope :by_recently_updated, :order => "points.updated_at desc"  
-  named_scope :revised, :conditions => "revisions_count > 1"
+  scope :published, :conditions => "points.status = 'published'"
+  scope :by_helpfulness, :order => "points.score desc"
+  scope :by_endorser_helpfulness, :conditions => "points.endorser_score > 0", :order => "points.endorser_score desc"
+  scope :by_neutral_helpfulness, :conditions => "points.neutral_score > 0", :order => "points.neutral_score desc"    
+  scope :by_opposer_helpfulness, :conditions => "points.opposer_score > 0", :order => "points.opposer_score desc"
+  scope :up, :conditions => "points.endorser_score > 0"
+  scope :neutral, :conditions => "points.neutral_score > 0"
+  scope :down, :conditions => "points.opposer_score > 0"    
+  scope :by_recently_created, :order => "points.created_at desc"
+  scope :by_recently_updated, :order => "points.updated_at desc"  
+  scope :revised, :conditions => "revisions_count > 1"
 
   belongs_to :user
   belongs_to :priority

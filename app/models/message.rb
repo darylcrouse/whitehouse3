@@ -1,14 +1,14 @@
 class Message < ActiveRecord::Base
 
-  named_scope :active, :conditions => "messages.status <> 'deleted'"
-  named_scope :sent, :conditions => "messages.status in('sent','read')"
-  named_scope :read, :conditions => "messages.status = 'read'"
-  named_scope :unread, :conditions => "messages.status = 'sent'"
-  named_scope :draft, :conditions => "messages.status = 'draft'"
+  scope :active, :conditions => "messages.status <> 'deleted'"
+  scope :sent, :conditions => "messages.status in('sent','read')"
+  scope :read, :conditions => "messages.status = 'read'"
+  scope :unread, :conditions => "messages.status = 'sent'"
+  scope :draft, :conditions => "messages.status = 'draft'"
   
-  named_scope :by_recently_sent, :order => "messages.sent_at desc"
-  named_scope :by_oldest_sent, :order => "messages.sent_at asc"  
-  named_scope :by_unread, :order => "messages.status desc, messages.sent_at desc"
+  scope :by_recently_sent, :order => "messages.sent_at desc"
+  scope :by_oldest_sent, :order => "messages.sent_at asc"  
+  scope :by_unread, :order => "messages.status desc, messages.sent_at desc"
 
   belongs_to :sender, :class_name => "User", :foreign_key => "sender_id"
   belongs_to :recipient, :class_name => "User", :foreign_key => "recipient_id"

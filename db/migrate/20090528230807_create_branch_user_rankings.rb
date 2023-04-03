@@ -1,5 +1,6 @@
-class CreateBranchUserRankings < ActiveRecord::Migration
-  def self.up
+class CreateBranchUserRankings < ActiveRecord::Migration[7.0]
+  def change
+    drop_table :branch_user_rankings
     create_table :branch_user_rankings do |t|
       t.integer  "branch_id"      
       t.integer  "user_id"
@@ -11,10 +12,5 @@ class CreateBranchUserRankings < ActiveRecord::Migration
     add_index :branch_user_rankings, :created_at
     add_index :branch_user_rankings, [:user_id, :branch_id], :name => "branch_uranks_id"
     add_index :branch_user_rankings, :version    
-    BranchUserRanking.connection.execute("ALTER TABLE branch_user_rankings ENGINE=MYISAM")
-  end
-
-  def self.down
-    drop_table :branch_user_rankings
   end
 end

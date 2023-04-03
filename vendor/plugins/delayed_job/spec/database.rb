@@ -10,7 +10,7 @@ require 'spec'
   
 ActiveRecord::Base.logger = Logger.new('/tmp/dj.log')
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => '/tmp/jobs.sqlite')
-ActiveRecord::Migration.verbose = false
+ActiveRecord::Migration[7.0].verbose = false
 
 ActiveRecord::Schema.define do
 

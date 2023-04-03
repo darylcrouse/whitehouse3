@@ -1,7 +1,7 @@
 class PartnersController < ApplicationController
 
-  before_filter :login_required
-  before_filter :admin_required, :only => [:destroy]
+  before_action :login_required
+  before_action :admin_required, :only => [:destroy]
 
   def index
     @page_title = t('partners.new.title', :government_name => current_government.name)

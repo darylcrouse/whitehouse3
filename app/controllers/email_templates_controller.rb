@@ -1,6 +1,6 @@
 class EmailTemplatesController < ApplicationController
 
-  before_filter :admin_required
+  before_action :admin_required
 
   # GET /email_templates
   # GET /email_templates.xml

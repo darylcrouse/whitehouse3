@@ -4,7 +4,7 @@ class Picture < ActiveRecord::Base
   
   has_one :owner, :class_name => "User", :foreign_key => "picture_id"
   
-  validates_format_of :content_type, :with => /^image/, :message => "--- you can only upload pictures"
+  validates_format_of :content_type, with: /\Aimage/, message: "--- you can only upload pictures"
 
   def picture=(picture_field)
     self.name = File.basename(picture_field.original_filename).gsub(/[^\w._-]/, '')

@@ -7,7 +7,7 @@ class RssController < ApplicationController
   skip_before_filter :update_loggedin_at
   skip_before_filter :check_facebook
   
-  before_filter :login_from_rss_code
+  before_action :login_from_rss_code
 
   def your_notifications
     @page_title = t('rss.your_notifications', :user_name => @user.login.possessive, :government_name => current_government.name)

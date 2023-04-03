@@ -1,7 +1,7 @@
 class DocumentsController < ApplicationController
   
-  before_filter :login_required, :only => [:new, :create, :quality, :unquality, :index, :your_priorities, :destroy]
-  before_filter :admin_required, :only => [:edit, :update]
+  before_action :login_required, :only => [:new, :create, :quality, :unquality, :index, :your_priorities, :destroy]
+  before_action :admin_required, :only => [:edit, :update]
  
   def index
     @page_title = t('document.yours.title')

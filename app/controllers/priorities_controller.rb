@@ -1,31 +1,31 @@
 class PrioritiesController < ApplicationController
 
-  before_filter :login_required, :only => [:yours_finished, :yours_ads, :yours_top, :yours_lowest, :consider, :flag_inappropriate, :comment, :edit, :update, :tag, :tag_save, :opposed, :endorsed, :destroy]
-  before_filter :admin_required, :only => [:bury, :successful, :compromised, :intheworks, :failed]
-  before_filter :load_endorsement, :only => [:show, :activities, :endorsers, :opposers, :opposer_points, :endorser_points, :neutral_points, :everyone_points, :discussions, :everyone_points, :documents, :opposer_documents, :endorser_documents, :neutral_documents, :everyone_documents]
-  before_filter :check_for_user, :only => [:yours, :network, :yours_finished, :yours_created]
+  before_action :login_required, :only => [:yours_finished, :yours_ads, :yours_top, :yours_lowest, :consider, :flag_inappropriate, :comment, :edit, :update, :tag, :tag_save, :opposed, :endorsed, :destroy]
+  before_action :admin_required, :only => [:bury, :successful, :compromised, :intheworks, :failed]
+  before_action :load_endorsement, :only => [:show, :activities, :endorsers, :opposers, :opposer_points, :endorser_points, :neutral_points, :everyone_points, :discussions, :everyone_points, :documents, :opposer_documents, :endorser_documents, :neutral_documents, :everyone_documents]
+  before_action :check_for_user, :only => [:yours, :network, :yours_finished, :yours_created]
 
   # GET /priorities
   def index
-    if params[:q] and request.xhr?
-      @priorities = Priority.published.find(:all, :select => "priorities.name", :conditions => ["name LIKE ?", "%#{params[:q]}%"], :order => "endorsements_count desc")
-    elsif current_government.homepage != 'index'
-      redirect_to :action => current_government.homepage
-      return
+    if params[:q].present? && request.xhr?
+      @priorities = Priority.published.where("name LIKE ?", "%#{params[:q]}%").select(:name).order("endorsements_count desc")
+    # elsif current_government&.homepage != 'index'
+    #   redirect_to action: current_government.homepage
+    #   return
     else
-      @issues = Tag.most_priorities.find(:all, :conditions => "tags.id <> 384 and priorities_count > 4", :include => :top_priority).paginate(:page => params[:page])
-      if logged_in? 
-        priority_ids = @issues.collect {|c| c.top_priority_id} + @issues.collect {|c| c.rising_priority_id} + @issues.collect {|c| c.controversial_priority_id}
-        @endorsements = Endorsement.find(:all, :conditions => ["priority_id in (?) and user_id = ? and status='active'",priority_ids,current_user.id])      
-      end
+      @issues = Tag.most_priorities.where("tags.id <> 384 and priorities_count > 4").includes(:top_priority)
+      # if logged_in? 
+        priority_ids = @issues.map {|c| c.top_priority_id} + @issues.map {|c| c.rising_priority_id} + @issues.map {|c| c.controversial_priority_id}
+        @endorsements = Endorsement.where("priority_id in (?) and status='active'", priority_ids).all      
+      # end
     end
     respond_to do |format|
       format.html
       format.js { 
-        if not @priorities
-          render :nothing => true
+        if @priorities.nil?
+          render nothing: true
         else
-          render :text => @priorities.collect{|p|p.name}.join("\n") 
+          render plain: @priorities.pluck(:name).join("\n") 
         end
       }
     end

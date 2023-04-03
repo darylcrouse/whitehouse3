@@ -1,51 +1,51 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
-
-  extend ActiveSupport::Memoizable
+  include AASM
+  extend ActiveSupport::Concern
   require 'paperclip'
     
-  named_scope :active, :conditions => "users.status in ('pending','active')"
-  named_scope :at_least_one_endorsement, :conditions => "users.endorsements_count > 0"
-  named_scope :newsletter_subscribed, :conditions => "users.is_newsletter_subscribed = true and users.email is not null and users.email <> ''"
-  named_scope :comments_unsubscribed, :conditions => "users.is_comments_subscribed = false"  
-  named_scope :twitterers, :conditions => "users.twitter_login is not null and users.twitter_login <> ''"
-  named_scope :authorized_twitterers, :conditions => "users.twitter_token is not null"
-  named_scope :uncrawled_twitterers, :conditions => "users.twitter_crawled_at is null"
-  named_scope :contributed, :conditions => "users.document_revisions_count > 0 or users.point_revisions_count > 0"
-  named_scope :no_recent_login, :conditions => "users.loggedin_at < '#{Time.now-90.days}'"
-  named_scope :admins, :conditions => "users.is_admin = true"
-  named_scope :suspended, :conditions => "users.status = 'suspended'"
-  named_scope :probation, :conditions => "users.status = 'probation'"
-  named_scope :deleted, :conditions => "users.status = 'deleted'"
-  named_scope :pending, :conditions => "users.status = 'pending'"  
-  named_scope :warnings, :conditions => "warnings_count > 0"
-  named_scope :no_branch, :conditions => "branch_id is null"
-  named_scope :with_branch, :conditions => "branch_id is not null"
+  scope :active, -> { where("users.status in ('pending','active')") }
+  scope :at_least_one_endorsement, -> { where("users.endorsements_count > 0") }
+  scope :newsletter_subscribed, -> { where("users.is_newsletter_subscribed = true and users.email is not null and users.email <> ''") }
+  scope :comments_unsubscribed, -> { where("users.is_comments_subscribed = false") }  
+  scope :twitterers, -> { where("users.twitter_login is not null and users.twitter_login <> ''") }
+  scope :authorized_twitterers, -> { where("users.twitter_token is not null") }
+  scope :uncrawled_twitterers, -> { where("users.twitter_crawled_at is null") }
+  scope :contributed, -> { where("users.document_revisions_count > 0 or users.point_revisions_count > 0") }
+  scope :no_recent_login, -> { where("users.loggedin_at < ?", Time.now-90.days) }
+  scope :admins, -> { where("users.is_admin = true") }
+  scope :suspended, -> { where("users.status = 'suspended'") }
+  scope :probation, -> { where("users.status = 'probation'") }
+  scope :deleted, -> { where("users.status = 'deleted'") }
+  scope :pending, -> { where("users.status = 'pending'") }  
+  scope :warnings, -> { where("warnings_count > 0") }
+  scope :no_branch, -> { where("branch_id is null") }
+  scope :with_branch, -> { where("branch_id is not null") }
   
-  named_scope :by_capital, :order => "users.capitals_count desc, users.score desc"
-  named_scope :by_ranking, :conditions => "users.position > 0", :order => "users.position asc"  
-  named_scope :by_talkative, :conditions => "users.comments_count > 0", :order => "users.comments_count desc"
-  named_scope :by_twitter_count, :order => "users.twitter_count desc"
-  named_scope :by_recently_created, :order => "users.created_at desc"
-  named_scope :by_revisions, :order => "users.document_revisions_count+users.point_revisions_count desc"
-  named_scope :by_invites_accepted, :conditions => "users.contacts_invited_count > 0", :order => "users.referrals_count desc"
-  named_scope :by_suspended_at, :order => "users.suspended_at desc"
-  named_scope :by_deleted_at, :order => "users.deleted_at desc"
-  named_scope :by_recently_loggedin, :order => "users.loggedin_at desc"
-  named_scope :by_probation_at, :order => "users.probation_at desc"
-  named_scope :by_oldest_updated_at, :order => "users.updated_at asc"
-  named_scope :by_twitter_crawled_at, :order => "users.twitter_crawled_at asc"
+  scope :by_capital, -> { order(capitals_count: :desc, score: :desc) }
+  scope :by_ranking, -> { where("users.position > 0").order(position: :asc) }
+  scope :by_talkative, -> { where("users.comments_count > 0").order(comments_count: :desc) }
+  scope :by_twitter_count, -> { order(twitter_count: :desc) }
+  scope :by_recently_created, -> { order(created_at: :desc) }
+  scope :by_revisions, -> { order("(document_revisions_count + point_revisions_count) desc") }
+  scope :by_invites_accepted, -> { where("users.contacts_invited_count > 0").order(referrals_count: :desc) }
+  scope :by_suspended_at, -> { order(suspended_at: :desc) }
+  scope :by_deleted_at, -> { order(deleted_at: :desc) }
+  scope :by_recently_loggedin, -> { order(loggedin_at: :desc) }
+  scope :by_probation_at, -> { order(probation_at: :desc) }
+  scope :by_oldest_updated_at, -> { order(updated_at: :asc) }
+  scope :by_twitter_crawled_at, -> { order(twitter_crawled_at: :asc) }  
   
-  named_scope :by_24hr_gainers, :conditions => "users.endorsements_count > 4", :order => "users.index_24hr_change desc"
-  named_scope :by_24hr_losers, :conditions => "users.endorsements_count > 4", :order => "users.index_24hr_change asc"  
-  named_scope :by_7days_gainers, :conditions => "users.endorsements_count > 4", :order => "users.index_7days_change desc"
-  named_scope :by_7days_losers, :conditions => "users.endorsements_count > 4", :order => "users.index_7days_change asc"  
-  named_scope :by_30days_gainers, :conditions => "users.endorsements_count > 4", :order => "users.index_30days_change desc"
-  named_scope :by_30days_losers, :conditions => "users.endorsements_count > 4", :order => "users.index_30days_change asc"  
+  scope :by_24hr_gainers, -> { where("users.endorsements_count > 4").order("users.index_24hr_change desc") }
+  scope :by_24hr_losers, -> { where("users.endorsements_count > 4").order("users.index_24hr_change asc") }
+  scope :by_7days_gainers, -> { where("users.endorsements_count > 4").order("users.index_7days_change desc") }
+  scope :by_7days_losers, -> { where("users.endorsements_count > 4").order("users.index_7days_change asc") }
+  scope :by_30days_gainers, -> { where("users.endorsements_count > 4").order("users.index_30days_change desc") }
+  scope :by_30days_losers, -> { where("users.endorsements_count > 4").order("users.index_30days_change asc") }
+
 
   belongs_to :picture
   has_attached_file :buddy_icon, :styles => { :icon_24 => "24x24#", :icon_48 => "48x48#", :icon_96 => "96x96#" }, 
-    :storage => :s3, :s3_credentials => S3_CONFIG, :default_url => "/images/buddy_:style.png",
     :path => ":class/:attachment/:id/:style.:extension"
   
   validates_attachment_size :buddy_icon, :less_than => 5.megabytes
@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
   belongs_to :branch
   belongs_to :referral, :class_name => "User", :foreign_key => "referral_id"
   belongs_to :partner_referral, :class_name => "Partner", :foreign_key => "partner_referral_id"
-  belongs_to :top_endorsement, :class_name => "Endorsement", :foreign_key => "top_endorsement_id", :include => :priority  
+  belongs_to :top_endorsement, class_name: "Endorsement", foreign_key: "top_endorsement_id" 
 
   has_one :profile, :dependent => :destroy
 
@@ -64,8 +64,9 @@ class User < ActiveRecord::Base
   has_many :partners, :through => :signups
     
   has_many :endorsements, :dependent => :destroy
-  has_many :priorities, :conditions => "endorsements.status = 'active'", :through => :endorsements
-  has_many :finished_priorities, :conditions => "endorsements.status = 'finished'", :through => :endorsements, :source => :priority
+  has_many :priorities, -> { where("endorsements.status = 'active'") }, through: :endorsements
+  has_many :finished_priorities, -> { where("endorsements.status = 'finished'") }, through: :endorsements, source: :priority
+  
     
   has_many :created_priorities, :class_name => "Priority"
   
@@ -74,7 +75,7 @@ class User < ActiveRecord::Base
   has_many :point_revisions, :class_name => "Revision", :dependent => :destroy
   has_many :documents, :dependent => :destroy  
   has_many :document_revisions, :class_name => "DocumentRevision", :dependent => :destroy
-  has_many :changes, :dependent => :nullify
+  has_many :priority_changes, :dependent => :nullify, class_name: 'Change'
   has_many :rankings, :class_name => "UserRanking", :dependent => :destroy
   
   has_many :constituents
@@ -111,7 +112,7 @@ class User < ActiveRecord::Base
   
   liquid_methods :first_name, :last_name, :id, :name, :login, :activation_code, :email, :root_url, :profile_url, :unsubscribe_url
   
-  validates_presence_of     :login, :message => I18n.t('users.new.validation.login')
+  # validates_presence_of     :login, :message => I18n.t('users.new.validation.login')
   validates_length_of       :login, :within => 3..40
   validates_uniqueness_of   :login, :case_sensitive => false    
   
@@ -119,7 +120,7 @@ class User < ActiveRecord::Base
   validates_length_of       :email, :within => 3..100, :allow_nil => true, :allow_blank => true
   validates_uniqueness_of   :email, :case_sensitive => false, :allow_nil => true, :allow_blank => true
   validates_uniqueness_of   :facebook_uid, :allow_nil => true, :allow_blank => true
-  validates_format_of       :email, :with => /^[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+$/x, :allow_nil => true, :allow_blank => true
+  validates_format_of :email, with: /\A[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+\z/x, allow_nil: true, allow_blank: true, multiline: true
     
   validates_presence_of     :password, :if => [:should_validate_password?]
   validates_presence_of     :password_confirmation, :if => [:should_validate_password?]
@@ -135,7 +136,7 @@ class User < ActiveRecord::Base
   after_create :give_user_credit
   after_create :new_user_signedup
   
-  attr_protected :remember_token, :remember_token_expired_at, :activation_code, :salt, :crypted_password, :twitter_token, :twitter_secret
+  # attr_protected :remember_token, :remember_token_expired_at, :activation_code, :salt, :crypted_password, :twitter_token, :twitter_secret
   
   # Virtual attribute for the unencrypted password
   attr_accessor :password, :partner_ids  
@@ -212,45 +213,45 @@ class User < ActiveRecord::Base
   end
   
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  acts_as_state_machine :initial => :pending, :column => :status
-
-  state :passive
-  state :pending, :enter => :do_pending
-  state :active, :enter => :do_activate
-  state :suspended, :enter => :do_suspension
-  state :probation, :enter => :do_probation
-  state :deleted, :enter => :do_delete  
-
-  event :register do
-    transitions :from => :passive, :to => :pending, :guard => Proc.new {|u| !(u.crypted_password.blank? && u.password.blank?) }
-  end
-
-  event :activate do
-    transitions :from => [:pending, :passive], :to => :active 
-  end
+  aasm column: :status, no_direct_assignment: true do
+    state :passive
+    state :pending, initial: true, before_enter: :do_pending
+    state :active, before_enter: :do_activate
+    state :suspended, before_enter: :do_suspension
+    state :probation, before_enter: :do_probation
+    state :deleted, before_enter: :do_delete
+    
+    event :register do
+      transitions from: :passive, to: :pending, guard: Proc.new {|u| !(u.crypted_password.blank? && u.password.blank?) }
+    end
   
-  event :suspend do
-    transitions :from => [:passive, :pending, :active, :probation], :to => :suspended
-  end
+    event :activate do
+      transitions from: [:pending, :passive], to: :active 
+    end
+    
+    event :suspend do
+      transitions from: [:passive, :pending, :active, :probation], to: :suspended
+    end
+    
+    event :delete do
+      transitions from: [:passive, :pending, :active, :suspended, :probation], to: :deleted
+    end
   
-  event :delete do
-    transitions :from => [:passive, :pending, :active, :suspended, :probation], :to => :deleted
-  end
-
-  event :unsuspend do
-    transitions :from => :suspended, :to => :active, :guard => Proc.new {|u| !u.activated_at.blank? }
-    transitions :from => :suspended, :to => :pending, :guard => Proc.new {|u| !u.activation_code.blank? }
-    transitions :from => :suspended, :to => :passive
-  end
-  
-  event :probation do
-    transitions :from => [:passive, :pending, :active], :to => :probation    
-  end
-  
-  event :unprobation do
-    transitions :from => :probation, :to => :active, :guard => Proc.new {|u| !u.activated_at.blank? }
-    transitions :from => :probation, :to => :pending, :guard => Proc.new {|u| !u.activation_code.blank? }
-    transitions :from => :probation, :to => :passive    
+    event :unsuspend do
+      transitions from: :suspended, to: :active, guard: Proc.new {|u| !u.activated_at.blank? }
+      transitions from: :suspended, to: :pending, guard: Proc.new {|u| !u.activation_code.blank? }
+      transitions from: :suspended, to: :passive
+    end
+    
+    event :probation do
+      transitions from: [:passive, :pending, :active], to: :probation    
+    end
+    
+    event :unprobation do
+      transitions from: :probation, to: :active, guard: Proc.new {|u| !u.activated_at.blank? }
+      transitions from: :probation, to: :pending, guard: Proc.new {|u| !u.activation_code.blank? }
+      transitions from: :probation, to: :passive    
+    end
   end
 
   def do_pending
@@ -373,7 +374,6 @@ class User < ActiveRecord::Base
   def most_recent_activity
     activities.active.by_recently_created.find(:all, :limit => 1)[0]
   end  
-  memoize :most_recent_activity
 
   def priority_list
     s = "My top priorities for America:"
@@ -384,7 +384,6 @@ class User < ActiveRecord::Base
     end
     return s
   end
-  memoize :priority_list
     
   # ranking metrics
   def up_issue_diversity
@@ -422,7 +421,6 @@ class User < ActiveRecord::Base
     return 1 if i > 1
     return i
   end
-  memoize :quality_factor
   
   def address_full
     a = ""
@@ -481,7 +479,6 @@ class User < ActiveRecord::Base
   def revisions_count
     document_revisions_count+point_revisions_count-points_count-documents_count 
   end
-  memoize :revisions_count
   
   def pick_ad(current_priority_ids)
   	shown = 0
@@ -503,12 +500,10 @@ class User < ActiveRecord::Base
   def following_user_ids
     followings.collect{|f|f.other_user_id}
   end
-  memoize :following_user_ids
   
   def follower_user_ids
     followers.collect{|f|f.user_id}
   end
-  memoize :follower_user_ids
   
   def calculate_contacts_count
     self.contacts_members_count = contacts.active.members.not_following.size
@@ -546,7 +541,6 @@ class User < ActiveRecord::Base
     priority_ids = Priority.find_by_sql(sql).collect{|p|p.id}
     Priority.find(priority_ids).paginate :per_page => limit, :page => 1
   end
-  memoize :recommend
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(email, password)
@@ -770,7 +764,6 @@ class User < ActiveRecord::Base
     group by endorsements.user_id, priority_charts.date_year, priority_charts.date_month, priority_charts.date_day
     order by priority_charts.date_year desc, priority_charts.date_month desc, priority_charts.date_day desc limit ?",id,limit])
   end
-  memoize :index_charts
   
   # computes the change in percentage of all their priorities over the last [limit] days.
   def index_change_percent(limit=7)
@@ -853,11 +846,12 @@ class User < ActiveRecord::Base
     self.first_name = names.join(' ')
   end
 
-  if TwitterAuth.oauth?
+  if defined?(TwitterAuth::OauthUser)
     include TwitterAuth::OauthUser
-  else
-    include TwitterAuth::BasicUser
   end
+  #   include TwitterAuth::BasicUser
+  # end
+  
 
   def twitter
     if TwitterAuth.oauth?

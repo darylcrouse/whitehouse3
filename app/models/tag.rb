@@ -1,22 +1,20 @@
 class Tag < ActiveRecord::Base
 
-  extend ActiveSupport::Memoizable
+  extend ActiveSupport::Concern
 
-  named_scope :by_endorsers_count, :order => "tags.up_endorsers_count desc"
-
-  named_scope :alphabetical, :order => "tags.name asc"
-  named_scope :more_than_three_priorities, :conditions => "tags.priorities_count > 3"
-  named_scope :with_priorities, :conditions => "tags.priorities_count > 0"
+  scope :by_endorsers_count, -> { order(up_endorsers_count: :desc) }
+  scope :alphabetical, -> { order(name: :asc) }
+  scope :more_than_three_priorities, -> { where('priorities_count > ?', 3) }
+  scope :with_priorities, -> { where('priorities_count > ?', 0) }
+  scope :most_priorities, -> { with_priorities.order(priorities_count: :desc) }
+  scope :most_webpages, -> { where('webpages_count > ?', 0).order(webpages_count: :desc) }
+  scope :most_feeds, -> { where('feeds_count > ?', 0).order(feeds_count: :desc) }
   
-  named_scope :most_priorities, :conditions => "tags.priorities_count > 0", :order => "tags.priorities_count desc"
-  named_scope :most_webpages, :conditions => "tags.webpages_count > 0", :order => "tags.webpages_count desc"  
-  named_scope :most_feeds, :conditions => "tags.feeds_count > 0", :order => "tags.feeds_count desc"   
-
   has_many :activities, :dependent => :destroy
   has_many :taggings
-  has_many :priorities, :through => :taggings, :source => :priority, :conditions => "taggings.taggable_type = 'Priority'"
-  has_many :webpages, :through => :taggings, :source => :webpage, :conditions => "taggings.taggable_type = 'Webpage'"
-  has_many :feeds, :through => :taggings, :source => :feed, :conditions => "taggings.taggable_type = 'Feed'"
+  has_many :priorities, -> { where taggings: { taggable_type: 'Priority' } }, through: :taggings, source: :priority
+  has_many :webpages, -> { where taggings: { taggable_type: 'Webpage' } }, through: :taggings, source: :webpage
+  has_many :feeds, -> { where taggings: { taggable_type: 'Feed' } }, through: :taggings, source: :feed
                             
   belongs_to :top_priority, :class_name => "Priority", :foreign_key => "top_priority_id"
   belongs_to :rising_priority, :class_name => "Priority", :foreign_key => "rising_priority_id"
@@ -80,9 +78,9 @@ class Tag < ActiveRecord::Base
   end
   
   def published_priority_ids
-    Priority.published.tagged_with(self.name, :on => :issues).collect{|p| p.id}
+    @published_priority_ids ||= Priority.published.tagged_with(self.name, on: :issues).pluck(:id)
   end
-  memoize :published_priority_ids  
+
   
   def calculate_discussions_count
     Activity.active.discussions.for_all_users.by_recently_updated.count(:conditions => ["priority_id in (?)",published_priority_ids])
@@ -181,7 +179,7 @@ class Tag < ActiveRecord::Base
     and endorsements.value = 1
     and endorsements.user_id = users.id
     and users.status in ('active','pending')",id])
-  end  
+  end
   
   def opposers
     User.find_by_sql(["
@@ -195,7 +193,5 @@ class Tag < ActiveRecord::Base
     and endorsements.value = -1
     and endorsements.user_id = users.id
     and users.status in ('active','pending')",id])
-  end  
-  memoize :subscribers, :endorsers, :opposers
-    
+  end
 end

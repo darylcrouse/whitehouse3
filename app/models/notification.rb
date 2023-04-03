@@ -5,18 +5,18 @@ class Notification < ActiveRecord::Base
 
   belongs_to :notifiable, :polymorphic => true
 
-  named_scope :active, :conditions => "notifications.status <> 'deleted'"
-  named_scope :unprocessed, :conditions => "notifications.processed_at IS NULL"
-  named_scope :sent, :conditions => "notifications.status in('sent','read')"
-  named_scope :read, :conditions => "notifications.status = 'read'"
-  named_scope :unread, :conditions => "notifications.status in ('sent','unsent')"
+  scope :active, :conditions => "notifications.status <> 'deleted'"
+  scope :unprocessed, :conditions => "notifications.processed_at IS NULL"
+  scope :sent, :conditions => "notifications.status in('sent','read')"
+  scope :read, :conditions => "notifications.status = 'read'"
+  scope :unread, :conditions => "notifications.status in ('sent','unsent')"
 
-  named_scope :messages, :conditions => "notifications.type = 'NotificationMessage'"
-  named_scope :comments, :conditions => "notifications.type = 'NotificationComment'"  
+  scope :messages, :conditions => "notifications.type = 'NotificationMessage'"
+  scope :comments, :conditions => "notifications.type = 'NotificationComment'"  
 
-  named_scope :by_recently_created, :order => "notifications.created_at desc"  
-  named_scope :by_recently_sent, :order => "notifications.sent_at desc"
-  named_scope :by_oldest_sent, :order => "notifications.sent_at asc"  
+  scope :by_recently_created, :order => "notifications.created_at desc"  
+  scope :by_recently_sent, :order => "notifications.sent_at desc"
+  scope :by_oldest_sent, :order => "notifications.sent_at asc"  
 
   cattr_reader :per_page
   @@per_page = 30

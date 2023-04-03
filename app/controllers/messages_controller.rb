@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   
-  before_filter :login_required
-  before_filter :get_recipient
+  before_action :login_required
+  before_action :get_recipient
   
   def index
     @page_title = t('messages.index', :user_name => @user.name)

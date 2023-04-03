@@ -1,7 +1,7 @@
 class Revision < ActiveRecord::Base
 
-  named_scope :published, :conditions => "revisions.status = 'published'"
-  named_scope :by_recently_created, :order => "revisions.created_at desc"  
+  scope :published, :conditions => "revisions.status = 'published'"
+  scope :by_recently_created, :order => "revisions.created_at desc"  
 
   belongs_to :point  
   belongs_to :user

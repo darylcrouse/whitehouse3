@@ -1,43 +1,40 @@
 class Government < ActiveRecord::Base
-
-  extend ActiveSupport::Memoizable
+  include LiquidDroppableHelper
+  extend ActiveSupport::Concern
   require 'paperclip'
   
-  named_scope :active, :conditions => "status = 'active'"
-  named_scope :pending, :conditions => "status = 'pending'"
-  named_scope :least_active, :conditions => "status = 'active'", :order => "users_count"
-  named_scope :with_branches, :conditions => "default_branch_id is not null"
-  named_scope :without_branches, :conditions => "default_branch_id is null"
-  named_scope :facebook, :conditions => "is_facebook = true"
-  named_scope :twitter, :conditions => "is_twitter = true"
+  scope :active, -> { where(status: 'active') }
+  scope :pending, -> { where(status: 'pending') }
+  scope :least_active, -> { where(status: 'active').order(users_count: :asc) }
+  scope :with_branches, -> { where.not(default_branch_id: nil) }
+  scope :without_branches, -> { where(default_branch_id: nil) }
+  scope :facebook, -> { where(is_facebook: true) }
+  scope :twitter, -> { where(is_twitter: true) }
   
   belongs_to :official_user, :class_name => "User"
   belongs_to :color_scheme
   
   belongs_to :picture
   
-  has_attached_file :logo, :styles => { :icon_96 => "96x96#", :icon_140  => "140x140#", :icon_180 => "180x180#", :medium => "450x" }, 
-    :storage => :s3, :s3_credentials => S3_CONFIG, 
-    :path => ":class/:attachment/:id/:style.:extension"
+  # has_attached_file :logo, :styles => { :icon_96 => "96x96#", :icon_140  => "140x140#", :icon_180 => "180x180#", :medium => "450x" }, 
+    # :path => ":class/:attachment/:id/:style.:extension"
   
-  validates_attachment_size :logo, :less_than => 5.megabytes
-  validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif']
+  # validates_attachment_size :logo, :less_than => 5.megabytes
+  # validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif']
     
   belongs_to :buddy_icon_old, :class_name => "Picture"
-  has_attached_file :buddy_icon, :styles => { :icon_24 => "24x24#", :icon_48  => "48x48#", :icon_96 => "96x96#" }, 
-    :storage => :s3, :s3_credentials => S3_CONFIG, :default_url => "/images/buddy_:style.png",
-    :path => ":class/:attachment/:id/:style.:extension"
+  # has_attached_file :buddy_icon, :styles => { :icon_24 => "24x24#", :icon_48  => "48x48#", :icon_96 => "96x96#" }, 
+    # :path => ":class/:attachment/:id/:style.:extension"
     
-  validates_attachment_size :buddy_icon, :less_than => 5.megabytes
-  validates_attachment_content_type :buddy_icon, :content_type => ['image/jpeg', 'image/png', 'image/gif']    
+  # validates_attachment_size :buddy_icon, :less_than => 5.megabytes
+  # validates_attachment_content_type :buddy_icon, :content_type => ['image/jpeg', 'image/png', 'image/gif']    
       
   belongs_to :fav_icon_old, :class_name => "Picture"
-  has_attached_file :fav_icon, :styles => { :icon_16 => "16x16#" }, 
-    :storage => :s3, :s3_credentials => S3_CONFIG, :default_url => "/favicon.png",
-    :path => ":class/:attachment/:id/:style.:extension"
+  # has_attached_file :fav_icon, :styles => { :icon_16 => "16x16#" }, 
+    # :path => ":class/:attachment/:id/:style.:extension"
   
-  validates_attachment_size :fav_icon, :less_than => 5.megabytes
-  validates_attachment_content_type :fav_icon, :content_type => ['image/jpeg', 'image/png', 'image/gif']  
+  # validates_attachment_size :fav_icon, :less_than => 5.megabytes
+  # validates_attachment_content_type :fav_icon, :content_type => ['image/jpeg', 'image/png', 'image/gif']  
   
   belongs_to :default_branch, :class_name => "Branch"
   
@@ -48,18 +45,21 @@ class Government < ActiveRecord::Base
   validates_uniqueness_of   :short_name, :case_sensitive => false
   ReservedShortnames = %w[admin blog dev ftp mail pop pop3 imap smtp stage stats status www jim jgilliam gilliam feedback facebook builder nationbuilder misc]
   validates_exclusion_of    :short_name, :in => ReservedShortnames, :message => 'is already taken'  
-  validates_format_of       :short_name, :with => /^([a-z]|[a-z][a-z0-9]|[a-z]([a-z0-9]|\-[a-z0-9])*)$/
+  validates_format_of :short_name, :with => /\A([a-z]|[a-z][a-z0-9]|[a-z]([a-z0-9]|\-[a-z0-9])*)\z/
 
   validates_presence_of     :admin_name
   validates_length_of       :admin_name, :within => 3..60
 
   validates_presence_of     :admin_email
   validates_length_of       :admin_email, :within => 3..100, :allow_nil => true, :allow_blank => true
-  validates_format_of       :admin_email, :with => /^[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+$/x
+  validates_format_of :admin_email, 
+  with: /\A[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+\z/x
+
 
   validates_presence_of     :email
   validates_length_of       :email, :within => 3..100, :allow_nil => true, :allow_blank => true
-  validates_format_of       :email, :with => /^[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+$/x
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+
 
   validates_presence_of     :tags_name
   validates_length_of       :tags_name, :maximum => 20
@@ -72,8 +72,6 @@ class Government < ActiveRecord::Base
   
   validates_inclusion_of    :homepage, :in => Homepage::NAMES.collect{|n|n[0]}
   validates_inclusion_of    :tags_page, :in => Homepage::TAGS.collect{|n|n[0]}
-  
-  liquid_methods :short_name, :domain_name, :name, :tagline, :name_with_tagline, :email, :official_user_id, :official_user_short_name,:official_user_priorities_count, :has_official?, :official_user_name, :target, :is_tags, :has_facebook_enabled?, :has_twitter_enabled?, :is_legislators?, :admin_name, :admin_email, :tags_name, :briefing_name, :currency_name, :currency_short_name, :priorities_count, :points_count, :documents_count, :users_count, :contributors_count, :partners_count, :endorsements_count, :logo, :logo_small, :logo_tiny, :logo_large, :logo_dimensions, :picture_id, :base_url, :homepage_url, :mission, :tags_name_plural
 
   after_save :clear_cache
   before_save :last_minute_checks

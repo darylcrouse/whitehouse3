@@ -5,7 +5,7 @@ module TwitterAuth
   end
   
   module Dispatcher
-    class Oauth < OAuth::AccessToken
+    class OAuth < OAuth::AccessToken
 
       def initialize(user)
         raise TwitterAuth::Error, 'Dispatcher must be initialized with a User.' unless user.is_a?(TwitterAuth::OauthUser) 

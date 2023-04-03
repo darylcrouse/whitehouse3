@@ -1,24 +1,24 @@
 class UserContact < ActiveRecord::Base
 
-  named_scope :active, :conditions => "user_contacts.status <> 'deleted'"
-  named_scope :tosend, :conditions => "user_contacts.status = 'tosend'"  
+  scope :active, :conditions => "user_contacts.status <> 'deleted'"
+  scope :tosend, :conditions => "user_contacts.status = 'tosend'"  
 
-  named_scope :members, :include => :user, :conditions => "user_contacts.other_user_id is not null and users.status in ('active','pending')"
-  named_scope :not_members, :conditions => "user_contacts.other_user_id is null"
+  scope :members, :include => :user, :conditions => "user_contacts.other_user_id is not null and users.status in ('active','pending')"
+  scope :not_members, :conditions => "user_contacts.other_user_id is null"
 
-  named_scope :invited, :conditions => "user_contacts.sent_at is not null or user_contacts.status = 'tosend'"
-  named_scope :not_invited, :conditions => "user_contacts.sent_at is null and user_contacts.status <> 'tosend'"
+  scope :invited, :conditions => "user_contacts.sent_at is not null or user_contacts.status = 'tosend'"
+  scope :not_invited, :conditions => "user_contacts.sent_at is null and user_contacts.status <> 'tosend'"
 
-  named_scope :following, :conditions => "user_contacts.following_id is not null"
-  named_scope :not_following, :conditions => "user_contacts.following_id is null"
+  scope :following, :conditions => "user_contacts.following_id is not null"
+  scope :not_following, :conditions => "user_contacts.following_id is null"
 
-  named_scope :facebook, :conditions => "user_contacts.facebook_uid is not null"
-  named_scope :not_facebook, :conditions => "user_contacts.facebook_uid is null"
+  scope :facebook, :conditions => "user_contacts.facebook_uid is not null"
+  scope :not_facebook, :conditions => "user_contacts.facebook_uid is null"
   
-  named_scope :with_email, :conditions => "user_contacts.email is not null"
+  scope :with_email, :conditions => "user_contacts.email is not null"
   
-  named_scope :recently_updated, :order => "user_contacts.updated_at desc"
-  named_scope :recently_created, :order => "user_contacts.created_at desc"  
+  scope :recently_updated, :order => "user_contacts.updated_at desc"
+  scope :recently_created, :order => "user_contacts.created_at desc"  
   
   belongs_to :user
   belongs_to :other_user, :class_name => "User"

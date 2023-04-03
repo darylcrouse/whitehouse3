@@ -1,6 +1,6 @@
 class VoteController < ApplicationController
 
-  before_filter :get_vote, :except => :index
+  before_action :get_vote, :except => :index
   
   def index
     redirect_to "/"

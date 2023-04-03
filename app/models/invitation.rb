@@ -1,6 +1,6 @@
 class Invitation < ActiveRecord::Base
   
-  named_scope :has_sender, :conditions => "sender_id is not null"
+  scope :has_sender, :conditions => "sender_id is not null"
   
   belongs_to :user
   belongs_to :sender, :class_name => "User", :foreign_key => "sender_id"

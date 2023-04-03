@@ -1,9 +1,9 @@
 class Vote < ActiveRecord::Base
   
-  named_scope :deleted, :conditions => "votes.status = 'deleted'"
-  named_scope :not_deleted, :conditions => "votes.status <> 'deleted'"
-  named_scope :active, :conditions => "votes.status = 'active'", :include => {:change => :priority}, :order => "priorities.endorsements_count desc"
-  named_scope :pending, :conditions => "votes.status in ('active','sent')", :include => {:change => :priority}, :order => "votes.created_at desc"
+  scope :deleted, :conditions => "votes.status = 'deleted'"
+  scope :not_deleted, :conditions => "votes.status <> 'deleted'"
+  scope :active, :conditions => "votes.status = 'active'", :include => {:change => :priority}, :order => "priorities.endorsements_count desc"
+  scope :pending, :conditions => "votes.status in ('active','sent')", :include => {:change => :priority}, :order => "votes.created_at desc"
 
   belongs_to :user
   belongs_to :change

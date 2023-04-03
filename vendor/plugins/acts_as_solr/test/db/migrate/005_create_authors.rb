@@ -1,4 +1,4 @@
-class CreateAuthors < ActiveRecord::Migration
+class CreateAuthors < ActiveRecord::Migration[7.0]
   def self.up
     create_table :authors, :force => true do |t|
       t.column :name, :string

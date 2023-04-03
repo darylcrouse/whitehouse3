@@ -1,6 +1,6 @@
 class BulletinsController < ApplicationController
   
-  before_filter :login_required, :only => [:new_inline,:create]
+  before_action :login_required, :only => [:new_inline,:create]
   
   def new_inline
     @activity = ActivityBulletinNew.create(:user => current_user)

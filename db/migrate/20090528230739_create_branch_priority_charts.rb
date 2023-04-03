@@ -1,4 +1,4 @@
-class CreateBranchPriorityCharts < ActiveRecord::Migration
+class CreateBranchPriorityCharts < ActiveRecord::Migration[7.0]
   def self.up
     create_table :branch_priority_charts do |t|
       t.integer  "branch_id"
@@ -15,8 +15,8 @@ class CreateBranchPriorityCharts < ActiveRecord::Migration
       t.datetime "created_at"
     end
 
-    add_index :branch_priority_charts, ["date_year", "date_month", "date_day"], :name => "branch_pcharts_date"
-    add_index :branch_priority_charts, ["priority_id", "branch_id"], :name => "branch_pcharts_id"
+    # add_index :branch_priority_charts, ["date_year", "date_month", "date_day"], :name => "branch_pcharts_date"
+    # add_index :branch_priority_charts, ["priority_id", "branch_id"], :name => "branch_pcharts_id"
     
   end
 

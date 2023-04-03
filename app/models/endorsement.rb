@@ -1,25 +1,25 @@
 class Endorsement < ActiveRecord::Base
+  include AASM
 
-  extend ActiveSupport::Memoizable
+  extend ActiveSupport::Concern
   
-  named_scope :active, :conditions => "endorsements.status = 'active'"
-  named_scope :deleted, :conditions => "endorsements.status = 'deleted'" 
-  named_scope :suspended, :conditions => "endorsements.status = 'suspended'"
-  named_scope :active_and_inactive, :conditions => "endorsements.status in ('active','inactive','finished')" 
-  named_scope :opposing, :conditions => "endorsements.value < 0"
-  named_scope :endorsing, :conditions => "endorsements.value > 0"
-  named_scope :obama_endorsed, :conditions => "priorities.obama_value = 1", :include => :priority
-  named_scope :not_obama, :conditions => "priorities.obama_value = 0", :include => :priority
-  named_scope :obama_opposed, :conditions => "priorities.obama_value = -1", :include => :priority
-  named_scope :not_obama_or_opposed, :conditions => "priorities.obama_value < 1", :include => :priority
-  named_scope :finished, :conditions => "endorsements.status in ('inactive','finished') and priorities.status = 'inactive'", :include => :priority
-  named_scope :top10, :order => "endorsements.position asc", :limit => 10
-  
-  named_scope :by_position, :order => "endorsements.position asc"
-  named_scope :by_priority_position, :order => "priorities.position asc"
-  named_scope :by_priority_lowest_position, :order => "priorities.position desc"  
-  named_scope :by_recently_created, :order => "endorsements.created_at desc"
-  named_scope :by_recently_updated, :order => "endorsements.updated_at desc"  
+  scope :active, -> { where("endorsements.status = 'active'") }
+  scope :deleted, -> { where("endorsements.status = 'deleted'") }
+  scope :suspended, -> { where("endorsements.status = 'suspended'") }
+  scope :active_and_inactive, -> { where("endorsements.status in ('active','inactive','finished')") }
+  scope :opposing, -> { where("endorsements.value < 0") }
+  scope :endorsing, -> { where("endorsements.value > 0") }
+  scope :obama_endorsed, -> { joins(:priority).where("priorities.obama_value = 1") }
+  scope :not_obama, -> { joins(:priority).where("priorities.obama_value = 0") }
+  scope :obama_opposed, -> { joins(:priority).where("priorities.obama_value = -1") }
+  scope :not_obama_or_opposed, -> { joins(:priority).where("priorities.obama_value < 1") }
+  scope :finished, -> { joins(:priority).where("endorsements.status in ('inactive','finished') and priorities.status = 'inactive'") }
+  scope :top10, -> { order("endorsements.position asc").limit(10) }
+  scope :by_position, -> { order("endorsements.position asc") }
+  scope :by_priority_position, -> { order("priorities.position asc") }
+  scope :by_priority_lowest_position, -> { order("priorities.position desc") }
+  scope :by_recently_created, -> { order("endorsements.created_at desc") }
+  scope :by_recently_updated, -> { order("endorsements.updated_at desc") } 
   
   belongs_to :partner
   belongs_to :user
@@ -40,41 +40,41 @@ class Endorsement < ActiveRecord::Base
   acts_as_list :scope => 'endorsements.user_id = #{user_id} AND status = \'active\''
   
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  acts_as_state_machine :initial => :active, :column => :status
-  
-  state :active, :enter => :do_activate
-  state :inactive
-  state :finished, :enter => :do_finish
-  state :deleted # deprecated, in favor of just flat out deleting them.  too many problems with aasm
-  state :suspended, :enter => :do_suspension
-  state :replaced, :enter => :do_replace
-  
-  event :activate do
-    transitions :from => [:deleted, :suspended, :replaced], :to => :active
-  end
-  
-  event :deactivate do
-    transitions :from => [:active, :finished], :to => :inactive
-  end  
-  
-  event :finish do
-    transitions :from => [:active, :inactive], :to => :finished
-  end
-  
-  event :undelete do
-    transitions :from => [:deleted, :replaced], :to => :active
-  end
-  
-  event :unsuspend do
-    transitions :from => :suspended, :to => :active
-  end
-  
-  event :suspend do
-    transitions :from => :active, :to => :suspended
-  end
-  
-  event :replace do
-    transitions :from => [:deleted, :active], :to => :replaced
+  aasm column: :status, whiny_transitions: true do
+    state :active, initial: true, before_enter: :do_activate
+    state :inactive
+    state :finished, before_enter: :do_finish
+    state :deleted # deprecated, in favor of just flat out deleting them.  too many problems with aasm
+    state :suspended, before_enter: :do_suspension
+    state :replaced, before_enter: :do_replace
+
+    event :activate do
+      transitions from: [:deleted, :suspended, :replaced], to: :active
+    end
+
+    event :deactivate do
+      transitions from: [:active, :finished], to: :inactive
+    end
+
+    event :finish do
+      transitions from: [:active, :inactive], to: :finished
+    end
+
+    event :undelete do
+      transitions from: [:deleted, :replaced], to: :active
+    end
+
+    event :unsuspend do
+      transitions from: :suspended, to: :active
+    end
+
+    event :suspend do
+      transitions from: :active, to: :suspended
+    end
+
+    event :replace do
+      transitions
+    end
   end
 
   before_create :calculate_score
@@ -119,7 +119,6 @@ class Endorsement < ActiveRecord::Base
   def priority_name
     priority.name if priority
   end
-  memoize :priority_name
   
   def priority_name=(n)
     self.priority = Priority.find_by_name(n) unless n.blank?

@@ -1,6 +1,6 @@
 class PointQuality < ActiveRecord::Base
 
-  extend ActiveSupport::Memoizable
+  extend ActiveSupport::Concern
 
   belongs_to :user
   belongs_to :point
@@ -70,7 +70,6 @@ class PointQuality < ActiveRecord::Base
   def endorsement
     user.endorsements.active_and_inactive.find_by_priority_id(point.priority_id)    
   end 
-  memoize :endorsement
   
   def is_endorser?
     endorsement and endorsement.is_up?

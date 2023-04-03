@@ -1,17 +1,17 @@
 class Document < ActiveRecord::Base
 
-  named_scope :published, :conditions => "documents.status = 'published'"
-  named_scope :by_helpfulness, :order => "documents.score desc"
-  named_scope :by_endorser_helpfulness, :conditions => "documents.endorser_score > 0", :order => "documents.endorser_score desc"
-  named_scope :by_neutral_helpfulness, :conditions => "documents.neutral_score > 0", :order => "documents.neutral_score desc"    
-  named_scope :by_opposer_helpfulness, :conditions => "documents.opposer_score > 0", :order => "documents.opposer_score desc"
-  named_scope :up, :conditions => "documents.endorser_score > 0"
-  named_scope :neutral, :conditions => "documents.neutral_score > 0"
-  named_scope :down, :conditions => "documents.opposer_score > 0"  
+  scope :published, :conditions => "documents.status = 'published'"
+  scope :by_helpfulness, :order => "documents.score desc"
+  scope :by_endorser_helpfulness, :conditions => "documents.endorser_score > 0", :order => "documents.endorser_score desc"
+  scope :by_neutral_helpfulness, :conditions => "documents.neutral_score > 0", :order => "documents.neutral_score desc"    
+  scope :by_opposer_helpfulness, :conditions => "documents.opposer_score > 0", :order => "documents.opposer_score desc"
+  scope :up, :conditions => "documents.endorser_score > 0"
+  scope :neutral, :conditions => "documents.neutral_score > 0"
+  scope :down, :conditions => "documents.opposer_score > 0"  
 
-  named_scope :by_recently_created, :order => "documents.created_at desc"
-  named_scope :by_recently_updated, :order => "documents.updated_at desc"  
-  named_scope :revised, :conditions => "revisions_count > 1"
+  scope :by_recently_created, :order => "documents.created_at desc"
+  scope :by_recently_updated, :order => "documents.updated_at desc"  
+  scope :revised, :conditions => "revisions_count > 1"
 
   belongs_to :user
   belongs_to :priority

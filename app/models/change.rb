@@ -1,20 +1,20 @@
 class Change < ActiveRecord::Base
 
-  named_scope :suggested, :conditions => "changes.status = 'suggested'"
-  named_scope :notsent, :conditions => "changes.status = 'notsent'"
-  named_scope :sent, :conditions => "changes.status = 'sent'"  
-  named_scope :approved, :conditions => "changes.status = 'approved'"
-  named_scope :declined, :conditions => "changes.status = 'declined'"  
-  named_scope :voting, :conditions => "changes.status in ('approved','declined','sent')"
+  scope :suggested, :conditions => "changes.status = 'suggested'"
+  scope :notsent, :conditions => "changes.status = 'notsent'"
+  scope :sent, :conditions => "changes.status = 'sent'"  
+  scope :approved, :conditions => "changes.status = 'approved'"
+  scope :declined, :conditions => "changes.status = 'declined'"  
+  scope :voting, :conditions => "changes.status in ('approved','declined','sent')"
   
-  named_scope :active, :conditions => "changes.status in ('sent','suggested')"
-  named_scope :inactive, :conditions => "changes.status in ('notsent','approved','declined')"
-  named_scope :not_deleted, :conditions => "changes.status <> 'deleted'"
-  named_scope :deleted, :conditions => "changes.status = 'deleted'"
+  scope :active, :conditions => "changes.status in ('sent','suggested')"
+  scope :inactive, :conditions => "changes.status in ('notsent','approved','declined')"
+  scope :not_deleted, :conditions => "changes.status <> 'deleted'"
+  scope :deleted, :conditions => "changes.status = 'deleted'"
 
-  named_scope :by_recently_created, :order => "changes.created_at desc"
-  named_scope :by_recently_started, :order => "changes.sent_at desc"  
-  named_scope :by_recently_updated, :order => "changes.updated_at desc"  
+  scope :by_recently_created, :order => "changes.created_at desc"
+  scope :by_recently_started, :order => "changes.sent_at desc"  
+  scope :by_recently_updated, :order => "changes.updated_at desc"  
 
   belongs_to :priority
   belongs_to :new_priority, :class_name => "Priority", :foreign_key => "new_priority_id"

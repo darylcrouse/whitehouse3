@@ -1,5 +1,7 @@
-class CreateBranchUserCharts < ActiveRecord::Migration
-  def self.up
+class CreateBranchUserCharts < ActiveRecord::Migration[7.0]
+  def change
+    drop_table :branch_user_charts
+    
     create_table :branch_user_charts do |t|
       t.integer  "branch_id"      
       t.integer  "user_id"
@@ -14,9 +16,5 @@ class CreateBranchUserCharts < ActiveRecord::Migration
     end
     add_index :branch_user_charts, ["date_year", "date_month", "date_day"], :name => "branch_ucharts_date"
     add_index :branch_user_charts, ["user_id", "branch_id"], :name => "branch_ucharts_id"
-  end
-
-  def self.down
-    drop_table :branch_user_charts
   end
 end

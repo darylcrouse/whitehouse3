@@ -1,11 +1,11 @@
 class Ad < ActiveRecord::Base
 
-  named_scope :active, :conditions => "ads.status = 'active'"
-  named_scope :inactive, :conditions => "ads.status in ('inactive','finished')"
-  named_scope :finished, :conditions => "ads.status = 'finished'"
-  named_scope :most_paid, :order => "ads.per_user_cost desc"
-  named_scope :active_first, :order => "ads.status asc, ads.per_user_cost desc, ads.created_at desc"
-  named_scope :by_recently_created, :order => "ads.created_at desc"
+  scope :active, :conditions => "ads.status = 'active'"
+  scope :inactive, :conditions => "ads.status in ('inactive','finished')"
+  scope :finished, :conditions => "ads.status = 'finished'"
+  scope :most_paid, :order => "ads.per_user_cost desc"
+  scope :active_first, :order => "ads.status asc, ads.per_user_cost desc, ads.created_at desc"
+  scope :by_recently_created, :order => "ads.created_at desc"
   
   belongs_to :user
   belongs_to :priority
