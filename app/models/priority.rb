@@ -74,7 +74,7 @@ class Priority < ActiveRecord::Base
   has_many :changes_with_deleted, -> { order(updated_at: :desc) }, class_name: "Change", dependent: :destroy
   
 
-  belongs_to :change # if there is currently a pending change, it will be attached
+  belongs_to :change, optional: true
   
   # acts_as_taggable_on :issues
   # acts_as_list
