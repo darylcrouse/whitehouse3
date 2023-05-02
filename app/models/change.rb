@@ -1,20 +1,21 @@
 class Change < ActiveRecord::Base
+  include AASM
 
-  scope :suggested, :conditions => "changes.status = 'suggested'"
-  scope :notsent, :conditions => "changes.status = 'notsent'"
-  scope :sent, :conditions => "changes.status = 'sent'"  
-  scope :approved, :conditions => "changes.status = 'approved'"
-  scope :declined, :conditions => "changes.status = 'declined'"  
-  scope :voting, :conditions => "changes.status in ('approved','declined','sent')"
+  scope :suggested, -> { where(status: 'suggested') }
+  scope :notsent, -> { where(status: 'notsent') }
+  scope :sent, -> { where(status: 'sent') }
+  scope :approved, -> { where(status: 'approved') }
+  scope :declined, -> { where(status: 'declined') }
+  scope :voting, -> { where(status: ['approved', 'declined', 'sent']) }
   
-  scope :active, :conditions => "changes.status in ('sent','suggested')"
-  scope :inactive, :conditions => "changes.status in ('notsent','approved','declined')"
-  scope :not_deleted, :conditions => "changes.status <> 'deleted'"
-  scope :deleted, :conditions => "changes.status = 'deleted'"
-
-  scope :by_recently_created, :order => "changes.created_at desc"
-  scope :by_recently_started, :order => "changes.sent_at desc"  
-  scope :by_recently_updated, :order => "changes.updated_at desc"  
+  scope :active, -> { where(status: ['sent', 'suggested']) }
+  scope :inactive, -> { where(status: ['notsent', 'approved', 'declined']) }
+  scope :not_deleted, -> { where.not(status: 'deleted') }
+  scope :deleted, -> { where(status: 'deleted') }
+  
+  scope :by_recently_created, -> { order(created_at: :desc) }
+  scope :by_recently_started, -> { order(sent_at: :desc) }
+  scope :by_recently_updated, -> { order(updated_at: :desc) }   
 
   belongs_to :priority
   belongs_to :new_priority, :class_name => "Priority", :foreign_key => "new_priority_id"
@@ -46,33 +47,33 @@ class Change < ActiveRecord::Base
   validates_length_of :content, :maximum => 500, :allow_nil => true, :allow_blank => true  
   
   acts_as_list
-  acts_as_state_machine :initial => :suggested, :column => :status
-  
-  state :suggested
-  state :notsent, :enter => :do_notsend
-  state :sent, :enter => :do_send
-  state :approved, :enter => :do_approve
-  state :declined, :enter => :do_decline
-  state :deleted, :enter => :do_delete
-  
-  event :send do
-    transitions :from => [:suggested], :to => :sent
-  end
-  
-  event :dont_send do
-    transitions :from => [:suggested], :to => :notsent
-  end  
-  
-  event :approve do
-    transitions :from => [:sent, :suggested], :to => :approved
-  end
+  aasm column: :status, initial: :suggested do
+    state :suggested
+    state :notsent, after_enter: :do_notsend
+    state :sent, after_enter: :do_send
+    state :approved, after_enter: :do_approve
+    state :declined, after_enter: :do_decline
+    state :deleted, after_enter: :do_delete
 
-  event :decline do
-    transitions :from => [:sent, :suggested], :to => :declined
-  end    
-  
-  event :delete do
-    transitions :from => [:suggested, :sent, :approved, :declined], :to => :deleted
+    event :send do
+      transitions from: [:suggested], to: :sent
+    end
+
+    event :dont_send do
+      transitions from: [:suggested], to: :notsent
+    end
+
+    event :approve do
+      transitions from: [:sent, :suggested], to: :approved
+    end
+
+    event :decline do
+      transitions from: [:sent, :suggested], to: :declined
+    end
+
+    event :delete do
+      transitions from: [:suggested, :sent, :approved, :declined], to: :deleted
+    end
   end
 
   after_create :add_to_priority
