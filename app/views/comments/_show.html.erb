@@ -9,17 +9,17 @@
 	<% elsif comment.user.status == 'deleted' and params[:action] != 'unhide' %>
 		<div class="comment_hidden" id="comment_hidden_<%= comment.id.to_s %>">
 			<%= t('comments.account_deleted', :user_name => comment.user.name )%>
-			<%= link_to_remote t('comments.show'),{ :url => unhide_activity_comment_url(comment.activity_id,comment), :method => :get }  %>
+			<%= link_tot('comments.show'),{ :url => unhide_activity_comment_url(comment.activity_id,comment), :method => :get }  %>
 		</div>	
 	<% elsif comment.user.status == 'suspended' and params[:action] != 'unhide' %>
 		<div class="comment_hidden" id="comment_hidden_<%= comment.id.to_s %>">
 			<%= t('comments.account_suspended', :user_name => comment.user.name )%>
-			<%= link_to_remote t('comments.show'),{ :url => unhide_activity_comment_url(comment.activity_id,comment), :method => :get }  %>
+			<%= link_tot('comments.show'),{ :url => unhide_activity_comment_url(comment.activity_id,comment), :method => :get }  %>
 		</div>		
 	<% elsif logged_in? and current_ignoring_ids.include?(comment.user_id) and params[:action] != 'unhide' %>
 		<div class="comment_hidden" id="comment_hidden_<%= comment.id.to_s %>">
 			<%= t('comments.ignoring', :user_name => link_to(comment.user.name,comment.user) )%>
-			<%= link_to_remote t('comments.show'),{ :url => unhide_activity_comment_url(comment.activity_id,comment), :method => :get }  %>
+			<%= link_tot('comments.show'),{ :url => unhide_activity_comment_url(comment.activity_id,comment), :method => :get }  %>
 		</div>
 	<% else %>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -32,9 +32,9 @@
 			<td valign="top" style="padding-left: 7px;">
 				<div class="comment_x">
 					<% if logged_in? and (current_user.is_admin? or current_user.id == comment.user_id) %>
-					<%= link_to_remote "x", { :url => activity_comment_url(comment.activity_id,comment),:method => :delete, :confirm => t('comments.delete.confirm')} %><% end %>
+					<%= link_to"x", { :url => activity_comment_url(comment.activity_id,comment),:method => :delete, :confirm => t('comments.delete.confirm')} %><% end %>
 					<% if logged_in? and current_user.id != comment.user_id and comment.created_at.to_i > 1238105412 %>
-						<%= link_to_remote "!", { :url => flag_activity_comment_url(comment.activity_id,comment),:method => :get, :confirm => t('comments.flag.confirm', :user_name => comment.user.name)}, :title => t('comments.flag.title') %><% end %>
+						<%= link_to"!", { :url => flag_activity_comment_url(comment.activity_id,comment),:method => :get, :confirm => t('comments.flag.confirm', :user_name => comment.user.name)}, :title => t('comments.flag.title') %><% end %>
 				</div>
 				<div class="small">
 					<%= link_to h(comment.user.login), comment.user %>
