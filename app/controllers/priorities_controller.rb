@@ -9,15 +9,15 @@ class PrioritiesController < ApplicationController
   def index
     if params[:q].present? && request.xhr?
       @priorities = Priority.published.where("name LIKE ?", "%#{params[:q]}%").select(:name).order("endorsements_count desc")
-    # elsif current_government&.homepage != 'index'
-    #   redirect_to action: current_government.homepage
-    #   return
+    elsif current_government&.homepage != 'index'
+      redirect_to action: current_government.homepage
+      return
     else
       @issues = Tag.most_priorities.where("tags.id <> 384 and priorities_count > 4").includes(:top_priority)
-      # if logged_in? 
+      if logged_in? 
         priority_ids = @issues.map {|c| c.top_priority_id} + @issues.map {|c| c.rising_priority_id} + @issues.map {|c| c.controversial_priority_id}
         @endorsements = Endorsement.where("priority_id in (?) and status='active'", priority_ids).all      
-      # end
+      end
     end
     respond_to do |format|
       format.html
@@ -206,7 +206,7 @@ class PrioritiesController < ApplicationController
   def top
     @page_title = t('priorities.top.title', :target => current_government.target)
     @rss_url = top_priorities_url(:format => 'rss')   
-    @priorities = Priority.published.top_rank.paginate :page => params[:page], :per_page => params[:per_page]
+    @priorities = Priority.published.top_rank.page(params[:page]).per(params[:per_page])
     get_endorsements
     respond_to do |format|
       format.html { render :action => "list" }
@@ -221,7 +221,7 @@ class PrioritiesController < ApplicationController
   def rising
     @page_title = t('priorities.rising.title', :target => current_government.target)
     @rss_url = rising_priorities_url(:format => 'rss')           
-    @priorities = Priority.published.rising.paginate :page => params[:page], :per_page => params[:per_page]
+    @priorities = Priority.published.rising.page(params[:page]).per(params[:per_page])
     get_endorsements
     respond_to do |format|
       format.html { render :action => "list" }
@@ -236,7 +236,7 @@ class PrioritiesController < ApplicationController
   def falling
     @page_title = t('priorities.falling.title', :target => current_government.target)
     @rss_url = falling_priorities_url(:format => 'rss')
-    @priorities = Priority.published.falling.paginate :page => params[:page], :per_page => params[:per_page]
+    @priorities = Priority.published.falling.page(params[:page]).per(params[:per_page])
     get_endorsements
     respond_to do |format|
       format.html { render :action => "list" }
@@ -251,7 +251,7 @@ class PrioritiesController < ApplicationController
   def controversial
     @page_title = t('priorities.controversial.title', :target => current_government.target)
     @rss_url = controversial_priorities_url(:format => 'rss')       
-    @priorities = Priority.published.controversial.paginate :page => params[:page], :per_page => params[:per_page]
+    @priorities = Priority.published.controversial.page(params[:page]).per(params[:per_page])
     get_endorsements
     respond_to do |format|
       format.html { render :action => "list" }
@@ -265,7 +265,7 @@ class PrioritiesController < ApplicationController
   # GET /priorities/finished
   def finished
     @page_title = t('priorities.finished.title', :target => current_government.target)
-    @priorities = Priority.finished.by_most_recent_status_change.paginate :page => params[:page], :per_page => params[:per_page]
+    @priorities = Priority.finished.by_most_recent_status_change.page(params[:page]).per(params[:per_page])
     respond_to do |format|
       format.html { render :action => "list" }
       format.rss { render :action => "list" }
@@ -279,9 +279,9 @@ class PrioritiesController < ApplicationController
   def random
     @page_title = t('priorities.random.title', :target => current_government.target)
     if User.adapter == 'postgresql'
-      @priorities = Priority.published.paginate :order => "RANDOM()", :page => params[:page], :per_page => params[:per_page]
+      @priorities = Priority.published.page(params[:page]).per(params[:per_page])
     else
-      @priorities = Priority.published.paginate :order => "rand()", :page => params[:page], :per_page => params[:per_page]
+      @priorities = Priority.published.page(params[:page]).per(params[:per_page])
     end
     get_endorsements
     respond_to do |format|
@@ -297,7 +297,7 @@ class PrioritiesController < ApplicationController
   def newest
     @page_title = t('priorities.newest.title', :target => current_government.target)
     @rss_url = newest_priorities_url(:format => 'rss')     
-    @priorities = Priority.published.newest.paginate :page => params[:page], :per_page => params[:per_page]
+    @priorities = Priority.published.newest.page(params[:page]).per(params[:per_page])
     get_endorsements
     respond_to do |format|
       format.html
@@ -312,7 +312,7 @@ class PrioritiesController < ApplicationController
   def untagged
     @page_title = t('priorities.untagged.title', :target => current_government.target)
     @rss_url = untagged_priorities_url(:format => 'rss')            
-    @priorities = Priority.published.untagged.paginate :page => params[:page], :per_page => params[:per_page]
+    @priorities = Priority.published.untagged.page(params[:page]).per(params[:per_page])
     get_endorsements
     respond_to do |format|
       format.html { render :action => "list" }
@@ -352,7 +352,7 @@ class PrioritiesController < ApplicationController
     @point_ids = point_ids.uniq.compact
     @qualities = nil
     if logged_in? # pull all their qualities on the priorities shown
-      @qualities = PointQuality.find(:all, :conditions => ["point_id in (?) and user_id = ? ", point_ids,current_user.id])
+      @qualities = PointQuality.where("point_id IN (?) AND user_id = ?", point_ids, current_user.id)
     end
     document_ids = []
     if @priority.up_documents_count > 0
@@ -377,7 +377,7 @@ class PrioritiesController < ApplicationController
     end
     @document_ids = document_ids.uniq.compact    
     
-    @activities = @priority.activities.active.for_all_users.by_recently_updated.paginate :include => :user, :page => params[:page]
+    @activities = @priority.activities.active.for_all_users.by_recently_updated.includes(:user).page(params[:page]).per(params[:per_page])
     if logged_in? and @endorsement
       if @endorsement.is_up?
         @relationships = @priority.relationships.endorsers_endorsed.by_highest_percentage.find(:all, :include => :other_priority).group_by {|o|o.other_priority}
@@ -385,7 +385,9 @@ class PrioritiesController < ApplicationController
         @relationships = @priority.relationships.opposers_endorsed.by_highest_percentage.find(:all, :include => :other_priority).group_by {|o|o.other_priority}
       end
     else
-      @relationships = @priority.relationships.who_endorsed.by_highest_percentage.find(:all, :include => :other_priority).group_by {|o|o.other_priority}
+      @relationships = Relationship.who_endorsed.by_highest_percentage.where(priority_id: @priority.id)
+@other_priorities = Priority.where(id: @relationships.pluck(:other_priority_id))
+
     end
     @endorsements = nil
     if logged_in? # pull all their endorsements on the priorities shown
@@ -931,7 +933,7 @@ class PrioritiesController < ApplicationController
     def get_endorsements
       @endorsements = nil
       if logged_in? # pull all their endorsements on the priorities shown
-        @endorsements = current_user.endorsements.active.find(:all, :conditions => ["priority_id in (?)", @priorities.collect {|c| c.id}])
+        @endorsements = current_user.endorsements.active.where(priority_id: @priorities.collect(&:id))
       end
     end
     

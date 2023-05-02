@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   before_action :login_required, :only => [:resend_activation, :follow, :unfollow, :endorse]
   before_action :current_user_required, :only => [:resend_activation]
-  # before_action :admin_required, :only => [:suspend, :unsuspend, :impersonate, :edit, :update, :signups, :legislators, :legislators_save, :make_admin, :reset_password]
+  before_action :admin_required, :only => [:suspend, :unsuspend, :impersonate, :edit, :update, :signups, :legislators, :legislators_save, :make_admin, :reset_password]
   
   def index
     page = params[:page].presence || 1
@@ -23,12 +23,12 @@ class UsersController < ApplicationController
   
   # render new.rhtml
   def new
-    # @user = User.new(:branch => current_government.default_branch) if current_government.is_branches?
-    # if logged_in?
-    #   redirect_to "/"
-    #   return
-    # end
-    # store_previous_location
+    @user = User.new(:branch => current_government.default_branch) if current_government.is_branches?
+    if logged_in?
+      redirect_to "/"
+      return
+    end
+    store_previous_location
     respond_to do |format|
       format.html
     end
@@ -277,7 +277,7 @@ class UsersController < ApplicationController
   
     self.current_user = @user
   
-    if current_partner && params[:signup]
+    if params[:signup]
       @user.signups << Signup.create(partner: current_partner, is_optin: params[:signup][:is_optin], ip_address: request.remote_ip)
     end
   
@@ -508,7 +508,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :login, :password, :password_confirmation).except(:buddy_icon_file_size)
+    params.require(:user).permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
   end
   
     def get_following
