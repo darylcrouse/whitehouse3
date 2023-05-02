@@ -13,7 +13,7 @@
 			<%= render :partial => "comments/show", :locals => {:comment => @comments.first} %>
 		
 			<div class="comment_more">
-			<%= link_to_remote "Show #{(activity.comments_count-3).to_s} more comments", { :url => more_activity_comments_url(activity), :method => :get } %>
+			<%= link_to"Show #{(activity.comments_count-3).to_s} more comments", { :url => more_activity_comments_url(activity), :method => :get } %>
 			</div>
 		
 			<%= render :partial => "comments/show", :locals => {:comment => @comments[@comments.length-2]} %>
