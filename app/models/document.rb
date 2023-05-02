@@ -1,32 +1,33 @@
 class Document < ActiveRecord::Base
+  include AASM
 
-  scope :published, :conditions => "documents.status = 'published'"
-  scope :by_helpfulness, :order => "documents.score desc"
-  scope :by_endorser_helpfulness, :conditions => "documents.endorser_score > 0", :order => "documents.endorser_score desc"
-  scope :by_neutral_helpfulness, :conditions => "documents.neutral_score > 0", :order => "documents.neutral_score desc"    
-  scope :by_opposer_helpfulness, :conditions => "documents.opposer_score > 0", :order => "documents.opposer_score desc"
-  scope :up, :conditions => "documents.endorser_score > 0"
-  scope :neutral, :conditions => "documents.neutral_score > 0"
-  scope :down, :conditions => "documents.opposer_score > 0"  
+  scope :published, -> { where(status: 'published') }
+  scope :by_helpfulness, -> { order(score: :desc) }
+  scope :by_endorser_helpfulness, -> { where('endorser_score > 0').order(endorser_score: :desc) }
+  scope :by_neutral_helpfulness, -> { where('neutral_score > 0').order(neutral_score: :desc) }
+  scope :by_opposer_helpfulness, -> { where('opposer_score > 0').order(opposer_score: :desc) }
+  scope :up, -> { where('endorser_score > 0') }
+  scope :neutral, -> { where('neutral_score > 0') }
+  scope :down, -> { where('opposer_score > 0') }
 
-  scope :by_recently_created, :order => "documents.created_at desc"
-  scope :by_recently_updated, :order => "documents.updated_at desc"  
-  scope :revised, :conditions => "revisions_count > 1"
+  scope :by_recently_created, -> { order(created_at: :desc) }
+  scope :by_recently_updated, -> { order(updated_at: :desc) }
+  scope :revised, -> { where('revisions_count > 1') }
 
   belongs_to :user
   belongs_to :priority
-  belongs_to :revision, :class_name => "DocumentRevision", :foreign_key => "revision_id" # the current revision
-  
-  has_many :revisions, :class_name => "DocumentRevision", :dependent => :destroy
-  has_many :activities, :dependent => :destroy, :order => "activities.created_at desc"
-  
-  has_many :author_users, :through => :revisions, :select => "distinct users.*", :source => :user, :class_name => "User"
-  
-  has_many :qualities, :class_name => "DocumentQuality", :order => "created_at desc", :dependent => :destroy
-  has_many :helpfuls, :class_name => "DocumentQuality", :conditions => "value = 1", :order => "created_at desc"
-  has_many :unhelpfuls, :class_name => "DocumentQuality", :conditions => "value = 0", :order => "created_at desc"
-  
-  has_many :capitals, :as => :capitalizable, :dependent => :nullify
+  belongs_to :revision, class_name: "DocumentRevision", foreign_key: "revision_id" # the current revision
+
+  has_many :revisions, class_name: "DocumentRevision", dependent: :destroy
+  has_many :activities, -> { order(created_at: :desc) }, dependent: :destroy
+
+  has_many :author_users, -> { distinct }, through: :revisions, source: :user, class_name: "User"
+
+  has_many :qualities, class_name: "DocumentQuality", -> { order(created_at: :desc) }, dependent: :destroy
+  has_many :helpfuls, class_name: "DocumentQuality", -> { where(value: 1).order(created_at: :desc) }
+  has_many :unhelpfuls, class_name: "DocumentQuality", -> { where(value: 0).order(created_at: :desc) }
+
+  has_many :capitals, as: :capitalizable, dependent: :nullify
   
   liquid_methods :id, :text, :user
   
@@ -47,34 +48,35 @@ class Document < ActiveRecord::Base
   validates_uniqueness_of :name  
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  acts_as_state_machine :initial => :published, :column => :status
-  
-  state :draft
-  state :published, :enter => :do_publish
-  state :deleted, :enter => :do_delete
-  state :buried, :enter => :do_bury
-  
-  event :publish do
-    transitions :from => [:draft], :to => :published
+  aasm column: :status, whiny_transitions: true do
+    state :draft, initial: true
+    state :published, enter: :do_publish
+    state :deleted, enter: :do_delete
+    state :buried, enter: :do_bury
+    
+    event :publish do
+      transitions from: [:draft], to: :published
+    end
+    
+    event :delete do
+      transitions from: [:draft, :published, :buried], to: :deleted
+    end
+    
+    event :undelete do
+      transitions from: :deleted, to: :published, guard: Proc.new { |p| !p.published_at.blank? }
+      transitions from: :deleted, to: :draft 
+    end
+    
+    event :bury do
+      transitions from: [:draft, :published, :deleted], to: :buried
+    end
+    
+    event :unbury do
+      transitions from: :buried, to: :published, guard: Proc.new { |p| !p.published_at.blank? }
+      transitions from: :buried, to: :draft     
+    end
   end
-  
-  event :delete do
-    transitions :from => [:draft, :published,:buried], :to => :deleted
-  end
-
-  event :undelete do
-    transitions :from => :deleted, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :deleted, :to => :draft 
-  end
-  
-  event :bury do
-    transitions :from => [:draft, :published, :deleted], :to => :buried
-  end
-  
-  event :unbury do
-    transitions :from => :buried, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :buried, :to => :draft     
-  end  
+ 
 
   def update_word_count
     self.word_count = self.content.split(' ').length
