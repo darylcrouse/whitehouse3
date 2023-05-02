@@ -1,10 +1,10 @@
 class Relationship < ActiveRecord::Base
 
-  scope :who_endorsed, -> { joins(:relationships).where(relationships: {type: ['RelationshipEndorserEndorsed', 'RelationshipOpposerEndorsed', 'RelationshipUndecidedEndorsed']}) }
-  scope :endorsers_endorsed, -> { joins(:relationships).where(relationships: {type: 'RelationshipEndorserEndorsed'}) }
-  scope :opposers_endorsed, -> { joins(:relationships).where(relationships: {type: 'RelationshipOpposerEndorsed'}) }
-  scope :undecideds_endorsed, -> { joins(:relationships).where(relationships: {type: 'RelationshipUndecidedEndorsed'}) }
-  scope :by_highest_percentage, -> { joins(:relationships).order('relationships.percentage desc') }
+  scope :who_endorsed, -> { where(type: ['RelationshipEndorserEndorsed', 'RelationshipOpposerEndorsed', 'RelationshipUndecidedEndorsed']) }
+  scope :endorsers_endorsed, -> { where(relationships: {type: 'RelationshipEndorserEndorsed'}) }
+  scope :opposers_endorsed, -> { where(relationships: {type: 'RelationshipOpposerEndorsed'}) }
+  scope :undecideds_endorsed, -> { where(relationships: {type: 'RelationshipUndecidedEndorsed'}) }
+  scope :by_highest_percentage, -> { order('relationships.percentage desc') }
 
 
   belongs_to :priority
