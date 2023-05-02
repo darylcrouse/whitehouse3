@@ -29,7 +29,7 @@
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr><td><div class="heading"><%= t('changes.activities.name') %></div></td>
 					<td>
-						<%= will_paginate(@activities) %>
+						<%= paginate(@activities) %>
 					</td>
 				</tr>
 				</table>
@@ -38,7 +38,7 @@
 					<%= render :partial => "activities/show", :locals => {:activity => activity, :priority => @priority, :suffix => "_noself"} %>
 				<% end %>
 				</div>
-				<%= will_paginate(@activities) %>
+				<%= paginate(@activities) %>
 			<% end %>
 
 		</td>	
