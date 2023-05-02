@@ -1,14 +1,15 @@
 class Message < ActiveRecord::Base
+  include AASM
 
-  scope :active, :conditions => "messages.status <> 'deleted'"
-  scope :sent, :conditions => "messages.status in('sent','read')"
-  scope :read, :conditions => "messages.status = 'read'"
-  scope :unread, :conditions => "messages.status = 'sent'"
-  scope :draft, :conditions => "messages.status = 'draft'"
-  
-  scope :by_recently_sent, :order => "messages.sent_at desc"
-  scope :by_oldest_sent, :order => "messages.sent_at asc"  
-  scope :by_unread, :order => "messages.status desc, messages.sent_at desc"
+  scope :active, -> { where.not(status: 'deleted') }
+  scope :sent, -> { where(status: ['sent', 'read']) }
+  scope :read, -> { where(status: 'read') }
+  scope :unread, -> { where(status: 'sent') }
+  scope :draft, -> { where(status: 'draft') }
+
+  scope :by_recently_sent, -> { order(sent_at: :desc) }
+  scope :by_oldest_sent, -> { order(sent_at: :asc) }
+  scope :by_unread, -> { order(status: :desc, sent_at: :desc) }
 
   belongs_to :sender, :class_name => "User", :foreign_key => "sender_id"
   belongs_to :recipient, :class_name => "User", :foreign_key => "recipient_id"
@@ -19,29 +20,29 @@ class Message < ActiveRecord::Base
   
   liquid_methods :content, :created_at
   
-  acts_as_state_machine :initial => :draft, :column => :status
-  
-  state :draft
-  state :sent, :enter => :do_send
-  state :read, :enter => :do_read  
-  state :deleted, :enter => :do_delete
-  
-  event :send do
-    transitions :from => [:draft], :to => :sent
-  end
-  
-  event :read do
-    transitions :from => [:sent, :draft], :to => :read
-  end
+  aasm column: :status, whiny_transitions: true do
+    state :draft, initial: true
+    state :sent, enter: :do_send
+    state :read, enter: :do_read
+    state :deleted, enter: :do_delete
 
-  event :delete do
-    transitions :from => [:sent, :draft, :read], :to => :deleted
-  end
+    event :send do
+      transitions from: [:draft], to: :sent
+    end
 
-  event :undelete do
-    transitions :from => :deleted, :to => :read, :guard => Proc.new {|p| !p.read_at.blank? }    
-    transitions :from => :deleted, :to => :sent, :guard => Proc.new {|p| !p.sent_at.blank? }
-    transitions :from => :deleted, :to => :draft 
+    event :read do
+      transitions from: [:sent, :draft], to: :read
+    end
+
+    event :delete do
+      transitions from: [:sent, :draft, :read], to: :deleted
+    end
+
+    event :undelete do
+      transitions from: :deleted, to: :read, guard: :read_at_present?
+      transitions from: :deleted, to: :sent, guard: :sent_at_present?
+      transitions from: :deleted, to: :draft
+    end
   end
   
   def do_send
