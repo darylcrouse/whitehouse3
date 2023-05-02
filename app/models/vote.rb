@@ -1,9 +1,10 @@
 class Vote < ActiveRecord::Base
-  
-  scope :deleted, :conditions => "votes.status = 'deleted'"
-  scope :not_deleted, :conditions => "votes.status <> 'deleted'"
-  scope :active, :conditions => "votes.status = 'active'", :include => {:change => :priority}, :order => "priorities.endorsements_count desc"
-  scope :pending, :conditions => "votes.status in ('active','sent')", :include => {:change => :priority}, :order => "votes.created_at desc"
+  include AASM
+
+  scope :deleted, -> { where("votes.status = 'deleted'") }
+  scope :not_deleted, -> { where("votes.status <> 'deleted'") }
+  scope :active, -> { where("votes.status = 'active'").includes(change: :priority).order("priorities.endorsements_count desc") }
+  scope :pending, -> { where("votes.status in ('active', 'sent')").includes(change: :priority).order("votes.created_at desc") }  
 
   belongs_to :user
   belongs_to :change
@@ -13,39 +14,39 @@ class Vote < ActiveRecord::Base
   before_create :make_code
   after_create :add_notification
   
-  acts_as_state_machine :initial => :active, :column => :status
-  
-  state :active
-  state :approved, :enter => :do_approve
-  state :implicit_approved, :enter => :do_implicit_approve
-  state :declined, :enter => :do_decline
-  state :implicit_declined
-  state :inactive  
-  state :deleted
-  
-  event :approve do
-    transitions :from => [:active], :to => :approved
-  end
+  aasm column: :status, whiny_transitions: true do
+    state :active, initial: true
+    state :approved, enter: :do_approve
+    state :implicit_approved, enter: :do_implicit_approve
+    state :declined, enter: :do_decline
+    state :implicit_declined
+    state :inactive  
+    state :deleted
 
-  event :decline do
-    transitions :from => [:active], :to => :declined
-  end    
-  
-  event :implicit_approve do
-    transitions :from => [:active], :to => :implicit_approved
-  end
+    event :approve do
+      transitions from: [:active], to: :approved
+    end
 
-  event :implicit_decline do
-    transitions :from => [:active], :to => :implicit_declined
-  end  
-  
-  event :deactivate do
-    transitions :from => [:sent], :to => :inactive
+    event :decline do
+      transitions from: [:active], to: :declined
+    end
+
+    event :implicit_approve do
+      transitions from: [:active], to: :implicit_approved
+    end
+
+    event :implicit_decline do
+      transitions from: [:active], to: :implicit_declined
+    end
+
+    event :deactivate do
+      transitions from: [:sent], to: :inactive
+    end
+
+    event :delete do
+      transitions from: [:active, :inactive, :approved, :declined], to: :deleted
+    end
   end
-  
-  event :delete do
-    transitions :from => [:active, :inactive, :approved, :declined], :to => :deleted
-  end  
   
   def do_approve
     self.voted_at = Time.now
