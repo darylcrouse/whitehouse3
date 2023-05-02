@@ -5,35 +5,37 @@ class BranchEndorsement < ActiveRecord::Base
   has_many :charts, :class_name => "BranchEndorsementChart", :dependent => :destroy
   has_many :rankings, :class_name => "BranchEndorsementRanking", :dependent => :destroy
   
-  if Government.current and Government.current.is_suppress_empty_priorities?
-    scope :published, :conditions => "priorities.status = 'published' and priorities.position > 0 and priorities.endorsements_count > 0"
-  else
-    scope :published, :conditions => "priorities.status = 'published'"
-  end
-  scope :finished, :conditions => "priorities.obama_status in (-2,-1,2)"
+  scope :published, -> {
+    if Government.current&.is_suppress_empty_priorities?
+      where("priorities.status = 'published' and priorities.position > 0 and priorities.endorsements_count > 0")
+    else
+      where("priorities.status = 'published'")
+    end
+  }
+  scope :finished, -> { where(priorities: { obama_status: [-2,-1,2] }) }
   
-  scope :top_rank, :order => "branch_endorsements.position asc"
-  scope :not_top_rank, :conditions => "branch_endorsements.position > 25"
-  scope :rising, :conditions => "branch_endorsements.position_7days_change > 0", :order => "(branch_endorsements.position_7days_change/branch_endorsements.position) desc"
-  scope :falling, :conditions => "branch_endorsements.position_7days_change < 0", :order => "(branch_endorsements.position_7days_change/branch_endorsements.position) asc"
-
-  scope :rising_7days, :conditions => "branch_endorsements.position_7days_change > 0"
-  scope :flat_7days, :conditions => "branch_endorsements.position_7days_change = 0"
-  scope :falling_7days, :conditions => "branch_endorsements.position_7days_change < 0"
-  scope :rising_30days, :conditions => "branch_endorsements.position_30days_change > 0"
-  scope :flat_30days, :conditions => "branch_endorsements.position_30days_change = 0"
-  scope :falling_30days, :conditions => "branch_endorsements.position_30days_change < 0"
-  scope :rising_24hr, :conditions => "branch_endorsements.position_24hr_change > 0"
-  scope :flat_24hr, :conditions => "branch_endorsements.position_24hr_change = 0"
-  scope :falling_24hr, :conditions => "branch_endorsements.position_24hr_change < 0"
+  scope :top_rank, -> { order("branch_endorsements.position asc") }
+  scope :not_top_rank, -> { where("branch_endorsements.position > 25") }
+  scope :rising, -> { where("branch_endorsements.position_7days_change > 0").order("(branch_endorsements.position_7days_change/branch_endorsements.position) desc") }
+  scope :falling, -> { where("branch_endorsements.position_7days_change < 0").order("(branch_endorsements.position_7days_change/branch_endorsements.position) asc") }
   
-  scope :newest, :order => "branch_endorsements.created_at desc"
-  scope :controversial, :conditions => "branch_endorsements.down_endorsements_count > 0 and (branch_endorsements.up_endorsements_count/branch_endorsements.down_endorsements_count) between 0.5 and 2", :order => "(branch_endorsements.endorsements_count - abs(branch_endorsements.up_endorsements_count-branch_endorsements.down_endorsements_count)) desc"
+  scope :rising_7days, -> { where("branch_endorsements.position_7days_change > 0") }
+  scope :flat_7days, -> { where("branch_endorsements.position_7days_change = 0") }
+  scope :falling_7days, -> { where("branch_endorsements.position_7days_change < 0") }
+  scope :rising_30days, -> { where("branch_endorsements.position_30days_change > 0") }
+  scope :flat_30days, -> { where("branch_endorsements.position_30days_change = 0") }
+  scope :falling_30days, -> { where("branch_endorsements.position_30days_change < 0") }
+  scope :rising_24hr, -> { where("branch_endorsements.position_24hr_change > 0") }
+  scope :flat_24hr, -> { where("branch_endorsements.position_24hr_change = 0") }
+  scope :falling_24hr, -> { where("branch_endorsements.position_24hr_change < 0") }
   
-  acts_as_list :scope => 'branch_endorsements.branch_id = #{branch_id}'
+  scope :newest, -> { order("branch_endorsements.created_at desc") }
+  scope :controversial, -> { where("branch_endorsements.down_endorsements_count > 0 and (branch_endorsements.up_endorsements_count/branch_endorsements.down_endorsements_count) between 0.5 and 2").order("(branch_endorsements.endorsements_count - abs(branch_endorsements.up_endorsements_count-branch_endorsements.down_endorsements_count)) desc") }
   
-  cattr_reader :per_page
-  @@per_page = 25
+  
+  acts_as_list -> { where(branch_id: branch_id) }
+  
+  self.per_page = 25
   
   after_create :add_counts
   after_destroy :remove_counts
