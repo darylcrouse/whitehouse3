@@ -1,8 +1,8 @@
 class ShownAd < ActiveRecord::Base
 
-  scope :responded, :conditions => "shown_ads.value <> 0"
-  scope :not_responded, :conditions => "shown_ads.value = 0"  
-  scope :least_seen, :order => "shown_ads.seen_count asc"
+  scope :responded, -> { where("shown_ads.value <> 0") }
+  scope :not_responded, -> { where("shown_ads.value = 0") }
+  scope :least_seen, -> { order("shown_ads.seen_count asc") }  
 
   belongs_to :user
   belongs_to :ad
