@@ -1,51 +1,52 @@
 class Notification < ActiveRecord::Base
+  include AASM
 
   belongs_to :sender, :class_name => "User", :foreign_key => "sender_id"
   belongs_to :recipient, :class_name => "User", :foreign_key => "recipient_id"
 
   belongs_to :notifiable, :polymorphic => true
 
-  scope :active, :conditions => "notifications.status <> 'deleted'"
-  scope :unprocessed, :conditions => "notifications.processed_at IS NULL"
-  scope :sent, :conditions => "notifications.status in('sent','read')"
-  scope :read, :conditions => "notifications.status = 'read'"
-  scope :unread, :conditions => "notifications.status in ('sent','unsent')"
+  scope :active, -> { where.not(status: 'deleted') }
+  scope :unprocessed, -> { where(processed_at: nil) }
+  scope :sent, -> { where(status: ['sent', 'read']) }
+  scope :read, -> { where(status: 'read') }
+  scope :unread, -> { where(status: ['sent', 'unsent']) }
 
-  scope :messages, :conditions => "notifications.type = 'NotificationMessage'"
-  scope :comments, :conditions => "notifications.type = 'NotificationComment'"  
+  scope :messages, -> { where(type: 'NotificationMessage') }
+  scope :comments, -> { where(type: 'NotificationComment') }
 
-  scope :by_recently_created, :order => "notifications.created_at desc"  
-  scope :by_recently_sent, :order => "notifications.sent_at desc"
-  scope :by_oldest_sent, :order => "notifications.sent_at asc"  
+  scope :by_recently_created, -> { order(created_at: :desc) }
+  scope :by_recently_sent, -> { order(sent_at: :desc) }
+  scope :by_oldest_sent, -> { order(sent_at: :asc) }
 
   cattr_reader :per_page
   @@per_page = 30
   
   liquid_methods :name, :sender, :recipient, :sender_name, :recipient_name, :id
 
-  acts_as_state_machine :initial => :unsent, :column => :status
+  aasm column: :status, whiny_transitions: true do
+    state :unsent, :enter => :queue_sending
+    state :sent, :enter => :do_send
+    state :read, :enter => :do_read  
+    state :deleted, :enter => :do_delete
+    
+    event :send do
+      transitions from: :unsent, to: :sent
+    end
+    
+    event :read do
+      transitions from: [:sent, :unsent], to: :read
+    end
   
-  state :unsent, :enter => :queue_sending
-  state :sent, :enter => :do_send
-  state :read, :enter => :do_read  
-  state :deleted, :enter => :do_delete
+    event :delete do
+      transitions from: [:sent, :unsent, :read], to: :deleted
+    end
   
-  event :send do
-    transitions :from => [:unsent], :to => :sent
-  end
-  
-  event :read do
-    transitions :from => [:sent, :unsent], :to => :read
-  end
-
-  event :delete do
-    transitions :from => [:sent, :unsent, :read], :to => :deleted
-  end
-
-  event :undelete do
-    transitions :from => :deleted, :to => :read, :guard => Proc.new {|p| !p.read_at.blank? }    
-    transitions :from => :deleted, :to => :sent, :guard => Proc.new {|p| !p.sent_at.blank? }
-    transitions :from => :deleted, :to => :unsent 
+    event :undelete do
+      transitions from: :deleted, to: :read, guard: Proc.new { |p| !p.read_at.blank? }    
+      transitions from: :deleted, to: :sent, guard: Proc.new { |p| !p.sent_at.blank? }
+      transitions from: :deleted, to: :unsent 
+    end
   end
   
   after_create :add_counts
