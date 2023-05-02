@@ -23,18 +23,19 @@ class Activity < ActiveRecord::Base
   belongs_to :user
   belongs_to :partner
   
-  belongs_to :other_user, :class_name => "User", :foreign_key => "other_user_id"
-  belongs_to :priority
-  belongs_to :activity
-  belongs_to :change
-  belongs_to :vote
-  belongs_to :tag
-  belongs_to :point
-  belongs_to :revision
-  belongs_to :document
-  belongs_to :document_revision
-  belongs_to :capital
-  belongs_to :ad
+  belongs_to :other_user, class_name: "User", foreign_key: "other_user_id", optional: true
+  belongs_to :priority, optional: true
+  belongs_to :activity, optional: true
+  belongs_to :change, optional: true
+  belongs_to :vote, optional: true
+  belongs_to :tag, optional: true
+  belongs_to :point, optional: true
+  belongs_to :revision, optional: true
+  belongs_to :document, optional: true
+  belongs_to :document_revision, optional: true
+  belongs_to :capital, optional: true
+  belongs_to :ad, optional: true
+  
   
   has_many :comments, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :published_comments, -> { where(status: 'published').order(created_at: :asc) }, class_name: "Comment", foreign_key: "activity_id"
