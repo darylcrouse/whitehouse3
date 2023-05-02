@@ -1,16 +1,16 @@
 class Point < ActiveRecord::Base
 
-  scope :published, :conditions => "points.status = 'published'"
-  scope :by_helpfulness, :order => "points.score desc"
-  scope :by_endorser_helpfulness, :conditions => "points.endorser_score > 0", :order => "points.endorser_score desc"
-  scope :by_neutral_helpfulness, :conditions => "points.neutral_score > 0", :order => "points.neutral_score desc"    
-  scope :by_opposer_helpfulness, :conditions => "points.opposer_score > 0", :order => "points.opposer_score desc"
-  scope :up, :conditions => "points.endorser_score > 0"
-  scope :neutral, :conditions => "points.neutral_score > 0"
-  scope :down, :conditions => "points.opposer_score > 0"    
-  scope :by_recently_created, :order => "points.created_at desc"
-  scope :by_recently_updated, :order => "points.updated_at desc"  
-  scope :revised, :conditions => "revisions_count > 1"
+  scope :published, -> { where(status: 'published') }
+  scope :by_helpfulness, -> { order(score: :desc) }
+  scope :by_endorser_helpfulness, -> { where('points.endorser_score > 0').order('points.endorser_score desc') }
+  scope :by_neutral_helpfulness, -> { where('points.neutral_score > 0').order('points.neutral_score desc') }
+  scope :by_opposer_helpfulness, -> { where('points.opposer_score > 0').order('points.opposer_score desc') }
+  scope :up, -> { where('points.endorser_score > 0') }
+  scope :neutral, -> { where('points.neutral_score > 0') }
+  scope :down, -> { where('points.opposer_score > 0') }
+  scope :by_recently_created, -> { order(created_at: :desc) }
+  scope :by_recently_updated, -> { order(updated_at: :desc) }
+  scope :revised, -> { where('revisions_count > 1') }
 
   belongs_to :user
   belongs_to :priority
@@ -48,34 +48,34 @@ class Point < ActiveRecord::Base
   validates_length_of :content, :maximum => 516, :allow_blank => true, :allow_nil => true, :too_long => I18n.t("points.new.errors.content_maximum")
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  acts_as_state_machine :initial => :published, :column => :status
+  aasm column: :status, whiny_transitions: false do
+    state :draft
+    state :published, initial: true, enter: :do_publish
+    state :deleted, enter: :do_delete
+    state :buried, enter: :do_bury
   
-  state :draft
-  state :published, :enter => :do_publish
-  state :deleted, :enter => :do_delete
-  state :buried, :enter => :do_bury
+    event :publish do
+      transitions from: [:draft], to: :published
+    end
   
-  event :publish do
-    transitions :from => [:draft], :to => :published
+    event :delete do
+      transitions from: [:draft, :published, :buried], to: :deleted
+    end
+  
+    event :undelete do
+      transitions from: :deleted, to: :published, if: Proc.new {|p| !p.published_at.blank? }
+      transitions from: :deleted, to: :draft 
+    end
+  
+    event :bury do
+      transitions from: [:draft, :published, :deleted], to: :buried
+    end
+  
+    event :unbury do
+      transitions from: :buried, to: :published, if: Proc.new {|p| !p.published_at.blank? }
+      transitions from: :buried, to: :draft     
+    end
   end
-  
-  event :delete do
-    transitions :from => [:draft, :published,:buried], :to => :deleted
-  end
-
-  event :undelete do
-    transitions :from => :deleted, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :deleted, :to => :draft 
-  end
-  
-  event :bury do
-    transitions :from => [:draft, :published, :deleted], :to => :buried
-  end
-  
-  event :unbury do
-    transitions :from => :buried, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :buried, :to => :draft     
-  end  
 
   def do_publish
     self.published_at = Time.now
