@@ -6,24 +6,24 @@
 <% if activity.user and activity.user.status == 'deleted' and params[:action] != 'unhide' %>
 	<div class="activity_hidden" id="activity_hidden_<%= activity.id.to_s %>">
 		Hidden because <%= activity.user.name %> deleted their account.
-		<%= link_to_remote "show",{ :url => unhide_activity_url(activity), :method => :get }  %>
+		<%= link_to"show",{ :url => unhide_activity_url(activity), :method => :get }  %>
 	</div>	
 <% elsif activity.user and activity.user.status == 'suspended' and params[:action] != 'unhide' %>
 	<div class="activity_hidden" id="activity_hidden_<%= activity.id.to_s %>">
 		Hidden because <%= activity.user.name.possessive %> account was suspended.
-		<%= link_to_remote "show",{ :url => unhide_activity_url(activity), :method => :get }  %>
+		<%= link_to"show",{ :url => unhide_activity_url(activity), :method => :get }  %>
 	</div>		
 <% elsif logged_in? and activity.user and current_ignoring_ids.include?(activity.user_id) and params[:action] != 'unhide' %>
 	<div class="activity_hidden" id="activity_hidden_<%= activity.id.to_s %>">
 		Hidden because you are ignoring <%= link_to activity.user.name, activity.user %>.
-		<%= link_to_remote "show",{ :url => unhide_activity_url(activity), :method => :get }  %>
+		<%= link_to"show",{ :url => unhide_activity_url(activity), :method => :get }  %>
 	</div>
 <% else %>
 
 	<div class="activity" id="activity_<%= activity.id %>">
 		<div class="activity_x">
 		<% if logged_in? and (current_user.is_admin? or current_user.id == activity.user_id) %>
-		<%= link_to_remote 'x', { :url => activity_url(activity.id),:method => :delete, :confirm => 'Remove this from the page?'}%><% end %>
+		<%= link_to'x', { :url => activity_url(activity.id),:method => :delete, :confirm => 'Remove this from the page?'}%><% end %>
 		</div>
 		<% cache("#{activity[:type].downcase}#{suffix}-#{activity.id}") do %> 
 			<%= render :partial => "activities/#{activity[:type].downcase}#{suffix}", :locals => {:activity => activity} %>
@@ -37,7 +37,7 @@
 				</span>
 			<% else %>
 				<span class="comment_link" id="comment_link_<%= activity.id.to_s %>" title="Post a comment">	
-				<%= link_to_remote "Comment", { :url => new_activity_comment_url(activity), :method => :get } %>
+				<%= link_to"Comment", { :url => new_activity_comment_url(activity), :method => :get } %>
 				</span>
 			<% end %>
 		<% end %>
