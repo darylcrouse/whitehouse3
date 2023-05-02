@@ -11,7 +11,7 @@
 				<%= render :partial => "bulletins/form", :locals => {:activity => Activity.new, :comment => Comment.new } %>				
 			<% end %>
 			
-			<%= will_paginate(@activities) %>
+			<%= paginate(@activities) %>
 			<p>
 			<div id="activities">
 			<% for activity in @activities %>
@@ -19,7 +19,7 @@
 			<% end %>
 			</div>
 			<p>
-			<%= will_paginate(@activities) %>
+			<%= paginate(@activities) %>
 			
 		</td>	
 		

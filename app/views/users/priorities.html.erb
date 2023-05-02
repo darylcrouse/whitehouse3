@@ -5,7 +5,7 @@
 
 		<td valign="top">
 
-			<%= will_paginate(@priorities)%>
+			<%= paginate(@priorities)%>
 			<table border="0" cellspacing="0" cellpadding="0">
 			<% for p in @priorities %>
 				<% if @endorsements %>
@@ -28,7 +28,7 @@
 			<% end %>
 			</table>
 			<p>
-			<%= will_paginate(@priorities)%>
+			<%= paginate(@priorities)%>
 		</td>
 		<td valign="top" width="160" style="padding-left: 20px;">
 			

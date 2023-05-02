@@ -9,12 +9,12 @@
 
 			<tr><td valign="top" align="center" class="prioritizer_choice" width="45%" height="50">
 				<% if @endorsement1.is_down? %><span class="opposed"><%= t('oppose.ing')%></span><% end %>
-				<%= link_to_remote @endorsement1.priority.name, :url => { :controller => "prioritizer", :action => "winner1", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id } %>
+				<%= link_to@endorsement1.priority.name, :url => { :controller => "prioritizer", :action => "winner1", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id } %>
 				</td><td valign="top" align="center" width="10%">
 					<%= t('or')%>
 				</td><td valign="top" align="center" class="prioritizer_choice" width="45%" height="50">
 					<% if @endorsement2.is_down? %><span class="opposed"><%= t('oppose.ing')%></span><% end %>
-					<%= link_to_remote @endorsement2.priority.name, :url => { :controller => "prioritizer", :action => "winner2", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id }  %>
+					<%= link_to@endorsement2.priority.name, :url => { :controller => "prioritizer", :action => "winner2", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id }  %>
 				</td>
 			</tr>
 		</table>
@@ -25,20 +25,20 @@
 
 			<tr><td valign="top" align="center" class="prioritizer_choice" width="45%" height="50">
 				<% if @endorsement2.is_down? %><span class="opposed"><%= t('oppose.ing')%></span><% end %>
-				<%= link_to_remote @endorsement2.priority.name, :url => { :controller => "prioritizer", :action => "winner2", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id }  %>		
+				<%= link_to@endorsement2.priority.name, :url => { :controller => "prioritizer", :action => "winner2", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id }  %>		
 
 				</td><td valign="top" align="center" width="10%">
 					<%= t('or')%>
 				</td><td valign="top" align="center" class="prioritizer_choice" width="45%" height="50">
 					<% if @endorsement1.is_down? %><span class="opposed"><%= t('oppose.ing')%></span><% end %>
-					<%= link_to_remote @endorsement1.priority.name, :url => { :controller => "prioritizer", :action => "winner1", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id } %>
+					<%= link_to@endorsement1.priority.name, :url => { :controller => "prioritizer", :action => "winner1", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id } %>
 				</td>
 			</tr>
 		</table>
 
 	<% end %>
 
-	<div id="prioritizer_skip"><div class="grey_button"><%= link_to_remote t('prioritizer.duel.same'), :url => { :controller => "prioritizer", :action => "same", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id } %></div></div>
+	<div id="prioritizer_skip"><div class="grey_button"><%= link_tot('prioritizer.duel.same'), :url => { :controller => "prioritizer", :action => "same", :endorsement1 => @endorsement1.id, :endorsement2 => @endorsement2.id } %></div></div>
 					
 </div>
 </div>

@@ -5,7 +5,7 @@
 	<%= t('points.empty') %>
 <% else %>
 	<% if @points.total_pages > 1 %>
-	<%= will_paginate(@points) %>
+	<%= paginate(@points) %>
 	<p>
 	<% end %>
 	<% for point in @points %>
@@ -15,5 +15,5 @@
 		<% end %>				
 		<%= render :partial => "points/show", :locals => {:point => point, :priority => @priority, :quality => quality }%>
 	<% end %>
-	<%= will_paginate(@points) %>
+	<%= paginate(@points) %>
 <% end %>

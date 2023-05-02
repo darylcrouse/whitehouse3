@@ -1,12 +1,13 @@
 <% endorsement = nil %>
+<div id="hp_intro"><%= current_government.prompt %></div>
 
 <%= render :partial => "priorities/form" %>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr><td valign="top">
-		<% if 0 > 1 %>
+		<% if @issues.total_pages > 1 %>
 		<p>
-		<%= will_paginate (@issues) %>
+		<%= paginate (@issues) %>
 		<% end %>
 		<% for tag in @issues %>
 			<div class="home_issue">
@@ -36,13 +37,22 @@
 			</div>
 		<% end %>
 		<p>
+		<%= paginate (@issues) %>
 		
 		
 	</td><td valign="top" width="160" style="padding-left: 20px;">
 		<p>
+		<% if logged_in? and current_user.endorsements_count > 4 %>
+			<% if current_government.has_official? %>
+				<%= render :partial => "users/index_chart_with_obama", :locals => {:user => current_user }%>
+			<% else %>
+				<%= render :partial => "users/index_chart", :locals => {:user => current_user }%>
+			<% end %>
+		<% elsif current_government.has_official? %>
+			<%= render :partial => "users/index_chart", :locals => {:user => current_government.official_user }%>
+		<% end %>
 		
-		<% @finished = Priority.finished.by_most_recent_status_change.take(5) %>
-
+		<% @finished = Priority.finished.by_most_recent_status_change.all(:limit => 5) %>
 		<% if @finished.any? %>
 			<p>
 			<div class="heading"><%= t('priorities.finished.heading')%></div>
@@ -59,3 +69,6 @@
 </tr>
 </table>
 
+<% if @issues.current_page == 1 and @issues.size > 0 %>
+	<p><%= blurb("overview_more")%>
+<% end %>

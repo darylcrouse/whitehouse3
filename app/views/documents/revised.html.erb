@@ -5,7 +5,7 @@
 <% else %>
 
 	<% if @revisions.total_pages > 1 %>
-	<%= will_paginate(@revisions) %>
+	<%= paginate(@revisions) %>
 	<p>
 	<% end %>
 	<% for revision in @revisions %>
@@ -17,6 +17,6 @@
 	<% end %>
 
 	<p>
-	<%= will_paginate(@revisions) %>
+	<%= paginate(@revisions) %>
 
 <% end %>
