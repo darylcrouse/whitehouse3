@@ -1,6 +1,7 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
   include AASM
+
   extend ActiveSupport::Concern
   require 'paperclip'
     
@@ -44,18 +45,14 @@ class User < ActiveRecord::Base
   scope :by_30days_losers, -> { where("users.endorsements_count > 4").order("users.index_30days_change asc") }
 
 
-  belongs_to :picture
-  has_attached_file :buddy_icon, :styles => { :icon_24 => "24x24#", :icon_48 => "48x48#", :icon_96 => "96x96#" }, 
-    :path => ":class/:attachment/:id/:style.:extension"
+  belongs_to :picture, optional: true
+  has_one_attached :buddy_icon
   
-  validates_attachment_size :buddy_icon, :less_than => 5.megabytes
-  validates_attachment_content_type :buddy_icon, :content_type => ['image/jpeg', 'image/png', 'image/gif']
-  
-  belongs_to :partner
-  belongs_to :branch
-  belongs_to :referral, :class_name => "User", :foreign_key => "referral_id"
-  belongs_to :partner_referral, :class_name => "Partner", :foreign_key => "partner_referral_id"
-  belongs_to :top_endorsement, class_name: "Endorsement", foreign_key: "top_endorsement_id" 
+  belongs_to :partner, optional: true
+  belongs_to :branch, optional: true
+  belongs_to :referral, :class_name => "User", :foreign_key => "referral_id", optional: true
+  belongs_to :partner_referral, :class_name => "Partner", :foreign_key => "partner_referral_id", optional: true
+  belongs_to :top_endorsement, class_name: "Endorsement", foreign_key: "top_endorsement_id", optional: true
 
   has_one :profile, :dependent => :destroy
 
@@ -113,14 +110,14 @@ class User < ActiveRecord::Base
   liquid_methods :first_name, :last_name, :id, :name, :login, :activation_code, :email, :root_url, :profile_url, :unsubscribe_url
   
   # validates_presence_of     :login, :message => I18n.t('users.new.validation.login')
-  validates_length_of       :login, :within => 3..40
-  validates_uniqueness_of   :login, :case_sensitive => false    
+  # validates_length_of       :login, :within => 3..40
+  # validates_uniqueness_of   :login, :case_sensitive => false    
   
   validates_presence_of     :email, :unless => [:has_facebook?, :has_twitter?]
   validates_length_of       :email, :within => 3..100, :allow_nil => true, :allow_blank => true
   validates_uniqueness_of   :email, :case_sensitive => false, :allow_nil => true, :allow_blank => true
   validates_uniqueness_of   :facebook_uid, :allow_nil => true, :allow_blank => true
-  validates_format_of :email, with: /\A[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+\z/x, allow_nil: true, allow_blank: true, multiline: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
     
   validates_presence_of     :password, :if => [:should_validate_password?]
   validates_presence_of     :password_confirmation, :if => [:should_validate_password?]
@@ -131,25 +128,25 @@ class User < ActiveRecord::Base
   before_create :make_rss_code
   before_create :check_branch
   after_save :update_signups
-  after_create :check_contacts
+  # after_create :check_contacts
   after_create :give_partner_credit
   after_create :give_user_credit
-  after_create :new_user_signedup
+  # after_create :new_user_signedup
   
   # attr_protected :remember_token, :remember_token_expired_at, :activation_code, :salt, :crypted_password, :twitter_token, :twitter_secret
   
   # Virtual attribute for the unencrypted password
   attr_accessor :password, :partner_ids  
   
-  def new_user_signedup
-    ActivityUserNew.create(:user => self, :partner => partner)    
-    resend_activation if self.has_email? and self.is_pending?
-  end
+  # def new_user_signedup
+  #   ActivityUserNew.create(:user => self, :partner => partner)    
+  #   resend_activation if self.has_email? and self.is_pending?
+  # end
   
   def check_branch
-    return if has_branch? or not Government.current.is_branches?
-    self.branch = Government.current.default_branch
-    Government.current.default_branch.increment!(:users_count) 
+    return if has_branch?
+    self.branch = Government.current
+    Government.current 
     Branch.expire_cache
   end
   
@@ -1026,8 +1023,8 @@ class User < ActiveRecord::Base
   
   def self.adapter
     return @adapter if @adapter
-    config = Rails::Configuration.new
-    @adapter = config.database_configuration[RAILS_ENV]["adapter"]
+    config = Rails.application.config
+    @adapter = config.database_configuration[Rails.env]["adapter"]
     return @adapter
   end
   
@@ -1048,4 +1045,12 @@ class User < ActiveRecord::Base
       self.update_attribute(:activation_code,Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join ))
     end
     
+    private
+
+    def buddy_icon_file_size_valid?
+      if logo.attached? && logo.blob.byte_size > 10.megabytes
+        errors.add(:logo, 'File size too large')
+        logo.purge # delete the uploaded file
+      end
+    end
 end
