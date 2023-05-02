@@ -9,7 +9,7 @@
 	<tr>
 		<td></td>
 		<td align="right"><span class="table_header"><%= t('priorities.newest.added')%></span></td>
-		<td style="padding-left: 7px; margin-bottom: 2px;"><%= will_paginate @priorities %></td>	
+		<td style="padding-left: 7px; margin-bottom: 2px;"><%= paginate @priorities %></td>	
 		<td align="right"><%= rss_url(@rss_url) %></td>						
 	</tr>
 
@@ -34,7 +34,7 @@
 
 	</table>
 	<p>
-	<%= will_paginate @priorities %>
+	<%= paginate @priorities %>
 
 
 <% end %>
