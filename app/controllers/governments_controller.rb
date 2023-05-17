@@ -1,6 +1,6 @@
 class GovernmentsController < ApplicationController
 
-  before_filter :admin_required
+  before_action :admin_required
   
   def authorized?
     current_user.is_admin? and current_government.id == params[:id]

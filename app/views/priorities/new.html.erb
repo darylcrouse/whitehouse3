@@ -34,9 +34,9 @@
 					</div>
 					<div class="priority_actions">		
 						<% if @tag_names %>
-						<span class="priority_add"><%= link_to_remote t('endorse.name'), :url => { :action => "create", :finalized => @priority.name, :tag_names => @tag_names }, :class => "priority_add_link" %></span>
+						<span class="priority_add"><%= link_tot('endorse.name'), :url => { :action => "create", :finalized => @priority.name, :tag_names => @tag_names }, :class => "priority_add_link" %></span>
 						<% else %>
-						<span class="priority_add"><%= link_to_remote t('endorse.name'), :url => { :action => "create", :finalized => @priority.name }, :class => "priority_add_link" %></span>						
+						<span class="priority_add"><%= link_tot('endorse.name'), :url => { :action => "create", :finalized => @priority.name }, :class => "priority_add_link" %></span>						
 						<% end %>
 					<span class="priority_endorsement_count"><%= t('endorsements.name', :count => 0) %></span>		
 					</div>

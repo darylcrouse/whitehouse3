@@ -1,6 +1,6 @@
 class DocumentQuality < ActiveRecord::Base
 
-  extend ActiveSupport::Memoizable
+  extend ActiveSupport::Concern
 
   belongs_to :user
   belongs_to :document
@@ -63,7 +63,6 @@ class DocumentQuality < ActiveRecord::Base
   def endorsement
     user.endorsements.active_and_inactive.find_by_priority_id(document.priority_id)    
   end
-  memoize :endorsement
   
   def is_endorser?
     endorsement and endorsement.is_up?

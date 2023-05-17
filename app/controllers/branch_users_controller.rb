@@ -1,7 +1,7 @@
 class BranchUsersController < ApplicationController
 
-  before_filter :get_branch
-  before_filter :setup
+  before_action :get_branch
+  before_action :setup
 
   def index
     @page_title = t('branch_users.influential.title', :branch_name => @branch.name, :government_name => current_government.name)

@@ -1,13 +1,14 @@
 class Comment < ActiveRecord::Base
+  include AASM
 
-  named_scope :published, :conditions => "comments.status = 'published'"
-  named_scope :published_and_abusive, :conditions => "comments.status in ('published','abusive')"
-  named_scope :deleted, :conditions => "comments.status = 'deleted'"
-  named_scope :flagged, :conditions => "flags_count > 0"
+  scope :published, -> { where(status: 'published') }
+  scope :published_and_abusive, -> { where(status: ['published', 'abusive']) }
+  scope :deleted, -> { where(status: 'deleted') }
+  scope :flagged, -> { where('flags_count > 0') }
     
-  named_scope :last_three_days, :conditions => "comments.created_at > '#{Time.now-3.days}'"
-  named_scope :by_recently_created, :order => "comments.created_at desc"  
-  named_scope :by_first_created, :order => "comments.created_at asc"  
+  scope :last_three_days, -> { where('comments.created_at > ?', Time.now - 3.days) }
+  scope :by_recently_created, -> { order(created_at: :desc) }  
+  scope :by_first_created, -> { order(created_at: :asc) } 
     
   belongs_to :user
   belongs_to :activity
@@ -19,25 +20,29 @@ class Comment < ActiveRecord::Base
   liquid_methods :id, :activity_id, :content, :user, :activity, :show_url
   
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  acts_as_state_machine :initial => :published, :column => :status
-  
-  state :published, :enter => :do_publish
-  state :deleted, :enter => :do_delete  
-  state :abusive, :enter => :do_abusive
-  
-  event :delete do
-    transitions :from => :published, :to => :deleted
-  end
-  
-  event :undelete do
-    transitions :from => :deleted, :to => :published
-  end  
-  
-  event :abusive do
-    transitions :from => :published, :to => :abusive
+  enum status: { published: 0, deleted: 1, abusive: 2 }, _prefix: :status
+
+  aasm column: :status, enum: true, whiny_transitions: false do
+    state :published, initial: true, before_enter: :do_publish
+    state :deleted, before_enter: :do_delete
+    state :abusive, before_enter: :do_abusive
+
+    event :delete do
+      transitions from: :published, to: :deleted
+    end
+
+    event :undelete do
+      transitions from: :deleted, to: :published
+    end
+
+    event :abusive do
+      transitions from: :published, to: :abusive
+    end
   end
   
   def do_publish
+    return unless self.activity
+
     self.activity.changed_at = Time.now
     self.activity.comments_count += 1
     self.activity.save_with_validation(false)
@@ -159,12 +164,5 @@ class Comment < ActiveRecord::Base
   def show_url
     Government.current.homepage_url + 'activities/' + activity_id.to_s + '/comments#' + id.to_s
   end
-  
-  auto_html_for(:content) do
-    redcloth
-    youtube(:width => 330, :height => 210)
-    vimeo(:width => 330, :height => 180)
-    link(:rel => "nofollow")
-  end
-  
+
 end

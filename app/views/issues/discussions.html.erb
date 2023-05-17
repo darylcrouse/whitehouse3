@@ -14,4 +14,4 @@
 		<%= render :partial => "activities/show", :locals => {:activity => activity, :suffix => ""} %>
 	<% end %>
 </div>
-<%= will_paginate(@activities) %>
+<%= paginate(@activities) %>

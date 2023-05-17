@@ -2,7 +2,7 @@
 	<tr>
 	
 	<td valign="top" align="right" width="20" style="padding-top: 4px;">
-		<% form_remote_for(endorsement, :url => endorsement_path(endorsement, :region => "yours")) do |f| %>
+		<% form_for(endorsement, :url => endorsement_path(endorsement, :region => "yours")) do |f| %>
 			<%= f.text_field :position, :size => "1", :id => "endorsement_#{endorsement.id.to_s}_row_edit", :class => "endorsement_row_edit" %>
 		<% end %>
 	</td>
@@ -13,7 +13,7 @@
 	</td>
 	<td valign="top">
 	<div class="endorsement_x">
-	<%= link_to_remote "x", { :url => endorsement_path(endorsement, :region => "your_priorities"), :method => :delete }, :class => "your_priorities_remove" %>	
+	<%= link_to"x", { :url => endorsement_path(endorsement, :region => "your_priorities"), :method => :delete }, :class => "your_priorities_remove" %>	
 	</div>
 	</td>	
 	</tr>

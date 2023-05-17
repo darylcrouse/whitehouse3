@@ -18,16 +18,16 @@ class Blurb < ActiveRecord::Base
       blurb = Blurb.find_by_name(name)
       if blurb
         liquid_blurb = Liquid::Template.parse(blurb.content)
-      else
-        liquid_blurb = Liquid::Template.parse(Blurb.fetch_default(name))
+      # else
+      #   liquid_blurb = Liquid::Template.parse(Blurb.fetch_default(name))
       end
       Rails.cache.write("blurb-" + name,liquid_blurb)
     end
     return liquid_blurb
   end
 
-  def Blurb.fetch_default(name)
-    File.open(RAILS_ROOT + "/app/views/blurbs/defaults/" + name + ".html.liquid", "r").read    
-  end
+  # def Blurb.fetch_default(name)
+  #   File.open(RAILS_ROOT + "/app/views/blurbs/defaults/" + name + ".html.liquid", "r").read    
+  # end
 
 end

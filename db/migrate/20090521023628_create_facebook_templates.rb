@@ -1,4 +1,4 @@
-class CreateFacebookTemplates < ActiveRecord::Migration
+class CreateFacebookTemplates < ActiveRecord::Migration[7.0]
   def self.up
     create_table :facebook_templates, :force => true do |t|      
       t.string :template_name, :null => false

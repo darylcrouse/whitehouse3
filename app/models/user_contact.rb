@@ -1,57 +1,58 @@
 class UserContact < ActiveRecord::Base
+  include AASM
 
-  named_scope :active, :conditions => "user_contacts.status <> 'deleted'"
-  named_scope :tosend, :conditions => "user_contacts.status = 'tosend'"  
-
-  named_scope :members, :include => :user, :conditions => "user_contacts.other_user_id is not null and users.status in ('active','pending')"
-  named_scope :not_members, :conditions => "user_contacts.other_user_id is null"
-
-  named_scope :invited, :conditions => "user_contacts.sent_at is not null or user_contacts.status = 'tosend'"
-  named_scope :not_invited, :conditions => "user_contacts.sent_at is null and user_contacts.status <> 'tosend'"
-
-  named_scope :following, :conditions => "user_contacts.following_id is not null"
-  named_scope :not_following, :conditions => "user_contacts.following_id is null"
-
-  named_scope :facebook, :conditions => "user_contacts.facebook_uid is not null"
-  named_scope :not_facebook, :conditions => "user_contacts.facebook_uid is null"
+  scope :active, -> { where("user_contacts.status <> 'deleted'") }
+  scope :tosend, -> { where("user_contacts.status = 'tosend'") }
   
-  named_scope :with_email, :conditions => "user_contacts.email is not null"
+  scope :members, -> { includes(:user).where("user_contacts.other_user_id is not null and users.status in ('active','pending')") }
+  scope :not_members, -> { where("user_contacts.other_user_id is null") }
   
-  named_scope :recently_updated, :order => "user_contacts.updated_at desc"
-  named_scope :recently_created, :order => "user_contacts.created_at desc"  
+  scope :invited, -> { where("user_contacts.sent_at is not null or user_contacts.status = 'tosend'") }
+  scope :not_invited, -> { where("user_contacts.sent_at is null and user_contacts.status <> 'tosend'") }
+  
+  scope :following, -> { where("user_contacts.following_id is not null") }
+  scope :not_following, -> { where("user_contacts.following_id is null") }
+  
+  scope :facebook, -> { where("user_contacts.facebook_uid is not null") }
+  scope :not_facebook, -> { where("user_contacts.facebook_uid is null") }
+  
+  scope :with_email, -> { where("user_contacts.email is not null") }
+  
+  scope :recently_updated, -> { order("user_contacts.updated_at desc") }
+  scope :recently_created, -> { order("user_contacts.created_at desc") }  
   
   belongs_to :user
   belongs_to :other_user, :class_name => "User"
   belongs_to :following
 
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  acts_as_state_machine :initial => :unsent, :column => :status
-  
-  state :unsent
-  state :tosend, :enter => :do_invite
-  state :sent, :enter => :do_send
-  state :accepted, :enter => :do_accept
-  state :deleted, :enter => :do_delete
-  
-  event :invite do
-    transitions :from => :unsent, :to => :tosend
-  end
-  
-  event :send do
-    transitions :from => :tosend, :to => :sent
-  end
-  
-  event :accept do
-    transitions :from => [:sent, :unsent, :tosend], :to => :accepted
-  end  
-  
-  event :delete do
-    transitions :from => [:sent, :unsent, :tosend, :accepted], :to => :deleted
-  end  
+  aasm column: :status, initial: :unsent do
+    state :unsent
+    state :tosend, :enter => :do_invite
+    state :sent, :enter => :do_send
+    state :accepted, :enter => :do_accept
+    state :deleted, :enter => :do_delete
+    
+    event :invite do
+      transitions from: :unsent, to: :tosend
+    end
+    
+    event :send_event, :send do
+      transitions from: :tosend, to: :sent
+    end
+    
+    event :accept do
+      transitions from: [:sent, :unsent, :tosend], to: :accepted
+    end
+    
+    event :delete do
+      transitions from: [:sent, :unsent, :tosend, :accepted], to: :deleted
+    end
+  end 
   
   validates_presence_of     :email, :unless => :has_facebook?
   validates_length_of       :email, :minimum => 3, :unless => :has_facebook?
-  validates_format_of       :email, :with => /^[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+$/x, :allow_nil => true, :allow_blank => true
+  validates                 :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   after_create :add_counts
   before_destroy :remove_counts
@@ -80,8 +81,7 @@ class UserContact < ActiveRecord::Base
     user.decrement!(:contacts_count)
   end
   
-  cattr_reader :per_page
-  @@per_page = 25  
+  self.per_page = 25  
   
   def from_name
     if is_from_realname?

@@ -4,14 +4,14 @@
 	<%= t('document.empty')%>
 <% else %>
 
-	<%= will_paginate(@documents) %>
+	<%= paginate(@documents) %>
 	<p>
 	<% for document in @documents %>
 		<%= render :partial => "documents/show_full", :locals => {:document => document, :revision => nil}%>
 	<% end %>
 
 	<p>
-	<%= will_paginate(@documents) %>
+	<%= paginate(@documents) %>
 
 <% end %>
 		

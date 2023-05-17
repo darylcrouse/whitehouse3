@@ -1,8 +1,8 @@
 class VotesController < ApplicationController
   
-  before_filter :get_priority
-  before_filter :login_required
-  before_filter :admin_required, :only => [:edit, :update, :destroy]
+  before_action :get_priority
+  before_action :login_required
+  before_action :admin_required, :only => [:edit, :update, :destroy]
   
   def get_priority
     @priority = Priority.find(params[:priority_id])

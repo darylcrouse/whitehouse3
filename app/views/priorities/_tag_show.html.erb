@@ -15,7 +15,7 @@
 
 <% if logged_in? and (current_user.is_tagger? or current_user.is_admin?)%>
 	<span class="tag_button">
-		<%= link_to_remote "tag", { :url => tag_priority_path(priority) } %>
+		<%= link_to"tag", { :url => tag_priority_path(priority) } %>
 	</span>
 <% end %>
 

@@ -1,4 +1,4 @@
-<%= render :partial => "header" %>
+<%= render partial: "header", locals: {current_government: current_government} %>
 
 <% if @priority.replaced? %>
 	<div id="hp_subhead">
@@ -132,7 +132,7 @@
 			</div>
 			<p>
 			<% if @activities.total_pages > 1 %>
-				<%= will_paginate(@activities, :params => {:action => "activities"} ) %>
+				<%= paginate(@activities, :params => {:action => "activities"} ) %>
 			<% end %>
 		</td>	
 		

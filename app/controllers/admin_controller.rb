@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
   
-  before_filter :admin_required
+  before_action :admin_required
   
   def random_user
     if User.adapter == 'postgresql'

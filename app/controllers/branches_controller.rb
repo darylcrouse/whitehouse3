@@ -1,6 +1,6 @@
 class BranchesController < ApplicationController
 
-  before_filter :admin_required
+  before_action :admin_required
 
   # GET /branches
   # GET /branches.xml

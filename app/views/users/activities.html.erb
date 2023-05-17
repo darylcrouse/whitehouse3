@@ -4,7 +4,7 @@
 	<%= t('currency.empty', :user_name => @user.name, :currency_name => current_government.currency_name.downcase)%>
 <% else %>
 	<% if @activities.total_pages > 1 %>
-		<%= will_paginate(@activities) %>
+		<%= paginate(@activities) %>
 		<p>
 	<% elsif @activities.empty? %>
 		<%= t('activities.empty')%>
@@ -17,5 +17,5 @@
 		<% end %>
 	<% end %>
 	<p>
-	<%= will_paginate(@activities) %>
+	<%= paginate(@activities) %>
 <% end %>

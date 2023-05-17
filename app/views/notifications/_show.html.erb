@@ -2,7 +2,7 @@
 <div class="notification" id="notification_<%= notification.id %>">
 	<div class="comment_x">
 	<% if logged_in? and (current_user.is_admin? or current_user.id == notification.recipient_id) %>
-	<%= link_to_remote 'x', { :url => notification_url(notification.id),:method => :delete, :confirm => 'Remove this from the page?'}%><% end %>
+	<%= link_to'x', { :url => notification_url(notification.id),:method => :delete, :confirm => 'Remove this from the page?'}%><% end %>
 	</div>
 	<% cache("#{notification[:type].downcase}-#{notification.id}") do %> 
 		<%= render :partial => "notifications/#{notification[:type].downcase}", :locals => {:notification => notification} %>

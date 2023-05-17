@@ -1,10 +1,11 @@
 class Relationship < ActiveRecord::Base
 
-  named_scope :who_endorsed, :conditions => "relationships.type in ('RelationshipEndorserEndorsed','RelationshipOpposerEndorsed','RelationshipUndecidedEndorsed')"
-  named_scope :endorsers_endorsed, :conditions => "relationships.type = 'RelationshipEndorserEndorsed'"
-  named_scope :opposers_endorsed, :conditions => "relationships.type = 'RelationshipOpposerEndorsed'"
-  named_scope :undecideds_endorsed, :conditions => "relationships.type = 'RelationshipUndecidedEndorsed'"    
-  named_scope :by_highest_percentage, :order => "relationships.percentage desc"
+  scope :who_endorsed, -> { where(type: ['RelationshipEndorserEndorsed', 'RelationshipOpposerEndorsed', 'RelationshipUndecidedEndorsed']) }
+  scope :endorsers_endorsed, -> { where(relationships: {type: 'RelationshipEndorserEndorsed'}) }
+  scope :opposers_endorsed, -> { where(relationships: {type: 'RelationshipOpposerEndorsed'}) }
+  scope :undecideds_endorsed, -> { where(relationships: {type: 'RelationshipUndecidedEndorsed'}) }
+  scope :by_highest_percentage, -> { order('relationships.percentage desc') }
+
 
   belongs_to :priority
   belongs_to :other_priority, :class_name => "Priority"

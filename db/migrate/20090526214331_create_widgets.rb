@@ -1,4 +1,4 @@
-class CreateWidgets < ActiveRecord::Migration
+class CreateWidgets < ActiveRecord::Migration[7.0]
   def self.up
     create_table :widgets do |t|
       t.integer :user_id

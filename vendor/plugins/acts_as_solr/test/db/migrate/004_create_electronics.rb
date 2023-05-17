@@ -1,4 +1,4 @@
-class CreateElectronics < ActiveRecord::Migration
+class CreateElectronics < ActiveRecord::Migration[7.0]
   def self.up
     create_table :electronics, :force => true do |t|
       t.column :name, :string

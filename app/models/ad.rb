@@ -1,11 +1,12 @@
 class Ad < ActiveRecord::Base
+  include AASM
 
-  named_scope :active, :conditions => "ads.status = 'active'"
-  named_scope :inactive, :conditions => "ads.status in ('inactive','finished')"
-  named_scope :finished, :conditions => "ads.status = 'finished'"
-  named_scope :most_paid, :order => "ads.per_user_cost desc"
-  named_scope :active_first, :order => "ads.status asc, ads.per_user_cost desc, ads.created_at desc"
-  named_scope :by_recently_created, :order => "ads.created_at desc"
+  scope :active, -> { where(status: 'active') }
+  scope :inactive, -> { where(status: ['inactive', 'finished']) }
+  scope :finished, -> { where(status: 'finished') }
+  scope :most_paid, -> { order(per_user_cost: :desc) }
+  scope :active_first, -> { order(status: :asc, per_user_cost: :desc, created_at: :desc) }
+  scope :by_recently_created, -> { order(created_at: :desc) }
   
   belongs_to :user
   belongs_to :priority
@@ -37,23 +38,23 @@ class Ad < ActiveRecord::Base
   validates_presence_of :content
   validates_length_of :content, :maximum => 90, :allow_nil => true, :allow_blank => true
 
-  acts_as_state_machine :initial => :active, :column => :status
-  
-  state :inactive, :enter => :do_inactive
-  state :active, :enter => :do_active
-  state :finished, :enter => :do_finished
-    
-  event :start do
-    transitions :from => [:finished, :inactive], :to => :active
-  end
+  aasm column: :status, initial: :active do
+    state :inactive, after_enter: :do_inactive
+    state :active, after_enter: :do_active
+    state :finished, after_enter: :do_finished
 
-  event :finish do
-    transitions :from => [:active, :inactive], :to => :finished
-  end
-  
-  event :deactivate do
-    transitions :from => [:active], :to => :inactive
-  end  
+    event :start do
+      transitions from: [:finished, :inactive], to: :active
+    end
+
+    event :finish do
+      transitions from: [:active, :inactive], to: :finished
+    end
+
+    event :deactivate do
+      transitions from: [:active], to: :inactive
+    end
+  end 
   
   def do_finished
     self.finished_at = Time.now

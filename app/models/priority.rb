@@ -1,114 +1,134 @@
 class Priority < ActiveRecord::Base
-  
-  extend ActiveSupport::Memoizable
+  include AASM
+  extend ActiveSupport::Concern
 
-  if Government.current and Government.current.is_suppress_empty_priorities?
-    named_scope :published, :conditions => "priorities.status = 'published' and priorities.position > 0 and endorsements_count > 0"
-  else
-    named_scope :published, :conditions => "priorities.status = 'published'"
-  end
-
-  named_scope :top_rank, :order => "priorities.score desc, priorities.position asc"
-  named_scope :not_top_rank, :conditions => "priorities.position > 25"
-  named_scope :rising, :conditions => "priorities.trending_score > 0", :order => "priorities.trending_score desc"
-  named_scope :falling, :conditions => "priorities.trending_score < 0", :order => "priorities.trending_score asc"
-  named_scope :controversial, :conditions => "priorities.is_controversial = true", :order => "priorities.controversial_score desc"
-
-  named_scope :rising_7days, :conditions => "priorities.position_7days_change > 0"
-  named_scope :flat_7days, :conditions => "priorities.position_7days_change = 0"
-  named_scope :falling_7days, :conditions => "priorities.position_7days_change < 0"
-  named_scope :rising_30days, :conditions => "priorities.position_30days_change > 0"
-  named_scope :flat_30days, :conditions => "priorities.position_30days_change = 0"
-  named_scope :falling_30days, :conditions => "priorities.position_30days_change < 0"
-  named_scope :rising_24hr, :conditions => "priorities.position_24hr_change > 0"
-  named_scope :flat_24hr, :conditions => "priorities.position_24hr_change = 0"
-  named_scope :falling_24hr, :conditions => "priorities.position_24hr_change < 0"
+  scope :published, -> {
+    if Government.current&.is_suppress_empty_priorities?
+      where("priorities.status = 'published' and priorities.position > 0 and endorsements_count > 0")
+    else
+      where("priorities.status = 'published'")
+    end
+  }
   
-  named_scope :finished, :conditions => "priorities.obama_status in (-2,-1,2)"
+  scope :top_rank, -> { order("priorities.score desc, priorities.position asc") }
+  scope :not_top_rank, -> { where("priorities.position > 25") }
+  scope :rising, -> { where("priorities.trending_score > 0").order("priorities.trending_score desc") }
+  scope :falling, -> { where("priorities.trending_score < 0").order("priorities.trending_score asc") }
+  scope :controversial, -> { where(is_controversial: true).order("priorities.controversial_score desc") }
   
-  named_scope :obama_endorsed, :conditions => "priorities.obama_value > 0"
-  named_scope :not_obama, :conditions => "priorities.obama_value = 0"
-  named_scope :obama_opposed, :conditions => "priorities.obama_value < 0"
-  named_scope :not_obama_or_opposed, :conditions => "priorities.obama_value < 1"   
+  scope :rising_7days, -> { where("priorities.position_7days_change > 0") }
+  scope :flat_7days, -> { where("priorities.position_7days_change = 0") }
+  scope :falling_7days, -> { where("priorities.position_7days_change < 0") }
+  scope :rising_30days, -> { where("priorities.position_30days_change > 0") }
+  scope :flat_30days, -> { where("priorities.position_30days_change = 0") }
+  scope :falling_30days, -> { where("priorities.position_30days_change < 0") }
+  scope :rising_24hr, -> { where("priorities.position_24hr_change > 0") }
+  scope :flat_24hr, -> { where("priorities.position_24hr_change = 0") }
+  scope :falling_24hr, -> { where("priorities.position_24hr_change < 0") }
   
-  named_scope :alphabetical, :order => "priorities.name asc"
-  named_scope :newest, :order => "priorities.published_at desc, priorities.created_at desc"
-  named_scope :tagged, :conditions => "(priorities.cached_issue_list is not null and priorities.cached_issue_list <> '')"
-  named_scope :untagged, :conditions => "(priorities.cached_issue_list is null or priorities.cached_issue_list = '')", :order => "priorities.endorsements_count desc, priorities.created_at desc"
+  scope :finished, -> { where(obama_status: [-2, -1, 2]) }
   
-  named_scope :by_most_recent_status_change, :order => "priorities.status_changed_at desc"
+  scope :obama_endorsed, -> { where("priorities.obama_value > 0") }
+  scope :not_obama, -> { where("priorities.obama_value = 0") }
+  scope :obama_opposed, -> { where("priorities.obama_value < 0") }
+  scope :not_obama_or_opposed, -> { where("priorities.obama_value < 1") }
+  
+  scope :alphabetical, -> { order("priorities.name asc") }
+  scope :newest, -> { order("priorities.published_at desc, priorities.created_at desc") }
+  scope :tagged, -> { where("priorities.cached_issue_list is not null and priorities.cached_issue_list <> ''") }
+  scope :untagged, -> { where("priorities.cached_issue_list is null or priorities.cached_issue_list = ''").order("priorities.endorsements_count desc, priorities.created_at desc") }
+  
+  scope :by_most_recent_status_change, -> { reorder("priorities.status_changed_at desc") }
+  
   
   belongs_to :user
   
-  has_many :relationships, :dependent => :destroy
-  has_many :incoming_relationships, :foreign_key => :other_priority_id, :class_name => "Relationship", :dependent => :destroy
+  has_many :relationships, dependent: :destroy
+  has_many :incoming_relationships, foreign_key: :other_priority_id, class_name: "Relationship", dependent: :destroy
   
-  has_many :endorsements, :dependent => :destroy
-  has_many :endorsers, :through => :endorsements, :conditions => "endorsements.status in ('active','inactive')", :source => :user, :class_name => "User"
-  has_many :up_endorsers, :through => :endorsements, :conditions => "endorsements.status in ('active','inactive') and endorsements.value=1", :source => :user, :class_name => "User"
-  has_many :down_endorsers, :through => :endorsements, :conditions => "endorsements.status in ('active','inactive') and endorsements.value=-1", :source => :user, :class_name => "User"
-  
-  has_many :branch_endorsements, :dependent => :destroy
-  
-  has_many :points, :conditions => "points.status in ('published','draft')"
-  has_many :incoming_points, :foreign_key => "other_priority_id", :class_name => "Point"
-  has_many :published_points, :conditions => "status = 'published'", :class_name => "Point", :order => "points.helpful_count-points.unhelpful_count desc"
-  has_many :points_with_deleted, :class_name => "Point", :dependent => :destroy
-  has_many :documents, :dependent => :destroy
-  
-  has_many :rankings, :dependent => :destroy
-  has_many :activities, :dependent => :destroy
+  has_many :endorsements, dependent: :destroy
+  has_many :endorsers, -> { where(endorsements: { status: ['active', 'inactive'] }) }, through: :endorsements, source: :user, class_name: "User"
+  has_many :up_endorsers, -> { where(endorsements: { status: ['active', 'inactive'], value: 1 }) }, through: :endorsements, source: :user, class_name: "User"
 
-  has_many :charts, :class_name => "PriorityChart", :dependent => :destroy
-  has_many :ads, :dependent => :destroy
-  has_many :notifications, :as => :notifiable, :dependent => :destroy
-  
-  has_many :changes, :conditions => "status <> 'deleted'", :order => "updated_at desc"
-  has_many :approved_changes, :class_name => "Change", :conditions => "status = 'approved'", :order => "updated_at desc"
-  has_many :sent_changes, :class_name => "Change", :conditions => "status = 'sent'", :order => "updated_at desc"
-  has_many :declined_changes, :class_name => "Change", :conditions => "status = 'declined'", :order => "updated_at desc"
-  has_many :changes_with_deleted, :class_name => "Change", :order => "updated_at desc", :dependent => :destroy
+  has_many :down_endorsers, -> { where(endorsements: { status: ['active', 'inactive'], value: -1 }) }, through: :endorsements, source: :user, class_name: "User"
 
-  belongs_to :change # if there is currently a pending change, it will be attached
+  has_many :branch_endorsements, class_name: 'BranchEndorsement', dependent: :destroy
   
-  acts_as_taggable_on :issues
-  acts_as_list
-  acts_as_solr :fields => [ :name, :cached_issue_list, :is_published ]
+  has_many :points, -> { where(status: ['published', 'draft']) }, class_name: "Point"
+  has_many :incoming_points, foreign_key: :other_priority_id, class_name: "Point"
+  has_many :published_points, -> { where(status: 'published').order("points.helpful_count-points.unhelpful_count desc") }, class_name: "Point"
+  has_many :points_with_deleted, class_name: "Point", dependent: :destroy
+  has_many :documents, dependent: :destroy
   
-  liquid_methods :id, :name, :show_url, :value_name
+  has_many :rankings, dependent: :destroy
+  has_many :activities, dependent: :destroy
   
+  has_many :charts, class_name: "PriorityChart", dependent: :destroy
+  has_many :ads, dependent: :destroy
+  has_many :notifications, as: :notifiable, dependent: :destroy
+  
+  has_many :priority_changes, -> { where.not(status: 'deleted').order(updated_at: :desc) }, class_name: 'Change'
+  has_many :approved_changes, -> { where(status: 'approved').order(updated_at: :desc) }, class_name: "Change"
+  has_many :sent_changes, -> { where(status: 'sent').order(updated_at: :desc) }, class_name: "Change"
+  has_many :declined_changes, -> { where(status: 'declined').order(updated_at: :desc) }, class_name: "Change"
+  has_many :changes_with_deleted, -> { order(updated_at: :desc) }, class_name: "Change", dependent: :destroy
+  
+
+  belongs_to :change, optional: true
+  
+  # acts_as_taggable_on :issues
+  # acts_as_list
+    
+  def liquid_attributes
+    {
+      name: name,
+      id: id,
+      show_url: show_url,
+      value_name: value_name
+    }
+  end
+
   validates_length_of :name, :within => 3..60
   validates_uniqueness_of :name
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  acts_as_state_machine :initial => :published, :column => :status
-  
-  state :passive
-  state :draft
-  state :published, :enter => :do_publish
-  state :deleted, :enter => :do_delete
-  state :buried, :enter => :do_bury
-  state :inactive
-  
-  event :publish do
-    transitions :from => [:draft, :passive], :to => :published
-  end
-  
-  event :delete do
-    transitions :from => [:passive, :draft, :published], :to => :deleted
-  end
+  enum status: { 
+    passive: 0,
+    draft: 1,
+    published: 2,
+    deleted: 3,
+    buried: 4,
+    inactive: 5
+  }
 
-  event :undelete do
-    transitions :from => :deleted, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :delete, :to => :draft 
-  end
-  
-  event :bury do
-    transitions :from => [:draft, :passive, :published, :deleted], :to => :buried
-  end
-  
-  event :deactivate do
-    transitions :from => [:draft, :published, :buried], :to => :inactive
+  aasm column: :status, initial: :published do
+    state :passive
+    state :draft
+    state :published, :enter => :do_publish
+    state :deleted, :enter => :do_delete
+    state :buried, :enter => :do_bury
+    state :inactive
+
+    event :publish do
+      transitions :from => [:draft, :passive], :to => :published
+    end
+
+    event :delete do
+      transitions :from => [:passive, :draft, :published], :to => :deleted
+    end
+
+    event :undelete do
+      transitions :deleted => :published, if: Proc.new {|p| !p.published_at.blank? }
+      transitions :deleted => :draft
+    end
+
+    event :bury do
+      transitions :from => [:draft, :passive, :published, :deleted], :to => :buried
+    end
+
+    event :deactivate do
+      transitions :from => [:draft, :published, :buried], :to => :inactive
+    end
   end
   
   cattr_reader :per_page
@@ -192,7 +212,7 @@ class Priority < ActiveRecord::Base
   def is_published?
     ['published','inactive'].include?(status)
   end
-  alias :is_published :is_published?
+  # alias :is_published :is_published?
     
   def is_finished?
     obama_status > 1 or obama_status < 0
@@ -373,7 +393,6 @@ class Priority < ActiveRecord::Base
     and endorsements.user_id not in (#{endorser_ids.join(',')})
     ")
   end
-  memoize :up_endorser_ids, :down_endorser_ids, :endorser_ids, :all_priority_ids_in_same_tags, :undecideds
   
   def related(limit=10)
     Priority.find_by_sql(["SELECT priorities.*, count(*) as num_tags

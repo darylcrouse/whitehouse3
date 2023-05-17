@@ -1,6 +1,6 @@
 class BlurbsController < ApplicationController
 
-  before_filter :admin_required
+  before_action :admin_required
 
   # GET /blurbs
   # GET /blurbs.xml

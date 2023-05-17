@@ -1,14 +1,11 @@
 class ColorScheme < ActiveRecord::Base
 
-  named_scope :featured, :conditions => "is_featured = true"
+  scope :featured, -> { where(is_featured: true) }
 
   after_save :clear_cache
   
-  has_attached_file :background_image, :storage => :s3, :s3_credentials => S3_CONFIG, 
-    :path => ":class/:attachment/:id/:style.:extension"
-  
-  validates_attachment_size :background_image, :less_than => 5.megabytes
-  validates_attachment_content_type :background_image, :content_type => ['image/jpeg', 'image/png', 'image/gif']  
+  has_one_attached :background
+  validate :background_image_type, :background_image_size
   
   def clear_cache
     Rails.cache.delete('views/color_scheme/'+id.to_s)
@@ -31,4 +28,17 @@ class ColorScheme < ActiveRecord::Base
     colors.uniq
   end
   
+  private
+
+  def background_image_type
+    if background.attached? && !background.content_type.in?(%w(image/jpeg image/png image/gif))
+      errors.add(:background, 'must be a JPEG PNG or GIF')
+    end
+  end
+
+  def background_image_size
+    if background.attached? && background.blob.byte_size > 5.megabytes
+      errors.add(:background, 'size must be less than 10MB')
+    end
+  end
 end

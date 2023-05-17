@@ -2,7 +2,7 @@
 <p>
 <%= blurb("legislators_intro")%>
 <p>
-<% form_remote_for(:user, :url => {:action => "legislators_save" }) do |f| %>
+<% form_for(:user, :url => {:action => "legislators_save" }) do |f| %>
 	<%= f.error_messages %>
 
 	<p><label for="email"><%= t('settings.edit.address.label')%></label><br/>

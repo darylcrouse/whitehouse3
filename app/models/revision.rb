@@ -1,7 +1,8 @@
 class Revision < ActiveRecord::Base
+  include AASM
 
-  named_scope :published, :conditions => "revisions.status = 'published'"
-  named_scope :by_recently_created, :order => "revisions.created_at desc"  
+  scope :published, -> { where("revisions.status = 'published'") }
+  scope :by_recently_created, -> { order("revisions.created_at desc") }  
 
   belongs_to :point  
   belongs_to :user
@@ -16,28 +17,28 @@ class Revision < ActiveRecord::Base
   liquid_methods :id, :user, :url, :text
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  acts_as_state_machine :initial => :draft, :column => :status
-  
-  state :draft
-  state :archived, :enter => :do_archive
-  state :published, :enter => :do_publish
-  state :deleted, :enter => :do_delete
-  
-  event :publish do
-    transitions :from => [:draft, :archived], :to => :published
-  end
+  aasm column: :status, no_direct_assignment: true do
+    state :draft, initial: true
+    state :archived, enter: :do_archive
+    state :published, enter: :do_publish
+    state :deleted, enter: :do_delete
 
-  event :archive do
-    transitions :from => :published, :to => :archived
-  end
-  
-  event :delete do
-    transitions :from => [:published, :archived], :to => :deleted
-  end
+    event :publish do
+      transitions from: [:draft, :archived], to: :published
+    end
 
-  event :undelete do
-    transitions :from => :deleted, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :deleted, :to => :archived 
+    event :archive do
+      transitions from: :published, to: :archived
+    end
+
+    event :delete do
+      transitions from: [:published, :archived], to: :deleted
+    end
+
+    event :undelete do
+      transitions from: :deleted, to: :published, guard: ->(p) { !p.published_at.blank? }
+      transitions from: :deleted, to: :archived
+    end
   end
   
   before_save :truncate_user_agent

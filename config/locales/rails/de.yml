@@ -10,10 +10,10 @@ de:
       only_day: "%e"
 
     day_names: [Sonntag, Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag]
-    abbr_day_names: [So, Mo, Di, Mi, Do, Fr, Sa]
+    abbr_day_names: [So, Mo, Di, Mi, Do, Fr, xSa]
     month_names: [~, Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
     abbr_month_names: [~, Jan, Feb, Mär, Apr, Mai, Jun, Jul, Aug, Sep, Okt, Nov, Dez]
-    order: [ :day, :month, :year ]
+    # order: [ :day, :month, :year ]
   
   time:
     formats:
@@ -93,15 +93,15 @@ de:
       storage_units:
         # Storage units output formatting.
         # %u is the storage unit, %n is the number (default: 2 MB)
-        format: "%n %u"
-        units:
-          byte:
-            one:   "Byte"
-            other: "Bytes"
-          kb: "KB"
-          mb: "MB"
-          gb: "GB"
-          tb: "TB"
+        # format: "%n %u"
+        # units:
+        #   # byte:
+        #     one:   "Byte"
+        #     other: "Bytes"
+        #   kb: "KB"
+        #   mb: "MB"
+        #   gb: "GB"
+        #   tb: "TB"
 
   support:
     array:

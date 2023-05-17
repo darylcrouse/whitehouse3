@@ -6,7 +6,7 @@
 	<p>
 	<%= t('contacts.invited.intro')%>
 	<p>
-	<%= will_paginate (@contacts) %>
+	<%= paginate (@contacts) %>
 	<p>
 	<% for c in @contacts %>
 		<% if c.has_email? %>
@@ -17,7 +17,7 @@
 		 <span class="small"><%= time_ago c.sent_at %></span><br/>
 	<% end %>					
 	<p>
-	<%= will_paginate (@contacts) %>
+	<%= paginate (@contacts) %>
 
 <% else %>
 

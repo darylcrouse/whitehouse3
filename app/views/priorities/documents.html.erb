@@ -10,5 +10,5 @@
 	<% for document in @documents %>
 		<%= render :partial => "documents/show", :locals => {:document => document, :priority => @priority}%>
 	<% end %>
-	<%= will_paginate(@documents) %>
+	<%= paginate(@documents) %>
 <% end %>

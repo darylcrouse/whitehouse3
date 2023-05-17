@@ -1,7 +1,7 @@
 class PointsController < ApplicationController
  
-  before_filter :login_required, :only => [:new, :create, :quality, :unquality, :your_priorities, :index, :destroy]
-  before_filter :admin_required, :only => [:edit, :update]
+  before_action :login_required, :only => [:new, :create, :quality, :unquality, :your_priorities, :index, :destroy]
+  before_action :admin_required, :only => [:edit, :update]
  
   def index
     @page_title = t('points.yours.title', :government_name => current_government.name)

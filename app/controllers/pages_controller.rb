@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
 
-  before_filter :admin_required
+  before_action :admin_required
   
   # GET /pages
   # GET /pages.xml

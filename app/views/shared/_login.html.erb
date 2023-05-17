@@ -3,7 +3,7 @@
 	<%= t('sessions.new.intro', :signup_url => signup_url, :government_name => current_government.name)%>
 	<div id="login_form">
 		<p>
-	<% form_remote_for :session, :url => session_path(:region => "inline") do |f| -%>
+	<% form_for :session, :url => session_path(:region => "inline") do |f| -%>
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr><td><%= t('sessions.new.email.label')%></td><td style="padding-left: 4px;"><%= t('sessions.new.password.label')%></td><td></td></tr>
 			<tr><td valign="top">

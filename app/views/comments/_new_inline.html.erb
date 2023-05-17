@@ -1,5 +1,5 @@
 <div class="comment_form" id="activity_<%=activity.id.to_s%>_comment_form">
-	<% form_remote_for comment, :url => activity_comments_path(activity), :loading=>"Form.Element.disable('comment-form-submit')" do |f| %>		
+	<% form_for comment, :url => activity_comments_path(activity), :loading=>"Form.Element.disable('comment-form-submit')" do |f| %>		
 		<%= f.error_messages %>
 		<%= f.text_area :content, :size => "50x2", :id => "comment_content_#{activity.id.to_s}" %><br/>
 		<div style="padding-top: 3px;">

@@ -50,7 +50,7 @@
 			</div>
 			<p>
 			<% if @activities.total_pages > 1 %>
-				<%= will_paginate(@activities, :params => {:action => "activities"} ) %>
+				<%= paginate(@activities, :params => {:action => "activities"} ) %>
 			<% end %>
 			
 		</td>

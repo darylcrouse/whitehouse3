@@ -4,12 +4,12 @@
 	<% if quality.is_helpful? %>
 		<span class="tag_button" id="document_helpful_<%= document.id.to_s %>">
 			<%= t('helpful.caps')%> 
-			<%= link_to_remote "&nbsp;x", { :url => unquality_document_path(document, :region => "document_inline") }, :class => "quality_remove", :title => t('helpful.delete.title') %>
+			<%= link_to"&nbsp;x", { :url => unquality_document_path(document, :region => "document_inline") }, :class => "quality_remove", :title => t('helpful.delete.title') %>
 		</span>
 	<% else %>
 		<span class="tag_button" id="document_helpful_<%= document.id.to_s %>">
 			<%= t('unhelpful.caps')%>
-			<%= link_to_remote "&nbsp;x", { :url => unquality_document_path(document, :region => "document_inline") }, :class => "quality_remove", :title => t('unhelpful.delete.title') %>
+			<%= link_to"&nbsp;x", { :url => unquality_document_path(document, :region => "document_inline") }, :class => "quality_remove", :title => t('unhelpful.delete.title') %>
 		</span>	
 	<% end %>
 
@@ -24,12 +24,12 @@
 <% if not quality and logged_in? %>
 	<%= t('helpful.question')%>
 	<span class="tag_button" id="priority_add_<%= document.id.to_s %>">
-		<%= link_to_remote t('doit'), { :url => quality_document_path(document, :region => "document_inline", :value => 1), :loading=>"update('#{t('helpful.ing')}')" }, :class => "quality_helpful_link", :title => t('helpful.title') %></span>
+		<%= link_tot('doit'), { :url => quality_document_path(document, :region => "document_inline", :value => 1), :loading=>"update('#{t('helpful.ing')}')" }, :class => "quality_helpful_link", :title => t('helpful.title') %></span>
 		
 	<span class="or"><%= t('or') %></span>
 
 	<span class="tag_button" id="priority_add_<%= document.id.to_s %>">
-		<%= link_to_remote t('dont'), { :url => quality_document_path(document, :region => "document_inline", :value => 0), :loading=>"update('#{t('unhelpful.ing')}')" }, :class => "quality_unhelpful_link", :title => t('unhelpful.title') %>		
+		<%= link_tot('dont'), { :url => quality_document_path(document, :region => "document_inline", :value => 0), :loading=>"update('#{t('unhelpful.ing')}')" }, :class => "quality_unhelpful_link", :title => t('unhelpful.title') %>		
 	</span>	
 <% end %>
 </div>

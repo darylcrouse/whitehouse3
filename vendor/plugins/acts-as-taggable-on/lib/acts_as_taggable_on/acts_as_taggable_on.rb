@@ -57,7 +57,7 @@ module ActiveRecord
               def find_related_#{tag_type}(options = {})
                 related_tags_for('#{tag_type}', self.class, options)
               end
-              alias_method :find_related_on_#{tag_type}, :find_related_#{tag_type}
+              # alias_method :find_related_on_#{tag_type}, :find_related_#{tag_type}
 
               def find_related_#{tag_type}_for(klass, options = {})
                 related_tags_for('#{tag_type}', klass, options)
@@ -80,8 +80,8 @@ module ActiveRecord
               before_save :save_cached_tag_list
               after_save :save_tags
               
-              if respond_to?(:named_scope)
-                named_scope :tagged_with, lambda{ |tags, options|
+              if respond_to?(:scope)
+                scope :tagged_with, lambda{ |tags, options|
                   find_options_for_find_tagged_with(tags, options)
                 }
               end
@@ -89,7 +89,7 @@ module ActiveRecord
             
             include ActiveRecord::Acts::TaggableOn::InstanceMethods
             extend ActiveRecord::Acts::TaggableOn::SingletonMethods                
-            alias_method_chain :reload, :tag_list
+            # alias reload tag_list
           end
         end
         

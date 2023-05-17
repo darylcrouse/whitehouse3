@@ -3,7 +3,7 @@
 	<%= link_to_unless_current h(priority.name), priority, :class => "priority_name_link" %>
 </div>
 
-	<%= render :partial => "priorities/tag_show", :locals => { :priority => priority }%>
+	
 	<%= render :partial => "priorities/action_show", :locals => {:priority => priority, :endorsement => endorsement }%>
 
 <% if priority.status == 'inactive' %>

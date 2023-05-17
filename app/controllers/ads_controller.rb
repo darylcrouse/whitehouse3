@@ -1,7 +1,7 @@
 class AdsController < ApplicationController
 
-  before_filter :get_priority
-  before_filter :login_required, :only => [:new, :create, :preview, :skip]
+  before_action :get_priority
+  before_action :login_required, :only => [:new, :create, :preview, :skip]
   
   # GET /priorities/1/ads
   def index

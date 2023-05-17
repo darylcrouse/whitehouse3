@@ -83,7 +83,7 @@
 <% if current_government.is_branches? %>
 	
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<% for be in @priority.branch_endorsements.top_rank.find(:all, :include => :branch) %>
+	<% for be in @priority.branch_endorsements.top_rank.includes(:branch) %>
 		<tr>
 		<td class="table_header"><%= be.branch.name %></td>
 		<td>#<%= be.position %></td>

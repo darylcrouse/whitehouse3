@@ -1,30 +1,31 @@
 class Webpage < ActiveRecord::Base
-
-  named_scope :published, :conditions => "webpages.status = 'published'"
-  named_scope :newest, :order => "webpages.created_at desc"
+  include AASM
+  scope :published, -> { where(status: 'published') }
+  scope :newest, -> { order(created_at: :desc) }
+  
 
   belongs_to :user
   belongs_to :feed
   
   acts_as_taggable_on :issues
   
-  acts_as_state_machine :initial => :published, :column => :status
-  
-  state :draft
-  state :published
-  state :deleted
-  
-  event :publish do
-    transitions :from => :draft, :to => :published
-  end
-  
-  event :delete do
-    transitions :from => [:published, :draft], :to => :deleted
-  end
-  
-  event :undelete do
-    transitions :from => :deleted, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :delete, :to => :draft 
+  aasm column: :status, initial: :published do
+    state :draft
+    state :published
+    state :deleted
+
+    event :publish do
+      transitions from: :draft, to: :published
+    end
+
+    event :delete do
+      transitions from: [:published, :draft], to: :deleted
+    end
+
+    event :undelete do
+      transitions from: :deleted, to: :published, guard: Proc.new {|p| !p.published_at.blank? }
+      transitions from: :delete, to: :draft
+    end
   end
   
   validates_format_of :url, :with => /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix

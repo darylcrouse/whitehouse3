@@ -2,7 +2,7 @@
 <%= render :partial => "nav" %>
 <p>
 <% if current_government.is_branches? %>
-	<% for be in @priority.branch_endorsements.top_rank.find(:all, :include => :branch) %>
+	<% @priority.branch_endorsements.top_rank.includes(:branch).each do |be| %>
 		<%= t('priorities.endorsers.branch', :branch_name => be.branch.name, :count => number_with_delimiter(be.up_endorsements_count)) %><br/>
 	<% end %>
 	<p>
@@ -17,7 +17,7 @@
 <% end %>
 
 <% cache("priority_#{@priority.id.to_s}_endorsers_#{@priority.up_endorsements_count}", :expires_in => 12.hours) do %>
-	<% @priority.endorsements.active_and_inactive.endorsing.by_position.find(:all, :include => :user, :limit => 500).group_by { |e| e.position }.each do |position, endorsements| %>	
+	<% @priority.endorsements.active_and_inactive.endorsing.by_position.includes(:user).limit(500).group_by(&:position).each do |position, endorsements| %>
 		<div class="subhead"><%= t('priorities.position.number', :position => position) %></div>
 		<table border="0" cellspacing="0" cellpadding="0">
 		<% endorsements.in_groups_of(4) do |row_endorsements| %>

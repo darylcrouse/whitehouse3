@@ -1,7 +1,7 @@
 class Following < ActiveRecord::Base
   
-  named_scope :up, :conditions => "value > 0"
-  named_scope :down, :conditions => "value < 0"
+  scope :up, -> { where("value > 0") }
+  scope :down, -> { where("value < 0") }  
   
   belongs_to :user
   belongs_to :other_user, :class_name => "User"

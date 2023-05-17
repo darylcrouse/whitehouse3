@@ -1,4 +1,4 @@
-class CreateBooks < ActiveRecord::Migration
+class CreateBooks < ActiveRecord::Migration[7.0]
   def self.up
     create_table :books, :force => true do |t|
       t.column :category_id, :integer

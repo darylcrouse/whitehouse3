@@ -1,6 +1,6 @@
 class ConstituentsController < ApplicationController
 
-  before_filter :get_legislator
+  before_action :get_legislator
 
   def index
     @page_title = t('constituents.index', :legislator_name => @legislator.name)

@@ -17,7 +17,7 @@
 			<td><span class="table_header"><%= t('rank') %></span></td>
 			<td style="padding-left: 3px;"><span class="table_header"><%= t('time.wk') %></span></td>
 			<td style="padding-left: 3px;"><span class="table_header"><%= t('time.mo') %></span></td>
-			<td style="padding-left: 7px; margin-bottom: 2px;" colspan="2"><%= will_paginate @users %></td>				
+			<td style="padding-left: 7px; margin-bottom: 2px;" colspan="2"><%= paginate @users %></td>				
 		</tr>
 	<% for user in @users %>
 		<tr><td valign="top"></td>
@@ -38,6 +38,6 @@
 
 	</table>				
 	<p>
-	<%= will_paginate(@users) %>
+	<%= paginate(@users) %>
 
 <% end %>

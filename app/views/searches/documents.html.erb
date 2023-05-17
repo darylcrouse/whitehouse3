@@ -17,7 +17,7 @@
 	<%= t('briefing.search.empty') %>
 <% else %>
 	<% if @document_results.total_hits > 15 %>
-	<%= will_paginate WillPaginate::Collection.new((params[:page]||1),(15),@document_results.total_hits) -%>
+	<%= paginate WillPaginate::Collection.new((params[:page]||1),(15),@document_results.total_hits) -%>
 	<p>
 	<% end %>
 	<% for document in @documents %>
@@ -25,5 +25,5 @@
 	<% end %>
 
 	<p>
-	<%= will_paginate WillPaginate::Collection.new((params[:page]||1),(15),@document_results.total_hits) -%>
+	<%= paginate WillPaginate::Collection.new((params[:page]||1),(15),@document_results.total_hits) -%>
 <% end %>

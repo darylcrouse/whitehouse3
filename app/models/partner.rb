@@ -1,53 +1,55 @@
 class Partner < ActiveRecord::Base
+  include AASM
 
   require 'paperclip'
   
-  named_scope :active, :conditions => "status in ('pending','active')"
+  scope :active, -> { where(status: ['pending', 'active']) }
   
   belongs_to :picture
-  
-  has_attached_file :logo, :styles => { :icon_96 => "96x96#", :icon_140 => "140x140#", :icon_180 => "180x180#", :medium  => "450x" }, 
-    :storage => :s3, :s3_credentials => S3_CONFIG, 
-    :path => ":class/:attachment/:id/:style.:extension"
-    
-  validates_attachment_size :logo, :less_than => 5.megabytes
-  validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif']
-  
+  has_one_attached :logo
+  # attr_accessor :logo_file_name, :logo_content_type, :logo_file_size
+  # validates :logo, content_type: ['image/jpeg', 'image/png', 'image/gif'], size: { less_than: 10.megabytes }
+  validate :logo_file_size_valid?
   has_one :owner, :class_name => "User", :foreign_key => "partner_id"
   has_many :signups
   has_many :users, :through => :signups
   has_many :activities
     
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  acts_as_state_machine :initial => :passive, :column => :status
+  aasm column: :status, initial: :passive do
+    state :passive
+    state :pending
+    state :active do
+      after_transition :on => :activate, :do => :do_activate
+    end
+    state :suspended
+    state :deleted do
+      after_transition :on => :delete, :do => :do_delete
+    end
   
-  state :passive
-  state :pending
-  state :active, :enter => :do_activate
-  state :suspended
-  state :deleted, :enter => :do_delete
+    event :register do
+      transitions :from => :passive, :to => :pending
+    end
   
-  event :register do
-    transitions :from => :passive, :to => :pending
-  end
-
-  event :activate do
-    transitions :from => :pending, :to => :active 
-  end
+    event :activate do
+      transitions :from => :pending, :to => :active 
+    end
+    
+    event :suspend do
+      transitions :from => [:passive, :pending, :active], :to => :suspended
+    end
+    
+    event :delete do
+      transitions :from => [:passive, :pending, :active, :suspended], :to => :deleted
+    end
   
-  event :suspend do
-    transitions :from => [:passive, :pending, :active], :to => :suspended
+    event :unsuspend do
+      transitions :from => :suspended, :to => :active, :if => Proc.new {|u| !u.activated_at.blank? }
+      transitions :from => :suspended, :to => :pending, :if => Proc.new {|u| !u.activation_code.blank? }
+      transitions :from => :suspended, :to => :passive
+    end
   end
-  
-  event :delete do
-    transitions :from => [:passive, :pending, :active, :suspended], :to => :deleted
-  end
-
-  event :unsuspend do
-    transitions :from => :suspended, :to => :active, :guard => Proc.new {|u| !u.activated_at.blank? }
-    transitions :from => :suspended, :to => :pending, :guard => Proc.new {|u| !u.activation_code.blank? }
-    transitions :from => :suspended, :to => :passive
-  end  
+   
 
   before_save :clean_urls
 
@@ -120,6 +122,13 @@ class Partner < ActiveRecord::Base
   private
   def do_delete
     deleted_at = Time.now
+  end
+
+  def logo_file_size_valid?
+    if logo.attached? && logo.blob.byte_size > 10.megabytes
+      errors.add(:logo, 'File size too large')
+      logo.purge # delete the uploaded file
+    end
   end
   
 end

@@ -1,8 +1,8 @@
 class DocumentRevisionsController < ApplicationController
 
-  before_filter :get_document
-  before_filter :login_required, :only => [:new, :update, :destroy, :edit, :create]
-  before_filter :admin_required, :only => [:destroy, :update, :edit]
+  before_action :get_document
+  before_action :login_required, :only => [:new, :update, :destroy, :edit, :create]
+  before_action :admin_required, :only => [:destroy, :update, :edit]
 
   # GET /documents/1/revisions
   def index

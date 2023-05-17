@@ -1,8 +1,8 @@
 class CommentsController < ApplicationController
   
-  before_filter :login_required, :only => [:new, :edit, :create, :update, :destroy, :flag]
-  before_filter :admin_required, :only => [:abusive, :not_abusive]
-  before_filter :get_activity
+  before_action :login_required, :only => [:new, :edit, :create, :update, :destroy, :flag]
+  before_action :admin_required, :only => [:abusive, :not_abusive]
+  before_action :get_activity
   
   # GET /activities/1/comments
   # GET /activities/1/comments.xml

@@ -1,32 +1,60 @@
-# Settings specified here will take precedence over those in config/environment.rb
-
-# Your secret key for verifying cookie session data integrity.
-# If you change this key, all old sessions will become invalid!
-# Make sure the secret is at least 30 characters and all random, 
-# no regular words or you'll be exposed to dictionary attacks.
-config.action_controller.session = {
-  :domain => 'jim.com',
-  :session_key => '_wh2_session',
-  :secret      => '97666fd8afb06371a3b9f5f9a88176f57e27d5ff893293b9975dc6e46b3d2b81f20c7b9d0e4abebf0ea6a9999983914582f3cb70d83b03ea1a5d00afeff5ba7d'
-}
+require "active_support/core_ext/integer/time"
 
 # The test environment is used exclusively to run your application's
-# test suite.  You never need to work with it otherwise.  Remember that
+# test suite. You never need to work with it otherwise. Remember that
 # your test database is "scratch space" for the test suite and is wiped
-# and recreated between test runs.  Don't rely on the data there!
-config.cache_classes = true
+# and recreated between test runs. Don't rely on the data there!
 
-# Log error messages when you accidentally call methods on nil.
-config.whiny_nils = true
+Rails.application.configure do
+  # Settings specified here will take precedence over those in config/application.rb.
 
-# Show full error reports and disable caching
-config.action_controller.consider_all_requests_local = true
-config.action_controller.perform_caching             = false
+  # Turn false under Spring and add config.action_view.cache_template_loading = true.
+  config.cache_classes = true
 
-# Disable request forgery protection in test environment
-config.action_controller.allow_forgery_protection    = false
+  # Eager loading loads your whole application. When running a single test locally,
+  # this probably isn't necessary. It's a good idea to do in a continuous integration
+  # system, or in some way before deploying your code.
+  config.eager_load = ENV["CI"].present?
 
-# Tell ActionMailer not to deliver emails to the real world.
-# The :test delivery method accumulates sent emails in the
-# ActionMailer::Base.deliveries array.
-config.action_mailer.delivery_method = :test
+  # Configure public file server for tests with Cache-Control for performance.
+  config.public_file_server.enabled = true
+  config.public_file_server.headers = {
+    "Cache-Control" => "public, max-age=#{1.hour.to_i}"
+  }
+
+  # Show full error reports and disable caching.
+  config.consider_all_requests_local       = true
+  config.action_controller.perform_caching = false
+  config.cache_store = :null_store
+
+  # Raise exceptions instead of rendering exception templates.
+  config.action_dispatch.show_exceptions = false
+
+  # Disable request forgery protection in test environment.
+  config.action_controller.allow_forgery_protection = false
+
+  # Store uploaded files on the local file system in a temporary directory.
+  config.active_storage.service = :test
+
+  config.action_mailer.perform_caching = false
+
+  # Tell Action Mailer not to deliver emails to the real world.
+  # The :test delivery method accumulates sent emails in the
+  # ActionMailer::Base.deliveries array.
+  config.action_mailer.delivery_method = :test
+
+  # Print deprecation notices to the stderr.
+  config.active_support.deprecation = :stderr
+
+  # Raise exceptions for disallowed deprecations.
+  config.active_support.disallowed_deprecation = :raise
+
+  # Tell Active Support which deprecation messages to disallow.
+  config.active_support.disallowed_deprecation_warnings = []
+
+  # Raises error for missing translations.
+  # config.i18n.raise_on_missing_translations = true
+
+  # Annotate rendered view with file names.
+  # config.action_view.annotate_rendered_view_with_filenames = true
+end

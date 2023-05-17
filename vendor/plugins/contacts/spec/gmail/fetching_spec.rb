@@ -100,7 +100,7 @@ describe Contacts::Google do
     found[0].name.should == 'Elizabeth Bennet'
     found[0].emails.should == ['liz@gmail.com', 'liz@example.org']
     found[1].name.should == 'William Paginate'
-    found[1].emails.should == ['will_paginate@googlegroups.com']
+    found[1].emails.should == ['paginate@googlegroups.com']
     found[2].name.should be_nil
     found[2].emails.should == ['anonymous@example.com']
   end

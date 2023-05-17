@@ -1,8 +1,8 @@
 class PasswordsController < ApplicationController
 
-  before_filter :login_from_cookie
-  before_filter :login_required, :except => [:create, :new]
-  before_filter :current_user_required, :only => [:edit, :update]
+  before_action :login_from_cookie
+  before_action :login_required, :except => [:create, :new]
+  before_action :current_user_required, :only => [:edit, :update]
 
   # Don't write passwords as plain text to the log files
   filter_parameter_logging :old_password, :password, :password_confirmation

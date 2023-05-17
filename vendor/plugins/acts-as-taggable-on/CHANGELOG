@@ -1,6 +1,6 @@
 == 2008-07-17
 
-* Can now use a named_scope to find tags!
+* Can now use a scope to find tags!
 
 == 2008-06-23
 

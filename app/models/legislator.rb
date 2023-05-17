@@ -1,6 +1,6 @@
 class Legislator < ActiveRecord::Base
   
-  named_scope :by_state, :order => "state asc, title desc, lastname asc"
+  scope :by_state, -> { order(state: :asc, title: :desc, lastname: :asc) }
   
   belongs_to :user # if they have a user account at wh2, sync it up
   

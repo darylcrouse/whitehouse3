@@ -1,12 +1,5 @@
-class AddAttachmentsBuddyIconToGovernment < ActiveRecord::Migration
-  def self.up
-    add_column :governments, :buddy_icon_file_name, :string
-    add_column :governments, :buddy_icon_content_type, :string, :limit => 30
-    add_column :governments, :buddy_icon_file_size, :integer
-    add_column :governments, :buddy_icon_updated_at, :datetime
-  end
-
-  def self.down
+class AddAttachmentsBuddyIconToGovernment < ActiveRecord::Migration[7.0]
+  def change
     remove_column :governments, :buddy_icon_file_name
     remove_column :governments, :buddy_icon_content_type
     remove_column :governments, :buddy_icon_file_size

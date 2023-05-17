@@ -1,12 +1,6 @@
-class AddAttachmentsLogoToPartner < ActiveRecord::Migration
-  def self.up
-    add_column :partners, :logo_file_name, :string
-    add_column :partners, :logo_content_type, :string, :limit => 30
-    add_column :partners, :logo_file_size, :integer
-    add_column :partners, :logo_updated_at, :datetime
-  end
+class AddAttachmentsLogoToPartner < ActiveRecord::Migration[7.0]
 
-  def self.down
+  def change
     remove_column :partners, :logo_file_name
     remove_column :partners, :logo_content_type
     remove_column :partners, :logo_file_size

@@ -1,6 +1,6 @@
 class EndorsementsController < ApplicationController
  
-  before_filter :login_required, :except => :index
+  before_action :login_required, :except => :index
   
   # GET /endorsements
   # GET /endorsements.xml

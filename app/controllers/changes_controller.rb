@@ -1,8 +1,8 @@
 class ChangesController < ApplicationController
   
-  before_filter :get_priority
-  before_filter :login_required, :except => [:index, :show]
-  before_filter :admin_required, :only => [:edit, :update, :destroy, :start, :stop, :approve]
+  before_action :get_priority
+  before_action :login_required, :except => [:index, :show]
+  before_action :admin_required, :only => [:edit, :update, :destroy, :start, :stop, :approve]
   
   # GET /priorities/1/changes
   # GET /priorities/1/changes.xml

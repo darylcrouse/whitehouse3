@@ -5,7 +5,7 @@
 	<%= t('changes.empty')%>
 <% else %>
 
-	<%= will_paginate(@changes) %>
+	<%= paginate(@changes) %>
 	<p>
 	<% for change in @changes %>
 		<%= render :partial => "changes/show", :locals => {:change => change} %>
@@ -17,6 +17,6 @@
 		<p>
 	<% end %>
 	<p>
-	<%= will_paginate(@changes) %>
+	<%= paginate(@changes) %>
 
 <% end %>

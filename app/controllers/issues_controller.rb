@@ -1,7 +1,7 @@
 class IssuesController < ApplicationController
   
-  before_filter :get_tag_names, :except => :index
-  before_filter :check_for_user, :only => [:yours, :yours_finished, :yours_created, :network]
+  before_action :get_tag_names, :except => :index
+  before_action :check_for_user, :only => [:yours, :yours_finished, :yours_created, :network]
       
   def index
     @page_title = current_government.tags_name.pluralize.titleize
@@ -37,7 +37,7 @@ class IssuesController < ApplicationController
     end    
   end
 
-  alias :top :show
+  # alias :top :show
 
   def yours
     @page_title = t('tags.yours.title', :tag_name => @tag_names.titleize, :target => current_government.target)

@@ -1,7 +1,7 @@
 class SettingsController < ApplicationController
   
-  before_filter :login_required
-  before_filter :get_user
+  before_action :login_required
+  before_action :get_user
 
   # GET /settings
   def index

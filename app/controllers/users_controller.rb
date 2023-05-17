@@ -1,22 +1,25 @@
 class UsersController < ApplicationController
 
-  before_filter :login_required, :only => [:resend_activation, :follow, :unfollow, :endorse]
-  before_filter :current_user_required, :only => [:resend_activation]
-  before_filter :admin_required, :only => [:suspend, :unsuspend, :impersonate, :edit, :update, :signups, :legislators, :legislators_save, :make_admin, :reset_password]
+  before_action :login_required, :only => [:resend_activation, :follow, :unfollow, :endorse]
+  before_action :current_user_required, :only => [:resend_activation]
+  before_action :admin_required, :only => [:suspend, :unsuspend, :impersonate, :edit, :update, :signups, :legislators, :legislators_save, :make_admin, :reset_password]
   
   def index
+    page = params[:page].presence || 1
+    per_page = params[:per_page].presence || 10
     if params[:q]
-      @users = User.active.find(:all, :conditions => ["login LIKE ?", "#{h(params[:q])}%"], :order => "users.login asc")
+      @users = User.active.where("login LIKE ?", "#{h(params[:q])}%").order("users.login asc")
     else
-      @users = User.active.by_ranking.paginate :page => params[:page], :per_page => params[:per_page]  
+      @users = User.active.by_ranking.page(page).per(per_page)
     end
     respond_to do |format|
-      format.html { redirect_to :controller => "network" }
-      format.js { render :text => @users.collect{|p|p.login}.join("\n") }
-      format.xml { render :xml => @users.to_xml(:include => [:top_endorsement, :referral, :partner_referral], :except => NB_CONFIG['api_exclude_fields']) }
-      format.json { render :json => @users.to_json(:include => [:top_endorsement, :referral, :partner_referral], :except => NB_CONFIG['api_exclude_fields']) }
-    end    
+      format.html { redirect_to controller: "network" }
+      format.js { render plain: @users.collect { |p| p.login }.join("\n") }
+      format.xml { render xml: @users.to_xml(include: [:top_endorsement, :referral, :partner_referral], except: NB_CONFIG['api_exclude_fields']) }
+      format.json { render json: @users.to_json(include: [:top_endorsement, :referral, :partner_referral], except: NB_CONFIG['api_exclude_fields']) }
+    end
   end
+  
   
   # render new.rhtml
   def new
@@ -252,47 +255,48 @@ class UsersController < ApplicationController
 
   def create
     cookies.delete :auth_token
-    # protects against session fixation attacks, wreaks havoc with
-    # request forgery protection.
-    # uncomment at your own risk
-    # reset_session
     @valid = true
-    @user = User.new(params[:user]) 
+    @user = User.new(user_params)
     @user.request = request
     @user.referral = @referral
-    @user.partner_referral = current_partner
+    # @user.partner_referral = current_partner
+  
     begin
-      @user.save! #save first
-      rescue ActiveRecord::RecordInvalid
-        @valid = false    
+      @user.save!
+    rescue ActiveRecord::RecordInvalid
+      @valid = false
     end
-    
-    if not @valid # if it's not valid, punt on all the rest
+  
+    unless @valid
       respond_to do |format|
         format.js
-        format.html { render :text => "error", :status => 500}
+        format.html { render plain: "error", status: :internal_server_error }
       end
       return
     end
-    self.current_user = @user # automatically log them in
-    
-    if current_partner and params[:signup]
-      @user.signups << Signup.create(:partner => current_partner, :is_optin => params[:signup][:is_optin], :ip_address => request.remote_ip)
+  
+    self.current_user = @user
+  
+    if params[:signup]
+      @user.signups << Signup.create(partner: current_partner, is_optin: params[:signup][:is_optin], ip_address: request.remote_ip)
     end
-      
-    flash[:notice] = t('users.new.success', :government_name => current_government.name)
-    if session[:query] 
-      @send_to_url = "/?q=" + session[:query]
+  
+    flash[:notice] = t('users.new.success', government_name: current_government.name)
+  
+    if session[:query]
+      @send_to_url = "/?q=#{session[:query]}"
       session[:query] = nil
     else
       @send_to_url = session[:return_to] || get_previous_location
     end
+  
     session[:goal] = 'signup'
+  
     respond_to do |format|
       format.js
-      format.html { render :text => "error", :status => 500}
-    end      
-  end  
+      format.html { render plain: "error", status: :internal_server_error }
+    end
+  end
 
   def activate
     self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
@@ -502,6 +506,10 @@ class UsersController < ApplicationController
   end
   
   private
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
+  end
   
     def get_following
       if logged_in?

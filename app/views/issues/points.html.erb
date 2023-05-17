@@ -4,7 +4,7 @@
 	<%= t('points.empty')%>
 <% else %>
 
-	<%= will_paginate(@points) %>
+	<%= paginate(@points) %>
 	<p>
 	<% for point in @points %>
 		<% quality = nil %>
@@ -15,7 +15,7 @@
 	<% end %>
 
 	<p>
-	<%= will_paginate(@points) %>
+	<%= paginate(@points) %>
 
 <% end %>
 

@@ -1,6 +1,6 @@
 class Capital < ActiveRecord::Base
 
-  named_scope :recently, :order => "capitals.created_at desc"
+  scope :recently, -> { order(created_at: :desc) }
 
   belongs_to :sender, :class_name => "User", :foreign_key => "sender_id"
   belongs_to :recipient, :class_name => "User", :foreign_key => "recipient_id"

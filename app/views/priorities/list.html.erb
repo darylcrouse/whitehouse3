@@ -2,20 +2,6 @@
 <p>
 <%= render :partial => "priorities/form" %>
 <p>	
-<% if current_government.has_official? %>
-
-	<% if params[:action] == 'not_obama' %>
-	<%= t('priorities.not_official.intro', :official_user_name => current_government.official_user.name)%>
-	<p>
-	<% elsif params[:action] == 'obama' %>
-	<%= t('priorities.official.intro', :official_user_name => current_government.official_user.name)%>
-	<p>
-	<% elsif params[:action] == 'obama_opposed' %>
-	<%= t('priorities.official_opposed.intro', :official_user_name => current_government.official_user.name)%>
-	<p>
-	<% end %>
-	
-<% end %>
 
 <% if params[:action] == 'yours_created' %>
 	<%= t('priorities.yours_created.intro')%>
@@ -29,9 +15,9 @@
 			<td align="right" style="padding-right: 5px;"><span class="table_header"><%= t('rank') %></span></td>
 			<td style="padding-left: 3px;"><span class="table_header"><%= t('time.wk') %></span></td>
 			<td style="padding-left: 3px;"><span class="table_header"><%= t('time.mo') %></span></td>
-			<td style="padding-left: 7px; padding-bottom: 2px;"><nobr><%= will_paginate @priorities %></nobr></td>
+			<td style="padding-left: 7px; padding-bottom: 2px;"><nobr><%= paginate @priorities %></nobr></td>
 			<td></td>
-			<td align="right" width="100%"><%= rss_url(@rss_url) %></td>	
+			<td align="right" width="100%"><%= @rss_url %></td>	
 		</tr>
 	<% for priority in @priorities %>
 		<% if @endorsements %>
@@ -49,7 +35,7 @@
 
 	</table>
 	<p>
-	<%= will_paginate @priorities %>
+	<%= paginate @priorities %>
 
 	<% if params[:action] == 'yours_created' %>
 		<p><%= t('priorities.yours_created.outro')%>

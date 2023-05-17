@@ -1,7 +1,8 @@
 class DocumentRevision < ActiveRecord::Base
+  include AASM
 
-  named_scope :published, :conditions => "document_revisions.status = 'published'"
-  named_scope :by_recently_created, :order => "document_revisions.created_at desc"  
+  scope :published, -> { where(status: 'published') }
+  scope :by_recently_created, -> { order(created_at: :desc) }  
 
   belongs_to :document  
   belongs_to :user
@@ -10,28 +11,30 @@ class DocumentRevision < ActiveRecord::Base
   has_many :notifications, :as => :notifiable, :dependent => :destroy
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  acts_as_state_machine :initial => :draft, :column => :status
-  
-  state :draft
-  state :archived, :enter => :do_archive
-  state :published, :enter => :do_publish
-  state :deleted, :enter => :do_delete
-  
-  event :publish do
-    transitions :from => [:draft, :archived], :to => :published
-  end
+  enum status: { draft: 0, archived: 1, published: 2, deleted: 3 }
 
-  event :archive do
-    transitions :from => :published, :to => :archived
-  end
-  
-  event :delete do
-    transitions :from => [:published, :archived], :to => :deleted
-  end
+  aasm column: :status, enum: true do
+    state :draft
+    state :archived, :enter => :do_archive
+    state :published, :enter => :do_publish
+    state :deleted, :enter => :do_delete
 
-  event :undelete do
-    transitions :from => :deleted, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :deleted, :to => :archived 
+    event :publish do
+      transitions :from => [:draft, :archived], :to => :published
+    end
+
+    event :archive do
+      transitions :from => :published, :to => :archived
+    end
+
+    event :delete do
+      transitions :from => [:published, :archived], :to => :deleted
+    end
+
+    event :undelete do
+      transitions :from => :deleted, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
+      transitions :from => :deleted, :to => :archived 
+    end
   end
   
   liquid_methods :text, :id, :url, :user

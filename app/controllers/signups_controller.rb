@@ -1,6 +1,6 @@
 class SignupsController < ApplicationController
   
-  before_filter :admin_required, :except => [:new,:create, :edit, :update]
+  # before_action :admin_required, :except => [:new,:create, :edit, :update]
   
   # GET /signups
   # GET /signups.xml

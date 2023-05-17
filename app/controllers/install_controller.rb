@@ -15,7 +15,7 @@ class InstallController < ApplicationController
   skip_before_filter :update_loggedin_at
   skip_before_filter :check_facebook
   
-  before_filter :set_current_government
+  before_action :set_current_government
   
   # new single government mode installs will redirect here if there's no government set
   def index

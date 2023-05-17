@@ -1,16 +1,16 @@
 class Point < ActiveRecord::Base
 
-  named_scope :published, :conditions => "points.status = 'published'"
-  named_scope :by_helpfulness, :order => "points.score desc"
-  named_scope :by_endorser_helpfulness, :conditions => "points.endorser_score > 0", :order => "points.endorser_score desc"
-  named_scope :by_neutral_helpfulness, :conditions => "points.neutral_score > 0", :order => "points.neutral_score desc"    
-  named_scope :by_opposer_helpfulness, :conditions => "points.opposer_score > 0", :order => "points.opposer_score desc"
-  named_scope :up, :conditions => "points.endorser_score > 0"
-  named_scope :neutral, :conditions => "points.neutral_score > 0"
-  named_scope :down, :conditions => "points.opposer_score > 0"    
-  named_scope :by_recently_created, :order => "points.created_at desc"
-  named_scope :by_recently_updated, :order => "points.updated_at desc"  
-  named_scope :revised, :conditions => "revisions_count > 1"
+  scope :published, -> { where(status: 'published') }
+  scope :by_helpfulness, -> { order(score: :desc) }
+  scope :by_endorser_helpfulness, -> { where('points.endorser_score > 0').order('points.endorser_score desc') }
+  scope :by_neutral_helpfulness, -> { where('points.neutral_score > 0').order('points.neutral_score desc') }
+  scope :by_opposer_helpfulness, -> { where('points.opposer_score > 0').order('points.opposer_score desc') }
+  scope :up, -> { where('points.endorser_score > 0') }
+  scope :neutral, -> { where('points.neutral_score > 0') }
+  scope :down, -> { where('points.opposer_score > 0') }
+  scope :by_recently_created, -> { order(created_at: :desc) }
+  scope :by_recently_updated, -> { order(updated_at: :desc) }
+  scope :revised, -> { where('revisions_count > 1') }
 
   belongs_to :user
   belongs_to :priority
@@ -18,26 +18,27 @@ class Point < ActiveRecord::Base
   belongs_to :revision # the current revision
   
   has_many :revisions, :dependent => :destroy
-  has_many :activities, :dependent => :destroy, :order => "activities.created_at desc"
+  has_many :activities, -> { order("activities.created_at desc") }, dependent: :destroy
+
+  has_many :author_users, -> { distinct }, through: :revisions, source: :user, class_name: "User"
   
-  has_many :author_users, :through => :revisions, :select => "distinct users.*", :source => :user, :class_name => "User"
+  has_many :point_qualities, -> { order("created_at desc") }, dependent: :destroy
+  has_many :helpfuls, -> { where(value: true).order("created_at desc") }, class_name: "PointQuality"
+  has_many :unhelpfuls, -> { where(value: false).order("created_at desc") }, class_name: "PointQuality"
   
-  has_many :point_qualities, :order => "created_at desc", :dependent => :destroy
-  has_many :helpfuls, :class_name => "PointQuality", :conditions => "value = true", :order => "created_at desc"
-  has_many :unhelpfuls, :class_name => "PointQuality", :conditions => "value = false", :order => "created_at desc"
   
   has_many :capitals, :as => :capitalizable, :dependent => :nullify
   
-  acts_as_solr :fields => [ :name, :content, :priority_name, :is_published ]
+  # acts_as_solr :fields => [ :name, :content, :priority_name, :is_published ]
 
-  liquid_methods :id, :user, :text
+  # liquid_methods :id, :user, :text
   
-  cattr_reader :per_page
-  @@per_page = 15  
+  # cattr_reader :per_page
+  # @@per_page = 15  
   
-  def to_param
-    "#{id}-#{name.gsub(/[^a-z0-9]+/i, '-').downcase}"
-  end  
+  # def to_param
+  #   "#{id}-#{name.gsub(/[^a-z0-9]+/i, '-').downcase}"
+  # end  
   
   after_destroy :delete_point_quality_activities
   before_destroy :remove_counts  
@@ -48,34 +49,34 @@ class Point < ActiveRecord::Base
   validates_length_of :content, :maximum => 516, :allow_blank => true, :allow_nil => true, :too_long => I18n.t("points.new.errors.content_maximum")
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  acts_as_state_machine :initial => :published, :column => :status
+  aasm column: :status, whiny_transitions: false do
+    state :draft
+    state :published, initial: true, enter: :do_publish
+    state :deleted, enter: :do_delete
+    state :buried, enter: :do_bury
   
-  state :draft
-  state :published, :enter => :do_publish
-  state :deleted, :enter => :do_delete
-  state :buried, :enter => :do_bury
+    event :publish do
+      transitions from: [:draft], to: :published
+    end
   
-  event :publish do
-    transitions :from => [:draft], :to => :published
+    event :delete do
+      transitions from: [:draft, :published, :buried], to: :deleted
+    end
+  
+    event :undelete do
+      transitions from: :deleted, to: :published, if: Proc.new {|p| !p.published_at.blank? }
+      transitions from: :deleted, to: :draft 
+    end
+  
+    event :bury do
+      transitions from: [:draft, :published, :deleted], to: :buried
+    end
+  
+    event :unbury do
+      transitions from: :buried, to: :published, if: Proc.new {|p| !p.published_at.blank? }
+      transitions from: :buried, to: :draft     
+    end
   end
-  
-  event :delete do
-    transitions :from => [:draft, :published,:buried], :to => :deleted
-  end
-
-  event :undelete do
-    transitions :from => :deleted, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :deleted, :to => :draft 
-  end
-  
-  event :bury do
-    transitions :from => [:draft, :published, :deleted], :to => :buried
-  end
-  
-  event :unbury do
-    transitions :from => :buried, :to => :published, :guard => Proc.new {|p| !p.published_at.blank? }
-    transitions :from => :buried, :to => :draft     
-  end  
 
   def do_publish
     self.published_at = Time.now
@@ -163,7 +164,7 @@ class Point < ActiveRecord::Base
   def is_published?
     ['published'].include?(status)
   end
-  alias :is_published :is_published?
+  # alias is_published is_published?
   
   def calculate_score(tosave=false,current_endorsement=nil)
     old_score = self.score
