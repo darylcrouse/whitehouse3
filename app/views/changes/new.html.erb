@@ -2,7 +2,7 @@
 <%= render :partial => "priorities/nav" %>
 <p>
 			
-<% form_remote_for(@change, :url => priority_changes_path(@priority)) do |f| %>
+<% form_for(@change, :url => priority_changes_path(@priority)) do |f| %>
 
 <%= blurb("acquisition_new")%>
 

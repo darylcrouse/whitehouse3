@@ -391,7 +391,7 @@ class PrioritiesController < ApplicationController
     end
     @endorsements = nil
     if logged_in? # pull all their endorsements on the priorities shown
-      @endorsements = Endorsement.find(:all, :conditions => ["priority_id in (?) and user_id = ? and status='active'", @relationships.collect {|other_priority, relationship| other_priority.id},current_user.id])
+      @endorsements = Endorsement.where("priority_id IN (?) AND user_id = ? AND status = 'active'", @relationships.map { |other_priority, _| other_priority.id }, current_user.id)
     end    
     respond_to do |format|
       format.html
@@ -502,9 +502,10 @@ class PrioritiesController < ApplicationController
   
   def discussions
     @page_title = t('priorities.discussions.title', :priority_name => @priority.name) 
-    @activities = @priority.activities.active.discussions.by_recently_updated.for_all_users.paginate :page => params[:page], :per_page => 10
+    @activities = @priority.activities.active.discussions.by_recently_updated.for_all_users.page(params[:page]).per(10)
+
     if @activities.empty? # pull all activities if there are no discussions
-      @activities = @priority.activities.active.paginate :page => params[:page]
+      @activities = @priority.activities.active.page(params[:page])
     end
     respond_to do |format|
       format.html { render :action => "activities" }
@@ -528,7 +529,7 @@ class PrioritiesController < ApplicationController
   # GET /priorities/1/activities
   def activities
     @page_title = t('priorities.activities.title', :priority_name => @priority.name) 
-    @activities = @priority.activities.active.for_all_users.by_recently_created.paginate :include => :user, :page => params[:page], :per_page => params[:per_page]
+    @activities = @priority.activities.active.for_all_users.by_recently_created.page(params[:page]).per(10)
     respond_to do |format|
       format.html
       format.rss { render :template => "rss/activities" }

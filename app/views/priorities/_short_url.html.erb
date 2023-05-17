@@ -3,6 +3,6 @@
 	<%= t('priorities.short_url.name')%>
 	<input type="text" id="short_url" onFocus="this.select()" onMouseUp="return false;" value="<%= priority.short_url %>" readonly="true" size="10">
 <% else %>	
-	<%= link_tot('priorities.short_url.link'), :url => create_short_url_priority_path(priority), :method => :put %>
+	<%= link_to('priorities.short_url.link', create_short_url_priority_path(priority), method: :put) %>
 <% end %>
 </div>

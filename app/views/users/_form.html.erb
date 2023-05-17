@@ -1,6 +1,6 @@
 <div id="new_user_form">
 
-	<% form_remote_for :user, :url => users_path(:region => "short") do |f| -%>
+	<% form_for :user, :url => users_path(:region => "short") do |f| -%>
 	<%= error_messages_for :user, :header_message => t('users.new.error_message') %>
 	
 	<div class="field">

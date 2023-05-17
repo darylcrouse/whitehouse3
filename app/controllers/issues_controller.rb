@@ -37,7 +37,7 @@ class IssuesController < ApplicationController
     end    
   end
 
-  alias :top :show
+  # alias :top :show
 
   def yours
     @page_title = t('tags.yours.title', :tag_name => @tag_names.titleize, :target => current_government.target)

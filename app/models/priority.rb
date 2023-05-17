@@ -52,9 +52,9 @@ class Priority < ActiveRecord::Base
 
   has_many :down_endorsers, -> { where(endorsements: { status: ['active', 'inactive'], value: -1 }) }, through: :endorsements, source: :user, class_name: "User"
 
-  has_many :branch_endorsements, dependent: :destroy
+  has_many :branch_endorsements, class_name: 'BranchEndorsement', dependent: :destroy
   
-  has_many :points, -> { where(status: ['published', 'draft']) }
+  has_many :points, -> { where(status: ['published', 'draft']) }, class_name: "Point"
   has_many :incoming_points, foreign_key: :other_priority_id, class_name: "Point"
   has_many :published_points, -> { where(status: 'published').order("points.helpful_count-points.unhelpful_count desc") }, class_name: "Point"
   has_many :points_with_deleted, class_name: "Point", dependent: :destroy
@@ -212,7 +212,7 @@ class Priority < ActiveRecord::Base
   def is_published?
     ['published','inactive'].include?(status)
   end
-  alias :is_published :is_published?
+  # alias :is_published :is_published?
     
   def is_finished?
     obama_status > 1 or obama_status < 0

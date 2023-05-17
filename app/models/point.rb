@@ -18,26 +18,27 @@ class Point < ActiveRecord::Base
   belongs_to :revision # the current revision
   
   has_many :revisions, :dependent => :destroy
-  has_many :activities, :dependent => :destroy, :order => "activities.created_at desc"
+  has_many :activities, -> { order("activities.created_at desc") }, dependent: :destroy
+
+  has_many :author_users, -> { distinct }, through: :revisions, source: :user, class_name: "User"
   
-  has_many :author_users, :through => :revisions, :select => "distinct users.*", :source => :user, :class_name => "User"
+  has_many :point_qualities, -> { order("created_at desc") }, dependent: :destroy
+  has_many :helpfuls, -> { where(value: true).order("created_at desc") }, class_name: "PointQuality"
+  has_many :unhelpfuls, -> { where(value: false).order("created_at desc") }, class_name: "PointQuality"
   
-  has_many :point_qualities, :order => "created_at desc", :dependent => :destroy
-  has_many :helpfuls, :class_name => "PointQuality", :conditions => "value = true", :order => "created_at desc"
-  has_many :unhelpfuls, :class_name => "PointQuality", :conditions => "value = false", :order => "created_at desc"
   
   has_many :capitals, :as => :capitalizable, :dependent => :nullify
   
-  acts_as_solr :fields => [ :name, :content, :priority_name, :is_published ]
+  # acts_as_solr :fields => [ :name, :content, :priority_name, :is_published ]
 
-  liquid_methods :id, :user, :text
+  # liquid_methods :id, :user, :text
   
-  cattr_reader :per_page
-  @@per_page = 15  
+  # cattr_reader :per_page
+  # @@per_page = 15  
   
-  def to_param
-    "#{id}-#{name.gsub(/[^a-z0-9]+/i, '-').downcase}"
-  end  
+  # def to_param
+  #   "#{id}-#{name.gsub(/[^a-z0-9]+/i, '-').downcase}"
+  # end  
   
   after_destroy :delete_point_quality_activities
   before_destroy :remove_counts  
@@ -163,7 +164,7 @@ class Point < ActiveRecord::Base
   def is_published?
     ['published'].include?(status)
   end
-  alias :is_published :is_published?
+  # alias is_published is_published?
   
   def calculate_score(tosave=false,current_endorsement=nil)
     old_score = self.score

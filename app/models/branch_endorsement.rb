@@ -35,7 +35,7 @@ class BranchEndorsement < ActiveRecord::Base
   
   acts_as_list -> { where(branch_id: branch_id) }
   
-  self.per_page = 25
+  # self.per_page = 25
   
   after_create :add_counts
   after_destroy :remove_counts

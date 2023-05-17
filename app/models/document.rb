@@ -169,7 +169,7 @@ class Document < ActiveRecord::Base
   def is_published?
     ['published'].include?(status)
   end
-  alias :is_published :is_published?
+  # alias :is_published :is_published?
   
   def calculate_score(tosave=false,current_endorsement=nil)
     old_score = self.score

@@ -18,8 +18,8 @@
 		<%= t('bulletins.new.name') %>
 		<% end %>
 	</div>
-	<% form_remote_for comment, :url => bulletins_url, :loading=>"Form.Element.disable('bulletin-form-submit')" do |f| %>		
-		<%= f.error_messages %>
+	<% form_for comment, :url => bulletins_url, remote: true, :loading=>"Form.Element.disable('bulletin-form-submit')" do |f| %>		
+		<%= render 'shared/error_messages', model: comment %>
 		<%= f.text_area :content, :size => "70x2", :id => "bulletin_content" %><br/>
 		<div style="padding-top: 3px;">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">

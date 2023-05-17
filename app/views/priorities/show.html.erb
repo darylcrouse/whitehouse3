@@ -1,4 +1,4 @@
-<%= render :partial => "header" %>
+<%= render partial: "header", locals: {current_government: current_government} %>
 
 <% if @priority.replaced? %>
 	<div id="hp_subhead">

@@ -2,7 +2,7 @@
 <p>
 <%= blurb("invite_intro")%>
 <p>
-<% form_remote_for @contact, :url => user_contacts_path(@user) do |f| %>
+<% form_for @contact, :url => user_contacts_path(@user) do |f| %>
   	<%= f.error_messages %>
 
 	<% if logged_in? %>

@@ -20,7 +20,7 @@ class Comment < ActiveRecord::Base
   liquid_methods :id, :activity_id, :content, :user, :activity, :show_url
   
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  enum status: { published: 0, deleted: 1, abusive: 2 }
+  enum status: { published: 0, deleted: 1, abusive: 2 }, _prefix: :status
 
   aasm column: :status, enum: true, whiny_transitions: false do
     state :published, initial: true, before_enter: :do_publish
@@ -41,6 +41,8 @@ class Comment < ActiveRecord::Base
   end
   
   def do_publish
+    return unless self.activity
+
     self.activity.changed_at = Time.now
     self.activity.comments_count += 1
     self.activity.save_with_validation(false)
@@ -162,12 +164,5 @@ class Comment < ActiveRecord::Base
   def show_url
     Government.current.homepage_url + 'activities/' + activity_id.to_s + '/comments#' + id.to_s
   end
-  
-  auto_html_for(:content) do
-    redcloth
-    youtube(:width => 330, :height => 210)
-    vimeo(:width => 330, :height => 180)
-    link(:rel => "nofollow")
-  end
-  
+
 end
