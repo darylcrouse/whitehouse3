@@ -1,78 +1,60 @@
 class PasswordsController < ApplicationController
+  layout "sessions"
+  ssl_required :new, :create, :edit, :update, :reset
 
-  before_filter :login_from_cookie
-  before_filter :login_required, :except => [:create, :new]
-  before_filter :current_user_required, :only => [:edit, :update]
+  before_action :find_password, only: [:edit, :update, :reset]
+  before_action :login_from_token, only: [:edit, :update]
+  before_action :login_required, only: [:new, :create]
 
-  # Don't write passwords as plain text to the log files
-  filter_parameter_logging :old_password, :password, :password_confirmation
-
-  # GETs should be safe
-  verify :method => :post, :only => [:create], :redirect_to => { :controller => :users }
-  verify :method => :put, :only => [:update], :redirect_to => { :controller => :users }
-
-  # POST /passwords
-  # Forgot password
-  
-  # If a user is logged in and they want to change their password
-  # link to edit_user_path(current_user). 
-  # If a user is not logged in and has forgotten their password, 
-  # link to the forgot password view by using new_password_path().  
-  
   def new
-    @page_title = t('passwords.new.title',:government_name => current_government.name)
+    @page_title = t('passwords.new.title', government_name: current_government.name)
   end
-  
+
   def create
-    @page_title = t('passwords.new.title',:government_name => current_government.name)
-    users = User.find(:all, :conditions => ["email = ? and status in ('active','pending','passive')",params[:email]])
-    if users.any?
-      user = users[0]
-      if user.has_facebook?
-        flash[:error] = t('passwords.new.facebook',:government_name => current_government.name)
-        redirect_to :action => "new"
-        return
-      else
-        user.reset_password
-        flash[:notice] = t('passwords.new.sent', :email => user.email)
-        redirect_to login_path
-        return
-      end      
+    @user = User.find_by(email: params[:user][:email])
+    if @user
+      PasswordMailer.reset_password(@user).deliver_now
+      flash[:notice] = t('passwords.sent', government_name: current_government.name)
+      redirect_to login_path
     else
-      user = nil
-      flash[:error] =  t('users.missing')
-      redirect_to :action => "new"
-      return
+      flash[:error] = t('passwords.invalid', government_name: current_government.name)
+      render action: "new"
     end
   end
 
-  # GET /users/1/password/edit
-  # Changing password
   def edit
-    @page_title = t('passwords.change.title',:government_name => current_government.name)
-    @user = current_user
-    if @user.has_facebook?
-      flash[:error] = t('passwords.change.facebook',:government_name => current_government.name)
-      return
-    end
+    @page_title = t('passwords.edit.title', government_name: current_government.name)
   end
 
-  # PUT /users/1/password
-  # Changing password
   def update
-    @user = current_user
-    old_password = params[:old_password]
-    @user.attributes = params[:user]
+    new_password = params[:user][:password]
+    new_password_confirmation = params[:user][:password_confirmation]
 
-    respond_to do |format|
-      if @user.authenticated?(old_password) && @user.save
-        flash[:notice] = t('passwords.change.success')
-        format.html { redirect_to edit_password_url(@user) }
-      else
-        flash[:error] = t('passwords.change.nomatch')
-        format.html { render :action => 'edit' }
-      end
+    if @user.update(password: new_password, password_confirmation: new_password_confirmation)
+      flash[:notice] = t('passwords.success')
+      redirect_to login_path
+    else
+      flash[:error] = t('passwords.invalid', government_name: current_government.name)
+      render action: "edit"
     end
   end
 
+  def reset
+    raise "Password token expired" if @password.expired?
+    @page_title = t('passwords.new.title', government_name: current_government.name)
+    render
+  end
+
+  private
+
+  def find_password
+    @password = Password.find_by(param: params[:id])
+    raise "Invalid password" unless @password
+  end
+
+  def login_from_token
+    session[:user_id] = @password.user_id
+    @user = User.find(session[:user_id])
+    raise "Invalid user" unless @user
+  end
 end
