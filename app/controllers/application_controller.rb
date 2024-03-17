@@ -1,226 +1,176 @@
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
-
   include AuthenticatedSystem
   include FaceboxRender
-  
+
   require_dependency "activity.rb"
-  require_dependency "blast.rb" 
-  require_dependency "relationship.rb"   
+  require_dependency "blast.rb"
+  require_dependency "relationship.rb"
   require_dependency "capital.rb"
 
-  rescue_from ActionController::InvalidAuthenticityToken, :with => :bad_token
-  rescue_from Facebooker::Session::SessionExpired, :with => :fb_session_expired 
+  rescue_from ActionController::InvalidAuthenticityToken, with: :bad_token
+  rescue_from Facebooker::Session::SessionExpired, with: :fb_session_expired
 
-  helper :all # include all helpers, all the time
-  
-  # Make these methods visible to views as well
   helper_method :facebook_session, :government_cache, :current_partner, :current_user_endorsements, :current_priority_ids, :current_following_ids, :current_ignoring_ids, :current_following_facebook_uids, :current_government, :current_tags, :current_branches, :facebook_session, :is_robot?, :js_help
-  
-  # switch to the right database for this government
-  before_filter :check_subdomain
-  
-  before_filter :set_facebook_session, :unless => [:no_facebook?]
-  before_filter :load_actions_to_publish, :unless => [:is_robot?]
-  before_filter :check_facebook, :unless => [:is_robot?]
-    
-  before_filter :check_blast_click, :unless => [:is_robot?]
-  before_filter :check_priority, :unless => [:is_robot?]
-  before_filter :check_referral, :unless => [:is_robot?]
-  before_filter :check_suspension, :unless => [:is_robot?]
-  before_filter :update_loggedin_at, :unless => [:is_robot?]
+
+  before_action :check_subdomain
+  before_action :set_facebook_session, unless: :no_facebook?
+  before_action :load_actions_to_publish, unless: :is_robot?
+  before_action :check_facebook, unless: :is_robot?
+  before_action :check_blast_click, unless: :is_robot?
+  before_action :check_priority, unless: :is_robot?
+  before_action :check_referral, unless: :is_robot?
+  before_action :check_suspension, unless: :is_robot?
+  before_action :update_loggedin_at, unless: :is_robot?
 
   layout :get_layout
 
-  # See ActionController::RequestForgeryProtection for details
-  # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery #:secret => 'd0451bc51967070c0872c2865d2651e1'
+  protect_from_forgery
 
-  protected
-  
+  private
+
   def get_layout
-    return false if not is_robot? and not current_government
-    return "basic" if not current_government
-    return current_government.layout 
+    return false if !is_robot? && !current_government
+    return "basic" if !current_government
+    current_government.layout
   end
 
   def current_government
-    return @current_government if @current_government
-    @current_government = Rails.cache.read('government')
-    if not @current_government
-      @current_government = Government.last
-      if @current_government
-        @current_government.update_counts
-        Rails.cache.write('government', @current_government, :expires_in => 15.minutes) 
-      else
-        return nil
-      end
+    @current_government ||= Rails.cache.fetch('government', expires_in: 15.minutes) do
+      government = Government.last
+      government.update_counts if government
+      government
     end
     Government.current = @current_government
-    return @current_government
+    @current_government
   end
-  
-  # Will either fetch the current partner or return nil if there's no subdomain
+
   def current_partner
-    return nil if request.subdomains.size == 0 or request.host == current_government.base_url or request.subdomains.first == 'dev'
-    @current_partner ||= Partner.find_by_short_name(request.subdomains.first)
+    return nil if request.subdomains.empty? || request.host == current_government.base_url || request.subdomains.first == 'dev'
+    @current_partner ||= Partner.find_by(short_name: request.subdomains.first)
   end
-  
+
   def current_user_endorsements
-		@current_user_endorsements ||= current_user.endorsements.active.by_position.paginate(:include => :priority, :page => session[:endorsement_page], :per_page => 25)
+    @current_user_endorsements ||= current_user.endorsements.active.by_position.includes(:priority).page(session[:endorsement_page]).per(25)
   end
-  
+
   def current_priority_ids
-    return [] unless logged_in? and current_user.endorsements_count > 0
-    @current_priority_ids ||= current_user.endorsements.active_and_inactive.collect{|e|e.priority_id}
-  end  
-  
-  def current_following_ids
-    return [] unless logged_in? and current_user.followings_count > 0
-    @current_following_ids ||= current_user.followings.up.collect{|f|f.other_user_id}
+    return [] unless logged_in? && current_user.endorsements_count.positive?
+    @current_priority_ids ||= current_user.endorsements.active_and_inactive.pluck(:priority_id)
   end
-  
+
+  def current_following_ids
+    return [] unless logged_in? && current_user.followings_count.positive?
+    @current_following_ids ||= current_user.followings.up.pluck(:other_user_id)
+  end
+
   def current_following_facebook_uids
-    return [] unless logged_in? and current_user.followings_count > 0 and current_user.has_facebook?
-    @current_following_facebook_uids ||= current_user.followings.up.collect{|f|f.other_user.facebook_uid}.compact
-  end  
-  
+    return [] unless logged_in? && current_user.followings_count.positive? && current_user.has_facebook?
+    @current_following_facebook_uids ||= current_user.followings.up.map { |f| f.other_user.facebook_uid }.compact
+  end
+
   def current_ignoring_ids
-    return [] unless logged_in? and current_user.ignorings_count > 0
-    @current_ignoring_ids ||= current_user.followings.down.collect{|f|f.other_user_id}    
+    return [] unless logged_in? && current_user.ignorings_count.positive?
+    @current_ignoring_ids ||= current_user.followings.down.pluck(:other_user_id)
   end
 
   def current_branches
     return [] unless current_government.is_branches?
     Branch.all_cached
   end
-  
+
   def current_tags
     return [] unless current_government.is_tags?
     @current_tags ||= Rails.cache.fetch('Tag.by_endorsers_count.all') { Tag.by_endorsers_count.all }
   end
 
   def load_actions_to_publish
-    @user_action_to_publish = flash[:user_action_to_publish] 
-    flash[:user_action_to_publish]=nil
-  end  
-  
-  def check_suspension
-    if logged_in? and current_user and current_user.status == 'suspended'
-      self.current_user.forget_me if logged_in?
-      cookies.delete :auth_token
-      reset_session
-      flash[:notice] = "This account has been suspended."
-      redirect_back_or_default('/')
-      return  
-    end
+    @user_action_to_publish = flash[:user_action_to_publish]
+    flash[:user_action_to_publish] = nil
   end
-  
-  # they were trying to endorse a priority, so let's go ahead and add it and take htem to their priorities page immediately    
+
+  def check_suspension
+    return unless logged_in? && current_user && current_user.suspended?
+    current_user.forget_me
+    cookies.delete :auth_token
+    reset_session
+    flash[:notice] = "This account has been suspended."
+    redirect_back_or_default('/')
+  end
+
   def check_priority
-    return unless logged_in? and session[:priority_id]
-    @priority = Priority.find(session[:priority_id])
+    return unless logged_in? && session[:priority_id]
+    @priority = Priority.find_by(id: session[:priority_id])
     @value = session[:value].to_i
     if @priority
-      if @value == 1
-        @priority.endorse(current_user,request,current_partner,@referral)
-      else
-        @priority.oppose(current_user,request,current_partner,@referral)
-      end
-    end  
+      @value == 1 ? @priority.endorse(current_user, request, current_partner, @referral) : @priority.oppose(current_user, request, current_partner, @referral)
+    end
     session[:priority_id] = nil
     session[:value] = nil
   end
-  
+
   def update_loggedin_at
-    return unless logged_in?
-    return unless current_user.loggedin_at.nil? or Time.now > current_user.loggedin_at+30.minutes
-    User.find(current_user.id).update_attribute(:loggedin_at,Time.now)
+    return unless logged_in? && (current_user.loggedin_at.nil? || Time.current > current_user.loggedin_at + 30.minutes)
+    current_user.update_column(:loggedin_at, Time.current)
   end
 
   def check_blast_click
-    # if they've got a ?b= code, log them in as that user
-    if params[:b] and params[:b].length > 2
-      @blast = Blast.find_by_code(params[:b])
-      if @blast and not logged_in?
+    if params[:b].present? && params[:b].length > 2
+      @blast = Blast.find_by(code: params[:b])
+      if @blast && !logged_in?
         self.current_user = @blast.user
         @blast.increment!(:clicks_count)
       end
-      redirect = request.path_info.split('?').first
-      redirect = "/" if not redirect
-      redirect_to redirect
-      return
+      redirect_to request.path_info.split('?').first
     end
   end
 
   def check_subdomain
-    if not current_government
-      redirect_to :controller => "install"
-      return
-    end
-    if not current_partner and RAILS_ENV == 'production' and request.subdomains.any? and not ['www','dev'].include?(request.subdomains.first) and current_government.base_url != request.host
-      redirect_to 'http://' + current_government.base_url + request.path_info
-      return
-    end    
+    return if current_government
+    redirect_to controller: "install"
   end
-  
+
   def check_referral
-    if not params[:referral_id].blank?
-      @referral = User.find(params[:referral_id])
-    else
-      @referral = nil
-    end    
-  end  
-  
-  # if they're logged in with a wh2 account, AND connected with facebook, but don't have their facebook uid added to their account yet
-  def check_facebook 
-    return unless Facebooker.api_key
-    if logged_in? and facebook_session and not current_user.has_facebook?
-      return if facebook_session.user.uid == 55714215 and current_user.id != 1 # this is jim, don't add his facebook to everyone's account!
-      @user = User.find(current_user.id)
-      if not @user.update_with_facebook(facebook_session)
-        return
-      end
-      if not @user.activated?
-        @user.activate!
-      end      
+    @referral = params[:referral_id].present? ? User.find_by(id: params[:referral_id]) : nil
+  end
+
+  def check_facebook
+    return unless Facebooker.api_key && logged_in? && facebook_session && !current_user.has_facebook?
+    return if facebook_session.user.uid == 55714215 && current_user.id != 1
+    @user = User.find(current_user.id)
+    if @user.update_with_facebook(facebook_session)
+      @user.activate! unless @user.activated?
       @current_user = User.find(current_user.id)
-      flash.now[:notice] = t('facebook.synced', :government_name => current_government.name)
-    end      
+      flash.now[:notice] = t('facebook.synced', government_name: current_government.name)
+    end
   end
-  
+
   def is_robot?
-    return true if request.format == 'rss' or params[:controller] == 'pictures'
-    request.user_agent =~ /\b(Baidu|Gigabot|Googlebot|libwww-perl|lwp-trivial|msnbot|SiteUptime|Slurp|WordPress|ZIBB|ZyBorg)\b/i
+    request.format == :rss || params[:controller] == 'pictures' || request.user_agent =~ /\b(Baidu|Gigabot|Googlebot|libwww-perl|lwp-trivial|msnbot|SiteUptime|Slurp|WordPress|ZIBB|ZyBorg)\b/i
   end
-  
+
   def no_facebook?
-    return false if Facebooker.api_key
-    return true if is_robot?
-    return true
+    Facebooker.api_key.blank? || is_robot?
   end
-  
+
   def bad_token
     flash[:error] = t('application.bad_token')
     respond_to do |format|
-      format.html { redirect_to request.referrer||'/' }
-      format.js { redirect_from_facebox(request.referrer||'/') }
+      format.html { redirect_back fallback_location: '/' }
+      format.js { redirect_from_facebox(request.referrer || '/') }
     end
   end
-  
+
   def fb_session_expired
-    self.current_user.forget_me if logged_in?
+    current_user.forget_me if logged_in?
     cookies.delete :auth_token
-    reset_session    
+    reset_session
     flash[:error] = t('application.fb_session_expired')
     respond_to do |format|
-      format.html { redirect_to request.referrer||'/' }
-      format.js { redirect_from_facebox(request.referrer||'/') }
-    end    
+      format.html { redirect_back fallback_location: '/' }
+      format.js { redirect_from_facebox(request.referrer || '/') }
+    end
   end
-  
+
   def js_help
     JavaScriptHelper.instance
   end
@@ -228,32 +178,24 @@ class ApplicationController < ActionController::Base
   class JavaScriptHelper
     include Singleton
     include ActionView::Helpers::JavaScriptHelper
-  end  
-  
+  end
 end
 
 module FaceboxRender
-   
-  def render_to_facebox( options = {} )
+  def render_to_facebox(options = {})
     options[:template] = "#{default_template_name}" if options.empty?
 
-    action_string = render_to_string(:action => options[:action], :layout => "facebox") if options[:action]
-    template_string = render_to_string(:template => options[:template], :layout => "facebox") if options[:template]
+    action_string = render
+render :update do |page|
+  page << "jQuery.facebox(#{action_string.to_json})" if options[:action]
+  page << "jQuery.facebox(#{template_string.to_json})" if options[:template]
+  page << "jQuery.facebox(#{render(partial: options[:partial]).to_json})" if options[:partial]
+  page << "jQuery.facebox(#{options[:html].to_json})" if options[:html]
 
-    render :update do |page|
-      page << "jQuery.facebox(#{action_string.to_json})" if options[:action]
-      page << "jQuery.facebox(#{template_string.to_json})" if options[:template]
-      page << "jQuery.facebox(#{(render :partial => options[:partial]).to_json})" if options[:partial]
-      page << "jQuery.facebox(#{options[:html].to_json})" if options[:html]
-
-      if options[:msg]
-        page << "jQuery('#facebox .content').prepend('<div class=\"message\">#{options[:msg]}</div>')"
-      end
-      page << render(:partial => "shared/javascripts_reloadable")
-      
-      yield(page) if block_given?
-
-    end
+  if options[:msg]
+    page << "jQuery('#facebox .content').prepend('<div class=\"message\">#{options[:msg]}</div>')"
   end
-    
+  page << render(partial: "shared/javascripts_reloadable")
+
+  yield(page) if block_given?
 end
