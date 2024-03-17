@@ -1,64 +1,66 @@
 class AdminController < ApplicationController
-  
-  before_filter :admin_required
-  
+  before_action :admin_required
+
   def random_user
-    if User.adapter == 'postgresql'
-      users = User.find(:all, :conditions => "status = 'active'", :order => "RANDOM()", :limit => 1)
-    else
-      users = User.find(:all, :conditions => "status = 'active'", :order => "rand()", :limit => 1)
-    end
-    self.current_user = users[0]
-    flash[:notice] = t('admin.impersonate', :user_name => users[0].name)
-    redirect_to users[0]    
+    user = if User.connection.adapter_name == 'PostgreSQL'
+             User.active.order('RANDOM()').first
+           else
+             User.active.order('RAND()').first
+           end
+    
+    self.current_user = user
+    flash[:notice] = t('admin.impersonate', user_name: user.name)
+    redirect_to user
   end
 
   def picture
-    @page_title = t('admin.logo', :government_name => current_government.name)
+    @page_title = t('admin.logo', government_name: current_government.name)
   end
 
   def picture_save
     @government = current_government
-    respond_to do |format|
-      if @government.update_attributes(params[:government])
-        flash[:notice] = t('pictures.success')
-        format.html { redirect_to(:action => :picture) }
-      else
-        format.html { render :action => "picture" }
-      end
+    
+    if @government.update(government_params)
+      flash[:notice] = t('pictures.success')
+      redirect_to action: :picture
+    else
+      render :picture
     end
   end
 
   def fav_icon
-    @page_title = t('admin.fav_icon', :government_name => current_government.name)
+    @page_title = t('admin.fav_icon', government_name: current_government.name)
   end
 
   def fav_icon_save
     @government = current_government
-    respond_to do |format|
-      if @government.update_attributes(params[:government])
-        flash[:notice] = t('pictures.success')
-        format.html { redirect_to(:action => :fav_icon) }
-      else
-        format.html { render :action => "fav_icon" }
-      end
+    
+    if @government.update(government_params)
+      flash[:notice] = t('pictures.success')
+      redirect_to action: :fav_icon
+    else
+      render :fav_icon
     end
   end
-  
+
   def buddy_icon
-    @page_title = t('admin.buddy_icon', :government_name => current_government.name)
+    @page_title = t('admin.buddy_icon', government_name: current_government.name)
   end
 
   def buddy_icon_save
     @government = current_government
-    respond_to do |format|
-      if @government.update_attributes(params[:government])
-        flash[:notice] = t('pictures.success')
-        format.html { redirect_to(:action => :buddy_icon) }
-      else
-        format.html { render :action => "buddy_icon" }
-      end
+    
+    if @government.update(government_params)
+      flash[:notice] = t('pictures.success')
+      redirect_to action: :buddy_icon
+    else
+      render :buddy_icon
     end
-  end  
+  end
 
+  private
+
+  def government_params
+    params.require(:government).permit(:your_permitted_attributes)
+  end
 end
