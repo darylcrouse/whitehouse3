@@ -5,90 +5,77 @@ class EndorsementsController < ApplicationController
   # GET /endorsements
   # GET /endorsements.xml
   def index
-    @endorsements = Endorsement.active_and_inactive.by_recently_created(:include => [:user,:priority]).paginate :page => params[:page], :per_page => params[:per_page]
+    @endorsements = Endorsement.active.by_position.find(:all, :include => :user, :limit => 5)
     respond_to do |format|
-      format.html { redirect_to yours_priorities_url }
-      format.xml { render :xml => @endorsements.to_xml(:include => [:user, :priority], :except => NB_CONFIG['api_exclude_fields']) }
-      format.json { render :json => @endorsements.to_json(:include => [:user, :priority], :except => NB_CONFIG['api_exclude_fields']) }
+      format.html # index.html.erb
+      format.xml { render :xml => @endorsements.to_xml(:include => :user, :except => NB_CONFIG['api_exclude_fields']) }
+      format.json { render :json => @endorsements.to_json(:include => :user, :except => NB_CONFIG['api_exclude_fields']) }
     end
   end
-  
-  def edit
-    @endorsement = current_user.endorsements.find(params[:id])
+
+  # GET /priorities/1/endorsements
+  # GET /priorities/1/endorsements.xml
+  def show
+    @priority = Priority.find(params[:id])
     respond_to do |format|
-      format.js {
-        render :update do |page|
-          if params[:region] == 'priority_left'
-            page.replace_html 'priority_' + @endorsement.priority.id.to_s + '_position', render(:partial => "endorsements/position_form", :locals => {:endorsement => @endorsement})
-            page['endorsement_' + @endorsement.id.to_s + "_position_edit"].focus
-          elsif params[:region] == 'yours'
-            page.replace_html 'endorsement_' + @endorsement.id.to_s, render(:partial => "endorsements/row_form", :locals => {:endorsement => @endorsement})
-            page['endorsement_' + @endorsement.id.to_s + "_row_edit"].focus
-          end
-        end        
-      }
+      format.html # show.html.erb
+      format.xml { render :xml => @endorsements.to_xml(:include => :user, :except => NB_CONFIG['api_exclude_fields']) }
+      format.json { render :json => @endorsements.to_json(:include => :user, :except => NB_CONFIG['api_exclude_fields']) }
+    end    
+  end
+
+  # GET /priorities/1/endorsements/new
+  def new
+    @priority = Priority.find(params[:priority_id])
+    @endorsement = @priority.endorsements.new
+    respond_to do |format|
+      format.html # new.html.erb
     end
   end
-  
-  def update
-    @endorsement = current_user.endorsements.find(params[:id])
-    return if params[:endorsement][:position].to_i < 1  # if they didn't put a number in, don't do anything
-    if @endorsement.insert_at(params[:endorsement][:position]) 
-      respond_to do |format|
+
+  # POST /priorities/1/endorsements
+  # POST /priorities/1/endorsements.xml
+  def create
+    @priority = Priority.find(params[:priority_id])    
+    @endorsement = @priority.endorse(current_user,request,current_partner,params[:referral_id])
+    respond_to do |format|
+      if @endorsement.save
+        format.html { redirect_to(@priority, :notice => 'Successfully endorsed.') }
         format.js {
           render :update do |page|
-            if params[:region] == 'priority_left'
-              page.replace_html 'priority_' + @endorsement.priority.id.to_s + "_position",render(:partial => "endorsements/position", :locals => {:endorsement => @endorsement})
-            elsif params[:region] == 'yours'
-            end
-            page.replace_html 'your_priorities_container', :partial => "priorities/yours"              
-          end        
-        }
+            page.replace 'endorsement_' + @priority.id.to_s, render(:partial => "endorsements/update", :locals => {:priority => @priority, :endorsement => @endorsement})
+            page.replace 'endorsement_count_' + @priority.id.to_s, render(:partial => "endorsements/endorsement_count", :locals => {:priority => @priority})            
+            page.replace 'endorse_or_oppose_' + @priority.id.to_s, render(:partial => "endorsements/endorse_or_oppose", :locals => {:priority => @priority})                      
+            page << "jQuery('#priority_#{@priority.id.to_s}_endorsed_button').button('option', 'disabled', true);"
+          end
+        }        
+      else
+        format.html { render :action => "new" }
       end
     end
   end
-  
-  # DELETE /endorsements/1
-  def destroy
-    if current_user.is_admin?
-      @endorsement = Endorsement.find(params[:id])
-    else
-      @endorsement = current_user.endorsements.find(params[:id])
-    end
-    return unless @endorsement
-    @priority = @endorsement.priority
-    eid = @endorsement.id
-    @endorsement.destroy
+
+  # PUT /endorsements/1
+  # PUT /endorsements/1.xml
+  def update
+    @endorsement = current_user.endorsements.find(params[:id])
     respond_to do |format|
-      format.js {
-        render :update do |page|
-          if params[:region] == 'priority_left'
-            page.replace_html 'priority_' + @priority.id.to_s + "_button",render(:partial => "priorities/button", :locals => {:priority => @priority, :endorsement => nil})
-            page.replace_html 'priority_' + @priority.id.to_s + "_position",render(:partial => "endorsements/position", :locals => {:endorsement => nil})
-            page.replace 'endorser_link', render(:partial => "priorities/endorser_link") 
-            page.replace 'opposer_link', render(:partial => "priorities/opposer_link")             
-            if @endorsement.is_up?
-              @activity = ActivityEndorsementDelete.find_by_priority_id_and_user_id(@priority.id,current_user.id, :order => "created_at desc")
-            else
-              @activity = ActivityOppositionDelete.find_by_priority_id_and_user_id(@priority.id,current_user.id, :order => "created_at desc")
-            end          
-            page.insert_html :top, 'activities', render(:partial => "activities/show", :locals => {:activity => @activity, :suffix => "_noself"})
-          elsif ['priority_inline'].include?(params[:region])
-            page.select('#priority_' + @priority.id.to_s + "_endorsement_count").each { |item| item.replace(render(:partial => "priorities/endorsement_count", :locals => {:priority => @priority})) }
-            page.select('#priority_' + @priority.id.to_s + "_button_small").each {|item| item.replace(render(:partial => "priorities/button_small", :locals => {:priority => @priority, :endorsement => nil, :region => params[:region]}))}
-          elsif ['branch_inline'].include?(params[:region])
-            be = BranchEndorsement.find_by_priority_id_and_branch_id(@priority.id,params[:branch_id])
-            page.select('#priority_' + @priority.id.to_s + "_endorsement_count").each { |item| item.replace(render(:partial => "branch_priorities/endorsement_count", :locals => {:priority => @priority, :branch_endorsement => be})) }
-            page.select('#priority_' + @priority.id.to_s + "_button_small").each {|item| item.replace(render(:partial => "branch_priorities/button_small", :locals => {:priority => @priority, :branch_endorsement => be, :endorsement => nil, :region => params[:region]}))}          
-          elsif params[:region] == 'your_priorities'
-            page.visual_effect :fade, 'endorsement_' + eid.to_s, :duration => 0.5
-          elsif params[:region] == 'ad'
-          end     
-          page.replace_html 'your_priorities_container', :partial => "priorities/yours"
-          page.visual_effect :highlight, 'your_priorities' unless params[:region] == 'your_priorities'          
-        end
-      }    
+      if @endorsement.update_attributes(params[:endorsement])
+        format.html { redirect_to(@endorsement, :notice => 'Endorsement was successfully updated.') }
+      else
+        format.html { render :action => "edit" }
+      end
     end
+  end
+
+  # DELETE /endorsements/1
+  # DELETE /endorsements/1.xml
+  def destroy
+    @endorsement = current_user.endorsements.find(params[:id])
+    return unless @endorsement.destroy
+    
+    redirect_back_or_default '/'
+    
   end
 
 end
