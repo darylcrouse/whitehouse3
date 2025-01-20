@@ -42,6 +42,10 @@ Date.prototype.toFormattedString = function(include_time){
 Date.parseFormattedString = function(string) { return new Date(string);}
 Math.floor_to_interval = function(n, i) { return Math.floor(n/i) * i;}
 window.f_height = function() { return( [window.innerHeight ? window.innerHeight : null, document.documentElement ? document.documentElement.clientHeight : null, document.body ? document.body.clientHeight : null].select(function(x){return x>0}).first()||0); }
+/**
+ * Retrieves the current vertical scroll position of the window.
+ * @returns {number} The number of pixels the document has been scrolled vertically.
+ */
 window.f_scrollTop = function() { return ([window.pageYOffset ? window.pageYOffset : null, document.documentElement ? document.documentElement.scrollTop : null, document.body ? document.body.scrollTop : null].select(function(x){return x>0}).first()||0 ); }
 
 _translations = {
@@ -51,14 +55,32 @@ _translations = {
 }
 SelectBox = Class.create();
 SelectBox.prototype = {
+  /**
+   * Initializes a select element with the given options and populates it with values.
+   * @param {HTMLElement|string} parent_element - The parent element or selector where the select element will be created.
+   * @param {Array|Object} values - The values to populate the select element with.
+   * @param {Object} html_options - HTML attributes to be applied to the select element.
+   * @param {Object} style_options - CSS styles to be applied to the select element.
+   * @returns {jQuery} The created and populated select element as a jQuery object.
+   */
   initialize: function(parent_element, values, html_options, style_options) {
     this.element = $(parent_element).build("select", html_options, style_options);
     this.populate(values);
   },
   populate: function(values) {
     this.element.purgeChildren();
+    /**
+     * Populates a select element with options based on the provided values.
+     * @param {Array} values - An array of values or key-value pairs to create options from.
+     * @returns {undefined} This method does not return a value.
+     */
     var that = this; $A(values).each(function(pair) { if (typeof(pair)!="object") {pair = [pair, pair]}; that.element.build("option", { value: pair[1], innerHTML: pair[0]}) });
   },
+  /**
+   * Sets the selected option of a select element based on a given value.
+   * @param {string|number} value - The value to match against the options' values.
+   * @returns {boolean} Returns true if a matching option was found and selected, false otherwise.
+   */
   setValue: function(value) {
     var e = this.element;
     var matched = false;
@@ -69,6 +91,24 @@ SelectBox.prototype = {
 }
 CalendarDateSelect = Class.create();
 CalendarDateSelect.prototype = {
+  /**
+   * Initializes the calendar date select component.
+   * @param {Element|string} target_element - The target element or its ID where the calendar will be attached.
+   * @param {Object} options - Configuration options for the calendar.
+   * @param {boolean} [options.embedded=false] - Whether the calendar is embedded in the page.
+   * @param {Element} [options.popup] - The element to use as a popup container.
+   * @param {boolean} [options.time=false] - Whether to include time selection.
+   * @param {boolean} [options.buttons=true] - Whether to show action buttons.
+   * @param {number} [options.year_range=10] - The range of years to display.
+   * @param {Element} [options.calendar_div] - The element to use as the calendar container.
+   * @param {boolean} [options.close_on_click] - Whether to close the calendar on click outside.
+   * @param {number} [options.minute_interval=5] - The interval for minute selection.
+   * @param {Element} [options.popup_by] - The element to position the popup by.
+   * @param {string} [options.month_year="dropdowns"] - The format for month and year selection.
+   * @param {Function} [options.onchange] - The onchange event handler.
+   * @param {Function} [options.valid_date_check] - A function to validate dates.
+   * @returns {boolean} Returns false if the target element is not found, otherwise undefined.
+   */
   initialize: function(target_element, options) {
     this.target_element = $(target_element); // make sure it's an element, not a string
     if (!this.target_element) { alert("Target element " + target_element + " not found!"); return false;}
@@ -142,6 +182,12 @@ CalendarDateSelect.prototype = {
     // draw an iframe behind the calendar -- ugly hack to make IE 6 happy
     if(navigator.appName=="Microsoft Internet Explorer") this.iframe = $(document.body).build("iframe", {className: "ie6_blocker"}, { left: left_px, top: top_px, height: c_height.toString()+"px", width: c_width.toString()+"px", border: "0px"})
   },
+  /**
+   * Initializes the calendar component by creating necessary DOM elements and setting up the calendar structure.
+   * This method creates divs for different parts of the calendar, initializes the header, buttons, and calendar grid,
+   * updates the footer, refreshes the calendar, and sets the time usage based on the configuration.
+   * @returns {void} This method does not return a value.
+   */
   init: function() {
     var that = this;
     // create the divs
@@ -171,6 +217,13 @@ CalendarDateSelect.prototype = {
       this.month_year_label = header_div.build("span")
     }
   },
+  /**
+   * Initializes the calendar grid for the date selector.
+   * This method creates a table structure representing the calendar,
+   * including weekday headers and individual day cells for a 6-week period.
+   * It also sets up event handlers for day selection and hover effects.
+   * @returns {void} This method does not return a value.
+   */
   initCalendarGrid: function() {
     var body_div = this.body_div;
     this.calendar_day_grid = [];
@@ -253,6 +306,15 @@ CalendarDateSelect.prototype = {
       }
     }
   },
+  /**
+   * Refreshes the calendar display by updating various components.
+   * This method performs a series of refresh operations including:
+   * - Refreshing the month and year display
+   * - Refreshing the calendar grid
+   * - Setting the selected class
+   * - Updating the footer
+   * @returns {void} This method does not return a value.
+   */
   refresh: function ()
   {
     this.refreshMonthYear();
@@ -292,6 +354,13 @@ CalendarDateSelect.prototype = {
       this.today_cell.addClassName("today");
     }
   },
+  /**
+   * Refreshes the month and year display in the date picker.
+   * This method updates either the dropdown selects or the label
+   * based on the current date and option settings.
+   * 
+   * @returns {undefined} This method does not return a value.
+   */
   refreshMonthYear: function() {
     var m = this.date.getMonth();
     var y = this.date.getFullYear();
@@ -312,6 +381,12 @@ CalendarDateSelect.prototype = {
   populateYearRange: function() {
     this.year_select.populate(this.yearRange().toArray());
   },
+  /**
+   * Calculates and returns a range of years based on the current date and configuration options.
+   * @returns {Object} A range object representing the calculated year range.
+   *                   The range is created using the $R() function, which likely returns
+   *                   an object with properties for the start and end of the range.
+   */
   yearRange: function() {
     if (!this.flexibleYearRange())
       return $R(this.options.get("year_range")[0], this.options.get("year_range")[1]);
@@ -320,6 +395,11 @@ CalendarDateSelect.prototype = {
     return $R(y - this.options.get("year_range"), y + this.options.get("year_range"));
   },
   flexibleYearRange: function() { return (typeof(this.options.get("year_range")) == "number"); },
+  /**
+   * Validates if a given year is within the acceptable range
+   * @param {number} year - The year to be validated
+   * @returns {boolean} True if the year is valid, false otherwise
+   */
   validYear: function(year) { if (this.flexibleYearRange()) { return true;} else { return this.yearRange().include(year);}  },
   dayHover: function(element) {
     var hover_date = new Date(this.selected_date);
@@ -342,6 +422,23 @@ CalendarDateSelect.prototype = {
   dateString: function() {
     return (this.selection_made) ? this.selected_date.toFormattedString(this.use_time) : "&nbsp;";
   },
+  /**
+   * Parses and validates a date string, setting internal date properties.
+   * @param {void} No parameters
+   * @returns {void} This method doesn't return a value
+   * 
+   * @description
+   * This method performs the following operations:
+   * 1. Strips whitespace from the value of the target element
+   * 2. Parses the date string using a custom parsing method
+   * 3. Sets the date to today if parsing fails
+   * 4. Validates the year and adjusts if necessary
+   * 5. Sets the selected date
+   * 6. Determines if time information is present
+   * 7. Resets the day of the month to 1
+   * 
+   * @throws {TypeError} May throw a TypeError if date parsing fails
+   */
   parseDate: function()
   {
     var value = $F(this.target_element).strip()
@@ -353,6 +450,12 @@ CalendarDateSelect.prototype = {
     this.date.setDate(1);
   },
   updateFooter:function(text) { if (!text) text = this.dateString(); this.footer_div.purgeChildren(); this.footer_div.build("span", {innerHTML: text }); },
+  /**
+   * Updates the selected date based on provided parts or element and handles related UI updates.
+   * @param {Object|Element} partsOrElement - Date parts as an object or an element containing date information
+   * @param {boolean} via_click - Indicates if the update was triggered by a click event
+   * @returns {boolean} False if the update is prevented, undefined otherwise
+   */
   updateSelectedDate:function(partsOrElement, via_click) {
     var parts = $H(partsOrElement);
     if ((this.target_element.disabled || this.target_element.readOnly) && this.options.get("popup") != "force") return false;
@@ -385,6 +488,11 @@ CalendarDateSelect.prototype = {
     }
   },
   navMonth: function(month) { (target_date = new Date(this.date)).setMonth(month); return (this.navTo(target_date)); },
+  /**
+   * Navigates to a specific year by updating the date and calling navTo method
+   * @param {number} year - The year to navigate to
+   * @returns {boolean} Returns the result of calling the navTo method with the new date
+   */
   navYear: function(year) { (target_date = new Date(this.date)).setYear(year); return (this.navTo(target_date)); },
   navTo: function(date) {
     if (!this.validYear(date.getFullYear())) return false;
@@ -394,6 +502,12 @@ CalendarDateSelect.prototype = {
     this.callback("after_navigate", this.date);
     return true;
   },
+  /**
+   * Sets the use of time for the date picker based on the provided parameter and options.
+   * This method updates the time-related UI elements (hour and minute selects) if applicable.
+   * @param {boolean} turn_on - Determines whether to enable time selection
+   * @returns {void} This method does not return a value
+   */
   setUseTime: function(turn_on) {
     this.use_time = this.options.get("time") && (this.options.get("time")=="mixed" ? turn_on : true) // force use_time to true if time==true && time!="mixed"
     if (this.use_time && this.selected_date) { // only set hour/minute if a date is already selected
@@ -411,6 +525,11 @@ CalendarDateSelect.prototype = {
     this.target_element.value = this.dateString();
     if (last_value!=this.target_element.value) this.callback("onchange");
   },
+  /**
+   * Updates the date and refreshes the display.
+   * @param {boolean} now - If true, includes hour and minute in the update. If false, hour and minute are set to empty strings.
+   * @returns {void} This method does not return a value.
+   */
   today: function(now) {
     var d = new Date(); this.date = new Date();
     var o = $H({ day: d.getDate(), month: d.getMonth(), year: d.getFullYear(), hour: d.getHours(), minute: d.getMinutes()});
@@ -429,6 +548,11 @@ CalendarDateSelect.prototype = {
     if (this.target_element.type!="hidden") this.target_element.focus();
     this.callback("after_close");
   },
+  /**
+   * Closes the calendar if the user clicks outside of it.
+   * @param {Event} e - The event object representing the click event.
+   * @returns {void} This method does not return a value.
+   */
   closeIfClickedOut: function(e) {
     if (! $(Event.element(e)).descendantOf(this.calendar_div) ) this.close();
   },

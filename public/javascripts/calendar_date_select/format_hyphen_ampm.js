@@ -1,3 +1,8 @@
+/**
+ * Converts a Date object to a formatted string representation.
+ * @param {boolean} include_time - Whether to include the time in the formatted string.
+ * @returns {string} A formatted string representation of the date, optionally including time.
+ */
 Date.prototype.toFormattedString = function(include_time){
   str = this.getFullYear() + "-" + Date.padded2(this.getMonth() + 1) + "-" +Date.padded2(this.getDate()); 
 
@@ -5,6 +10,11 @@ if (include_time) { hour=this.getHours(); str += " " + this.getAMPMHour() + ":" 
 return str;
 }
 
+/**
+ * Parses a formatted date string into a JavaScript Date object.
+ * @param {string} string - The formatted date string to parse.
+ * @returns {Date} A JavaScript Date object representing the parsed date and time.
+ */
 Date.parseFormattedString = function (string) {
   var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
       "( ([0-9]{1,2}):([0-9]{2})? *(pm|am)" +
