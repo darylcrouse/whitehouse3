@@ -7,6 +7,14 @@ Date.prototype.toFormattedString = function(include_time){
   return str;
 }
 
+/**
+ * Parses a formatted date string and returns a Date object.
+ * @param {string} string - The formatted date string to parse. Accepted formats include:
+ *                          "MM/DD/YYYY", "MM/DD/YYYY HH(am|pm)", "MM/DD/YYYY HH:MM(am|pm)"
+ * @returns {Date} A Date object representing the parsed date and time.
+ *                 If the input string doesn't match the expected format,
+ *                 it falls back to the built-in Date.parse() method.
+ */
 Date.parseFormattedString = function (string) {
   // Test these with and without the time
   // 11/11/1111 12pm
