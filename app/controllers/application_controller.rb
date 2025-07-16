@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
 
   def current_following_facebook_uids
     return [] unless logged_in? && current_user.followings_count.positive? && current_user.has_facebook?
-    @current_following_facebook_uids ||= current_user.followings.up.map { |f| f.other_user.facebook_uid }.compact
+    @current_following_facebook_uids ||= current_user.followings.up.includes(:other_user).map { |f| f.other_user.facebook_uid }.compact
   end
 
   def current_ignoring_ids
