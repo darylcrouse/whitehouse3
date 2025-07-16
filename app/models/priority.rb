@@ -92,7 +92,7 @@ class Priority < ActiveRecord::Base
   validates_uniqueness_of :name
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  enum status: { 
+  enum :status, { 
     passive: 0,
     draft: 1,
     published: 2,

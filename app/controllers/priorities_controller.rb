@@ -1,6 +1,6 @@
 class PrioritiesController < ApplicationController
 
-  before_action :login_required, :only => [:yours_finished, :yours_ads, :yours_top, :yours_lowest, :consider, :flag_inappropriate, :comment, :edit, :update, :tag, :tag_save, :opposed, :endorsed, :destroy]
+  before_action :login_required, :only => [:yours_finished, :yours_ads, :yours_top, :yours_lowest, :consider, :flag_inappropriate, :comments, :edit, :update, :tag, :tag_save, :opposed, :endorsed, :destroy]
   before_action :admin_required, :only => [:bury, :successful, :compromised, :intheworks, :failed]
   before_action :load_endorsement, :only => [:show, :activities, :endorsers, :opposers, :opposer_points, :endorser_points, :neutral_points, :everyone_points, :discussions, :everyone_points, :documents, :opposer_documents, :endorser_documents, :neutral_documents, :everyone_documents]
   before_action :check_for_user, :only => [:yours, :network, :yours_finished, :yours_created]
@@ -13,7 +13,7 @@ class PrioritiesController < ApplicationController
       redirect_to action: current_government.homepage
       return
     else
-      @issues = Tag.most_priorities.where("tags.id <> 384 and priorities_count > 4").includes(:top_priority)
+      @issues = Tag.most_priorities.where("tags.id <> 384 and priorities_count > 4").includes(:top_priority).page(params[:page])
       if logged_in? 
         priority_ids = @issues.map {|c| c.top_priority_id} + @issues.map {|c| c.rising_priority_id} + @issues.map {|c| c.controversial_priority_id}
         @endorsements = Endorsement.where("priority_id in (?) and status='active'", priority_ids).all      

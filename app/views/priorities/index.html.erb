@@ -52,7 +52,7 @@
 			<%= render :partial => "users/index_chart", :locals => {:user => current_government.official_user }%>
 		<% end %>
 		
-		<% @finished = Priority.finished.by_most_recent_status_change.all(:limit => 5) %>
+		<% @finished = Priority.finished.by_most_recent_status_change.limit(5) %>
 		<% if @finished.any? %>
 			<p>
 			<div class="heading"><%= t('priorities.finished.heading')%></div>
