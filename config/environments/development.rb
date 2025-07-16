@@ -69,4 +69,5 @@ Rails.application.configure do
 
   # Allow requests from tunnel hostnames for development
   config.hosts << "rails-update-app-tunnel-4t1xmwuw.devinapps.com"
+  config.hosts << "rails-update-app-tunnel-m1zxza73.devinapps.com"
 end
