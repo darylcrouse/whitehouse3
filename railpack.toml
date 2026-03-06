@@ -1,0 +1,5 @@
+[build]
+cmd = "bundle install && bundle exec rake assets:precompile"
+
+[start]
+cmd = "bundle exec rails server -b 0.0.0.0 -p 8080"
