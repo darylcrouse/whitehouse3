@@ -1,0 +1,1282 @@
+// Prisma schema for WhiteHouse3 - migrated from Rails 2.3.4 ActiveRecord
+// Database: PostgreSQL (migrated from MySQL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// CORE MODELS
+// ============================================================================
+
+model User {
+  id                        Int       @id @default(autoincrement())
+  login                     String    @unique @db.VarChar(40)
+  email                     String?   @unique @db.VarChar(100)
+  cryptedPassword           String?   @map("crypted_password") @db.VarChar(40)
+  salt                      String?   @db.VarChar(40)
+  firstName                 String?   @map("first_name") @db.VarChar(100)
+  lastName                  String?   @map("last_name") @db.VarChar(100)
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+  activatedAt               DateTime? @map("activated_at")
+  activationCode            String?   @map("activation_code") @db.VarChar(60)
+  rememberToken             String?   @map("remember_token") @db.VarChar(60)
+  rememberTokenExpiresAt    DateTime? @map("remember_token_expires_at")
+  status                    String    @default("passive") @db.VarChar(30)
+  deletedAt                 DateTime? @map("deleted_at")
+  ipAddress                 String?   @map("ip_address") @db.VarChar(16)
+  loggedinAt                DateTime? @map("loggedin_at")
+  zip                       String?   @db.VarChar(10)
+  birthDate                 DateTime? @map("birth_date") @db.Date
+  twitterLogin              String?   @map("twitter_login") @db.VarChar(15)
+  website                   String?   @db.VarChar(150)
+  isMergeable               Boolean   @default(true) @map("is_mergeable")
+  isSubscribed              Boolean   @default(true) @map("is_subscribed")
+  userAgent                 String?   @map("user_agent") @db.VarChar(200)
+  referrer                  String?   @db.VarChar(200)
+  isCommentsSubscribed      Boolean   @default(true) @map("is_comments_subscribed")
+  isVotesSubscribed         Boolean   @default(true) @map("is_votes_subscribed")
+  isNewsletterSubscribed    Boolean   @default(true) @map("is_newsletter_subscribed")
+  isTagger                  Boolean   @default(false) @map("is_tagger")
+  endorsementsCount         Int       @default(0) @map("endorsements_count")
+  upEndorsementsCount       Int       @default(0) @map("up_endorsements_count")
+  downEndorsementsCount     Int       @default(0) @map("down_endorsements_count")
+  upIssuesCount             Int       @default(0) @map("up_issues_count")
+  downIssuesCount           Int       @default(0) @map("down_issues_count")
+  commentsCount             Int       @default(0) @map("comments_count")
+  score                     Float     @default(0.1)
+  isPointChangesSubscribed  Boolean   @default(true) @map("is_point_changes_subscribed")
+  isMessagesSubscribed      Boolean   @default(true) @map("is_messages_subscribed")
+  capitalsCount             Int       @default(0) @map("capitals_count")
+  twitterCount              Int       @default(0) @map("twitter_count")
+  followersCount            Int       @default(0) @map("followers_count")
+  followingsCount           Int       @default(0) @map("followings_count")
+  ignorersCount             Int       @default(0) @map("ignorers_count")
+  ignoringsCount            Int       @default(0) @map("ignorings_count")
+  position                  Int       @default(0)
+  position24hr              Int       @default(0) @map("position_24hr")
+  position7days             Int       @default(0) @map("position_7days")
+  position30days            Int       @default(0) @map("position_30days")
+  position24hrChange        Int       @default(0) @map("position_24hr_change")
+  position7daysChange       Int       @default(0) @map("position_7days_change")
+  position30daysChange      Int       @default(0) @map("position_30days_change")
+  isFollowersSubscribed     Boolean   @default(true) @map("is_followers_subscribed")
+  adsCount                  Int       @default(0) @map("ads_count")
+  changesCount              Int       @default(0) @map("changes_count")
+  googleToken               String?   @map("google_token") @db.VarChar(30)
+  isFinishedSubscribed      Boolean   @default(true) @map("is_finished_subscribed")
+  contactsCount             Int       @default(0) @map("contacts_count")
+  contactsMembersCount      Int       @default(0) @map("contacts_members_count")
+  contactsInvitedCount      Int       @default(0) @map("contacts_invited_count")
+  contactsNotInvitedCount   Int       @default(0) @map("contacts_not_invited_count")
+  facebookUid               Int?      @unique @map("facebook_uid")
+  city                      String?   @db.VarChar(80)
+  state                     String?   @db.VarChar(50)
+  documentsCount            Int       @default(0) @map("documents_count")
+  documentRevisionsCount    Int       @default(0) @map("document_revisions_count")
+  pointsCount               Int       @default(0) @map("points_count")
+  index24hrChange           Float     @default(0) @map("index_24hr_change")
+  index7daysChange          Float     @default(0) @map("index_7days_change")
+  index30daysChange         Float     @default(0) @map("index_30days_change")
+  receivedNotificationsCount Int      @default(0) @map("received_notifications_count")
+  unreadNotificationsCount  Int       @default(0) @map("unread_notifications_count")
+  rssCode                   String?   @unique @map("rss_code") @db.VarChar(40)
+  pointRevisionsCount       Int       @default(0) @map("point_revisions_count")
+  qualitiesCount            Int       @default(0) @map("qualities_count")
+  constituentsCount         Int       @default(0) @map("constituents_count")
+  address                   String?   @db.VarChar(100)
+  warningsCount             Int       @default(0) @map("warnings_count")
+  probationAt               DateTime? @map("probation_at")
+  suspendedAt               DateTime? @map("suspended_at")
+  referralsCount            Int       @default(0) @map("referrals_count")
+  isAdmin                   Boolean   @default(false) @map("is_admin")
+  twitterId                 Int?      @unique @map("twitter_id")
+  twitterToken              String?   @map("twitter_token") @db.VarChar(64)
+  twitterSecret             String?   @map("twitter_secret") @db.VarChar(64)
+  isAdminSubscribed         Boolean   @default(true) @map("is_admin_subscribed")
+  buddyIconFileName         String?   @map("buddy_icon_file_name")
+  buddyIconContentType      String?   @map("buddy_icon_content_type") @db.VarChar(30)
+  buddyIconFileSize         Int?      @map("buddy_icon_file_size")
+  buddyIconUpdatedAt        DateTime? @map("buddy_icon_updated_at")
+
+  // Relations
+  pictureId         Int?         @map("picture_id")
+  picture           Picture?     @relation(fields: [pictureId], references: [id])
+  partnerId         Int?         @map("partner_id")
+  partner           Partner?     @relation(fields: [partnerId], references: [id])
+  branchId          Int?         @map("branch_id")
+  branch            Branch?      @relation(fields: [branchId], references: [id])
+  referralId        Int?         @map("referral_id")
+  referral          User?        @relation("UserReferral", fields: [referralId], references: [id])
+  referredUsers     User[]       @relation("UserReferral")
+  partnerReferralId Int?         @map("partner_referral_id")
+  partnerReferral   Partner?     @relation("PartnerReferral", fields: [partnerReferralId], references: [id])
+  topEndorsementId  Int?         @map("top_endorsement_id")
+
+  // Has many
+  endorsements       Endorsement[]
+  createdPriorities  Priority[]
+  activities         Activity[]
+  points             Point[]
+  documents          Document[]
+  comments           Comment[]
+  changes            Change[]
+  ads                Ad[]
+  contacts           UserContact[]    @relation("UserContacts")
+  followings         Following[]      @relation("UserFollowings")
+  followers          Following[]      @relation("UserFollowers")
+  sentMessages       Message[]        @relation("SentMessages")
+  receivedMessages   Message[]        @relation("ReceivedMessages")
+  sentCapitals       Capital[]        @relation("SentCapitals")
+  receivedCapitals   Capital[]        @relation("ReceivedCapitals")
+  sentNotifications  Notification[]   @relation("SentNotifications")
+  receivedNotifications Notification[] @relation("ReceivedNotifications")
+  pointQualities     PointQuality[]
+  documentQualities  DocumentQuality[]
+  votes              Vote[]
+  blasts             Blast[]
+  profile            Profile?
+  constituents       Constituent[]
+  revisions          Revision[]
+  documentRevisions  DocumentRevision[]
+  userRankings       UserRanking[]
+  userCharts         UserChart[]
+  signups            Signup[]
+  shownAds           ShownAd[]
+  followingDiscussions FollowingDiscussion[]
+  unsubscribes       Unsubscribe[]
+
+  // Government relation (as official user)
+  officialGovernments Government[]
+
+  @@index([status])
+  @@index([partnerId])
+  @@map("users")
+}
+
+model Priority {
+  id                    Int       @id @default(autoincrement())
+  position              Int       @default(0)
+  name                  String    @unique @db.VarChar(140)
+  endorsementsCount     Int       @default(0) @map("endorsements_count")
+  status                String?   @db.VarChar(50)
+  ipAddress             String?   @map("ip_address") @db.VarChar(16)
+  deletedAt             DateTime? @map("deleted_at")
+  publishedAt           DateTime? @map("published_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  position1hr           Int       @default(0) @map("position_1hr")
+  position24hr          Int       @default(0) @map("position_24hr")
+  position7days         Int       @default(0) @map("position_7days")
+  position30days        Int       @default(0) @map("position_30days")
+  position1hrChange     Int       @default(0) @map("position_1hr_change")
+  position24hrChange    Int       @default(0) @map("position_24hr_change")
+  position7daysChange   Int       @default(0) @map("position_7days_change")
+  position30daysChange  Int       @default(0) @map("position_30days_change")
+  cachedIssueList       String?   @map("cached_issue_list")
+  upEndorsementsCount   Int       @default(0) @map("up_endorsements_count")
+  downEndorsementsCount Int       @default(0) @map("down_endorsements_count")
+  pointsCount           Int       @default(0) @map("points_count")
+  upPointsCount         Int       @default(0) @map("up_points_count")
+  downPointsCount       Int       @default(0) @map("down_points_count")
+  neutralPointsCount    Int       @default(0) @map("neutral_points_count")
+  discussionsCount      Int       @default(0) @map("discussions_count")
+  relationshipsCount    Int       @default(0) @map("relationships_count")
+  changesCount          Int       @default(0) @map("changes_count")
+  officialStatus        Int       @default(0) @map("official_status")
+  officialValue         Int       @default(0) @map("official_value")
+  statusChangedAt       DateTime? @map("status_changed_at")
+  score                 Int       @default(0)
+  upDocumentsCount      Int       @default(0) @map("up_documents_count")
+  downDocumentsCount    Int       @default(0) @map("down_documents_count")
+  neutralDocumentsCount Int       @default(0) @map("neutral_documents_count")
+  documentsCount        Int       @default(0) @map("documents_count")
+  shortUrl              String?   @map("short_url") @db.VarChar(20)
+  isControversial       Boolean   @default(false) @map("is_controversial")
+  trendingScore         Int       @default(0) @map("trending_score")
+  controversialScore    Int       @default(0) @map("controversial_score")
+
+  // Relations
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id])
+  changeId  Int?    @map("change_id")
+
+  // Has many
+  endorsements       Endorsement[]
+  branchEndorsements BranchEndorsement[]
+  points             Point[]           @relation("PriorityPoints")
+  incomingPoints     Point[]           @relation("OtherPriorityPoints")
+  documents          Document[]
+  rankings           Ranking[]
+  activities         Activity[]
+  charts             PriorityChart[]
+  ads                Ad[]
+  changes            Change[]          @relation("PriorityChanges")
+  newPriorityChanges Change[]          @relation("NewPriorityChanges")
+  relationships      Relationship[]    @relation("PriorityRelationships")
+  incomingRelationships Relationship[] @relation("OtherPriorityRelationships")
+  notifications      Notification[]
+
+  @@index([position])
+  @@index([status])
+  @@index([userId])
+  @@index([officialStatus])
+  @@index([officialValue])
+  @@index([trendingScore])
+  @@map("priorities")
+}
+
+model Endorsement {
+  id         Int       @id @default(autoincrement())
+  status     String?   @db.VarChar(50)
+  position   Int?
+  ipAddress  String?   @map("ip_address") @db.VarChar(16)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  value      Int       @default(1)
+  score      Int       @default(0)
+
+  // Relations
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+  priorityId Int      @map("priority_id")
+  priority   Priority @relation(fields: [priorityId], references: [id])
+  partnerId  Int?     @map("partner_id")
+  partner    Partner? @relation(fields: [partnerId], references: [id])
+  referralId Int?     @map("referral_id")
+
+  // Has many
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([priorityId])
+  @@index([partnerId])
+  @@index([status])
+  @@index([position])
+  @@index([value])
+  @@index([status, priorityId, userId, value])
+  @@map("endorsements")
+}
+
+model Government {
+  id                          Int       @id @default(autoincrement())
+  status                      String?   @db.VarChar(30)
+  shortName                   String    @unique @map("short_name") @db.VarChar(20)
+  domainName                  String?   @map("domain_name") @db.VarChar(60)
+  name                        String    @db.VarChar(60)
+  tagline                     String?   @db.VarChar(100)
+  email                       String    @db.VarChar(100)
+  isPublic                    Boolean   @default(true) @map("is_public")
+  createdAt                   DateTime  @default(now()) @map("created_at")
+  updatedAt                   DateTime  @updatedAt @map("updated_at")
+  target                      String?   @db.VarChar(30)
+  isTags                      Boolean   @default(true) @map("is_tags")
+  isFacebook                  Boolean   @default(true) @map("is_facebook")
+  isLegislators               Boolean   @default(false) @map("is_legislators")
+  adminName                   String    @map("admin_name") @db.VarChar(60)
+  adminEmail                  String    @map("admin_email") @db.VarChar(100)
+  googleAnalyticsCode         String?   @map("google_analytics_code") @db.VarChar(15)
+  tagsName                    String    @default("Category") @map("tags_name") @db.VarChar(20)
+  briefingName                String    @default("Briefing Room") @map("briefing_name") @db.VarChar(20)
+  currencyName                String    @default("political capital") @map("currency_name") @db.VarChar(30)
+  currencyShortName           String    @default("pc") @map("currency_short_name") @db.VarChar(3)
+  homepage                    String    @default("top") @db.VarChar(20)
+  prioritiesCount             Int       @default(0) @map("priorities_count")
+  pointsCount                 Int       @default(0) @map("points_count")
+  documentsCount              Int       @default(0) @map("documents_count")
+  usersCount                  Int       @default(0) @map("users_count")
+  contributorsCount           Int       @default(0) @map("contributors_count")
+  partnersCount               Int       @default(0) @map("partners_count")
+  officialUserPrioritiesCount Int       @default(0) @map("official_user_priorities_count")
+  endorsementsCount           Int       @default(0) @map("endorsements_count")
+  mission                     String?   @db.VarChar(200)
+  prompt                      String?   @db.VarChar(100)
+  isSuppressEmptyPriorities   Boolean   @default(false) @map("is_suppress_empty_priorities")
+  tagsPage                    String    @default("list") @map("tags_page") @db.VarChar(20)
+  isTwitter                   Boolean   @default(true) @map("is_twitter")
+  languageCode                String    @default("en") @map("language_code") @db.VarChar(2)
+  logoFileName                String?   @map("logo_file_name")
+  logoContentType             String?   @map("logo_content_type") @db.VarChar(30)
+  logoFileSize                Int?      @map("logo_file_size")
+  logoUpdatedAt               DateTime? @map("logo_updated_at")
+  buddyIconFileName           String?   @map("buddy_icon_file_name")
+  favIconFileName             String?   @map("fav_icon_file_name")
+
+  // Relations
+  officialUserId  Int?     @map("official_user_id")
+  officialUser    User?    @relation(fields: [officialUserId], references: [id])
+  colorSchemeId   Int?     @default(1) @map("color_scheme_id")
+  colorScheme     ColorScheme? @relation(fields: [colorSchemeId], references: [id])
+  defaultBranchId Int?     @map("default_branch_id")
+  defaultBranch   Branch?  @relation(fields: [defaultBranchId], references: [id])
+
+  @@index([domainName])
+  @@map("governments")
+}
+
+// ============================================================================
+// CONTENT MODELS
+// ============================================================================
+
+model Point {
+  id                    Int       @id @default(autoincrement())
+  value                 Int       @default(0)
+  revisionsCount        Int       @default(0) @map("revisions_count")
+  status                String?   @db.VarChar(50)
+  name                  String    @unique @db.VarChar(60)
+  content               String?   @db.Text
+  contentHtml           String?   @map("content_html") @db.Text
+  publishedAt           DateTime? @map("published_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  website               String?
+  authorSentence        String?   @map("author_sentence")
+  helpfulCount          Int       @default(0) @map("helpful_count")
+  unhelpfulCount        Int       @default(0) @map("unhelpful_count")
+  discussionsCount      Int       @default(0) @map("discussions_count")
+  endorserHelpfulCount  Int       @default(0) @map("endorser_helpful_count")
+  opposerHelpfulCount   Int       @default(0) @map("opposer_helpful_count")
+  endorserUnhelpfulCount Int     @default(0) @map("endorser_unhelpful_count")
+  opposerUnhelpfulCount Int      @default(0) @map("opposer_unhelpful_count")
+  neutralHelpfulCount   Int       @default(0) @map("neutral_helpful_count")
+  neutralUnhelpfulCount Int       @default(0) @map("neutral_unhelpful_count")
+  score                 Float     @default(0)
+  endorserScore         Float     @default(0) @map("endorser_score")
+  opposerScore          Float     @default(0) @map("opposer_score")
+  neutralScore          Float     @default(0) @map("neutral_score")
+
+  // Relations
+  revisionId      Int?      @map("revision_id")
+  userId          Int       @map("user_id")
+  user            User      @relation(fields: [userId], references: [id])
+  priorityId      Int       @map("priority_id")
+  priority        Priority  @relation("PriorityPoints", fields: [priorityId], references: [id])
+  otherPriorityId Int?      @map("other_priority_id")
+  otherPriority   Priority? @relation("OtherPriorityPoints", fields: [otherPriorityId], references: [id])
+
+  // Has many
+  revisions      Revision[]
+  activities     Activity[]
+  pointQualities PointQuality[]
+  capitals       Capital[]
+
+  @@index([priorityId])
+  @@index([userId])
+  @@index([status])
+  @@index([otherPriorityId])
+  @@map("points")
+}
+
+model Document {
+  id                    Int       @id @default(autoincrement())
+  value                 Int       @default(0)
+  status                String?   @db.VarChar(20)
+  name                  String    @db.VarChar(60)
+  content               String?   @db.Text
+  contentHtml           String?   @map("content_html") @db.Text
+  cachedIssueList       String?   @map("cached_issue_list")
+  authorSentence        String?   @map("author_sentence")
+  revisionsCount        Int       @default(0) @map("revisions_count")
+  helpfulCount          Int       @default(0) @map("helpful_count")
+  unhelpfulCount        Int       @default(0) @map("unhelpful_count")
+  discussionsCount      Int       @default(0) @map("discussions_count")
+  endorserHelpfulCount  Int       @default(0) @map("endorser_helpful_count")
+  opposerHelpfulCount   Int       @default(0) @map("opposer_helpful_count")
+  neutralHelpfulCount   Int       @default(0) @map("neutral_helpful_count")
+  endorserUnhelpfulCount Int     @default(0) @map("endorser_unhelpful_count")
+  opposerUnhelpfulCount Int      @default(0) @map("opposer_unhelpful_count")
+  neutralUnhelpfulCount Int      @default(0) @map("neutral_unhelpful_count")
+  publishedAt           DateTime? @map("published_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  wordCount             Int       @default(0) @map("word_count")
+  score                 Float     @default(0)
+  endorserScore         Float     @default(0) @map("endorser_score")
+  opposerScore          Float     @default(0) @map("opposer_score")
+  neutralScore          Float     @default(0) @map("neutral_score")
+
+  // Relations
+  revisionId Int?     @map("revision_id")
+  priorityId Int      @map("priority_id")
+  priority   Priority @relation(fields: [priorityId], references: [id])
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+
+  // Has many
+  documentRevisions DocumentRevision[]
+  documentQualities DocumentQuality[]
+  activities        Activity[]
+
+  @@index([priorityId])
+  @@index([userId])
+  @@index([status])
+  @@map("documents")
+}
+
+// ============================================================================
+// ACTIVITY & SOCIAL
+// ============================================================================
+
+model Activity {
+  id                 Int       @id @default(autoincrement())
+  type               String?   @db.VarChar(60)
+  status             String?   @default("active") @db.VarChar(8)
+  isUserOnly         Boolean   @default(false) @map("is_user_only")
+  commentsCount      Int       @default(0) @map("comments_count")
+  position           Int?
+  followersCount     Int       @default(0) @map("followers_count")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  changedAt          DateTime? @map("changed_at")
+
+  // Relations
+  userId             Int?       @map("user_id")
+  user               User?      @relation(fields: [userId], references: [id])
+  partnerId          Int?       @map("partner_id")
+  partner            Partner?   @relation(fields: [partnerId], references: [id])
+  priorityId         Int?       @map("priority_id")
+  priority           Priority?  @relation(fields: [priorityId], references: [id])
+  parentActivityId   Int?       @map("activity_id")
+  parentActivity     Activity?  @relation("ActivityParent", fields: [parentActivityId], references: [id])
+  childActivities    Activity[] @relation("ActivityParent")
+  otherUserId        Int?       @map("other_user_id")
+  tagId              Int?       @map("tag_id")
+  tag                Tag?       @relation(fields: [tagId], references: [id])
+  pointId            Int?       @map("point_id")
+  point              Point?     @relation(fields: [pointId], references: [id])
+  revisionId         Int?       @map("revision_id")
+  capitalId          Int?       @map("capital_id")
+  adId               Int?       @map("ad_id")
+  ad                 Ad?        @relation(fields: [adId], references: [id])
+  documentId         Int?       @map("document_id")
+  document           Document?  @relation(fields: [documentId], references: [id])
+  documentRevisionId Int?       @map("document_revision_id")
+  changeId           Int?       @map("change_id")
+  voteId             Int?       @map("vote_id")
+
+  // Has many
+  comments    Comment[]
+  followings  FollowingDiscussion[]
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([priorityId])
+  @@index([type])
+  @@index([status])
+  @@index([parentActivityId])
+  @@index([pointId])
+  @@index([changeId])
+  @@index([adId])
+  @@index([documentId])
+  @@index([changedAt])
+  @@index([createdAt])
+  @@map("activities")
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  status      String?
+  content     String?   @db.Text
+  contentHtml String?   @map("content_html") @db.Text
+  isEndorser  Boolean   @default(false) @map("is_endorser")
+  isOpposer   Boolean   @default(false) @map("is_opposer")
+  ipAddress   String?   @map("ip_address")
+  userAgent   String?   @map("user_agent")
+  referrer    String?
+  flagsCount  Int       @default(0) @map("flags_count")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  activityId Int      @map("activity_id")
+  activity   Activity @relation(fields: [activityId], references: [id])
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([activityId])
+  @@index([userId])
+  @@index([status])
+  @@index([status, activityId])
+  @@map("comments")
+}
+
+model Following {
+  id          Int      @id @default(autoincrement())
+  value       Int      @default(1)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  userId      Int      @map("user_id")
+  user        User     @relation("UserFollowings", fields: [userId], references: [id])
+  otherUserId Int      @map("other_user_id")
+  otherUser   User     @relation("UserFollowers", fields: [otherUserId], references: [id])
+
+  @@index([userId])
+  @@index([otherUserId])
+  @@map("followings")
+}
+
+model FollowingDiscussion {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+  activityId Int      @map("activity_id")
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  @@map("following_discussions")
+}
+
+// ============================================================================
+// VOTING & RANKING
+// ============================================================================
+
+model Vote {
+  id        Int       @id @default(autoincrement())
+  code      String?
+  status    String?
+  value     Int       @default(1)
+  votedAt   DateTime? @map("voted_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  changeId  Int       @map("change_id")
+  change    Change    @relation(fields: [changeId], references: [id])
+  userId    Int       @map("user_id")
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([changeId])
+  @@index([userId])
+  @@index([status])
+  @@index([code])
+  @@map("votes")
+}
+
+model Ranking {
+  id               Int      @id @default(autoincrement())
+  version          Int      @default(0)
+  position         Int?
+  endorsementsCount Int     @default(0) @map("endorsements_count")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  priorityId       Int      @map("priority_id")
+  priority         Priority @relation(fields: [priorityId], references: [id])
+
+  @@index([priorityId])
+  @@index([version])
+  @@index([createdAt])
+  @@map("rankings")
+}
+
+model UserRanking {
+  id            Int      @id @default(autoincrement())
+  version       Int      @default(0)
+  position      Int?
+  capitalsCount Int      @default(0) @map("capitals_count")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  userId        Int      @map("user_id")
+  user          User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([version])
+  @@index([createdAt])
+  @@map("user_rankings")
+}
+
+model PointQuality {
+  id        Int      @id @default(autoincrement())
+  value     Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  pointId   Int      @map("point_id")
+  point     Point    @relation(fields: [pointId], references: [id])
+
+  @@index([userId])
+  @@index([pointId])
+  @@index([userId, pointId])
+  @@map("point_qualities")
+}
+
+model DocumentQuality {
+  id         Int      @id @default(autoincrement())
+  value      Int      @default(0)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+  documentId Int      @map("document_id")
+  document   Document @relation(fields: [documentId], references: [id])
+
+  @@index([userId])
+  @@index([documentId])
+  @@map("document_qualities")
+}
+
+// ============================================================================
+// CHANGES & REVISIONS
+// ============================================================================
+
+model Change {
+  id                  Int       @id @default(autoincrement())
+  type                String?
+  status              String?
+  content             String?   @db.Text
+  yesVotes            Int       @default(0) @map("yes_votes")
+  noVotes             Int       @default(0) @map("no_votes")
+  sentAt              DateTime? @map("sent_at")
+  approvedAt          DateTime? @map("approved_at")
+  declinedAt          DateTime? @map("declined_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  position            Int       @default(0)
+  cost                Int?
+  estimatedVotesCount Int       @default(0) @map("estimated_votes_count")
+  votesCount          Int       @default(0) @map("votes_count")
+  isEndorsers         Boolean   @default(true) @map("is_endorsers")
+  isOpposers          Boolean   @default(true) @map("is_opposers")
+  isFlip              Boolean   @default(false) @map("is_flip")
+
+  // Relations
+  userId         Int       @map("user_id")
+  user           User      @relation(fields: [userId], references: [id])
+  priorityId     Int       @map("priority_id")
+  priority       Priority  @relation("PriorityChanges", fields: [priorityId], references: [id])
+  newPriorityId  Int?      @map("new_priority_id")
+  newPriority    Priority? @relation("NewPriorityChanges", fields: [newPriorityId], references: [id])
+
+  // Has many
+  votes Vote[]
+
+  @@index([userId])
+  @@index([priorityId])
+  @@index([newPriorityId])
+  @@index([status])
+  @@index([type])
+  @@map("changes")
+}
+
+model Revision {
+  id              Int       @id @default(autoincrement())
+  value           Int       @default(0)
+  status          String?   @db.VarChar(50)
+  name            String?   @db.VarChar(60)
+  content         String?   @db.Text
+  contentHtml     String?   @map("content_html") @db.Text
+  contentDiff     String?   @map("content_diff") @db.Text
+  publishedAt     DateTime? @map("published_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  ipAddress       String?   @map("ip_address") @db.VarChar(16)
+  userAgent       String?   @map("user_agent") @db.VarChar(150)
+  website         String?   @db.VarChar(100)
+  otherPriorityId Int?      @map("other_priority_id")
+
+  // Relations
+  pointId Int  @map("point_id")
+  point   Point @relation(fields: [pointId], references: [id])
+  userId  Int  @map("user_id")
+  user    User @relation(fields: [userId], references: [id])
+
+  @@index([pointId])
+  @@index([userId])
+  @@index([status])
+  @@map("revisions")
+}
+
+model DocumentRevision {
+  id          Int       @id @default(autoincrement())
+  value       Int       @default(0)
+  status      String?   @db.VarChar(30)
+  name        String?   @db.VarChar(60)
+  content     String?   @db.Text
+  contentHtml String?   @map("content_html") @db.Text
+  contentDiff String?   @map("content_diff") @db.Text
+  ipAddress   String?   @map("ip_address") @db.VarChar(16)
+  userAgent   String?   @map("user_agent") @db.VarChar(150)
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  wordCount   Int       @default(0) @map("word_count")
+
+  // Relations
+  documentId Int      @map("document_id")
+  document   Document @relation(fields: [documentId], references: [id])
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([documentId])
+  @@index([userId])
+  @@index([status])
+  @@map("document_revisions")
+}
+
+// ============================================================================
+// BRANCHES
+// ============================================================================
+
+model Branch {
+  id               Int      @id @default(autoincrement())
+  name             String   @db.VarChar(20)
+  usersCount       Int      @default(0) @map("users_count")
+  endorsementsCount Int     @default(0) @map("endorsements_count")
+  rankFactor       Float    @default(0) @map("rank_factor")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  // Has many
+  users             User[]
+  branchEndorsements BranchEndorsement[]
+  governments       Government[]
+
+  @@map("branches")
+}
+
+model BranchEndorsement {
+  id                    Int      @id @default(autoincrement())
+  score                 Int      @default(0)
+  position              Int      @default(0)
+  endorsementsCount     Int      @default(0) @map("endorsements_count")
+  upEndorsementsCount   Int      @default(0) @map("up_endorsements_count")
+  downEndorsementsCount Int      @default(0) @map("down_endorsements_count")
+  position1hr           Int      @default(0) @map("position_1hr")
+  position24hr          Int      @default(0) @map("position_24hr")
+  position7days         Int      @default(0) @map("position_7days")
+  position30days        Int      @default(0) @map("position_30days")
+  position1hrChange     Int      @default(0) @map("position_1hr_change")
+  position24hrChange    Int      @default(0) @map("position_24hr_change")
+  position7daysChange   Int      @default(0) @map("position_7days_change")
+  position30daysChange  Int      @default(0) @map("position_30days_change")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  branchId   Int      @map("branch_id")
+  branch     Branch   @relation(fields: [branchId], references: [id])
+  priorityId Int      @map("priority_id")
+  priority   Priority @relation(fields: [priorityId], references: [id])
+
+  @@index([branchId])
+  @@index([priorityId])
+  @@map("branch_endorsements")
+}
+
+// ============================================================================
+// ECONOMY & CAPITAL
+// ============================================================================
+
+model Capital {
+  id               Int      @id @default(autoincrement())
+  amount           Int      @default(0)
+  type             String?  @db.VarChar(60)
+  note             String?
+  capitalizableId  Int?     @map("capitalizable_id")
+  capitalizableType String? @map("capitalizable_type")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  senderId    Int?  @map("sender_id")
+  sender      User? @relation("SentCapitals", fields: [senderId], references: [id])
+  recipientId Int?  @map("recipient_id")
+  recipient   User? @relation("ReceivedCapitals", fields: [recipientId], references: [id])
+
+  // Polymorphic - point capital
+  pointId Int?   @map("point_id")
+  point   Point? @relation(fields: [pointId], references: [id])
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([type])
+  @@map("capitals")
+}
+
+// ============================================================================
+// PARTNERS & SIGNUPS
+// ============================================================================
+
+model Partner {
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(60)
+  shortName       String    @map("short_name") @db.VarChar(20)
+  status          String    @default("passive")
+  usersCount      Int       @default(0) @map("users_count")
+  website         String?
+  isActive        Boolean   @default(true) @map("is_active")
+  isOptin         Boolean   @default(false) @map("is_optin")
+  optinText       String?   @map("optin_text") @db.VarChar(60)
+  privacyUrl      String?   @map("privacy_url")
+  isDailySummary  Boolean   @default(true) @map("is_daily_summary")
+  unsubscribeUrl  String?   @map("unsubscribe_url")
+  subscribeUrl    String?   @map("subscribe_url")
+  ipAddress       String?   @map("ip_address") @db.VarChar(16)
+  logoFileName    String?   @map("logo_file_name")
+  logoContentType String?   @map("logo_content_type") @db.VarChar(30)
+  logoFileSize    Int?      @map("logo_file_size")
+  logoUpdatedAt   DateTime? @map("logo_updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Has many
+  users        User[]        @relation()
+  referrals    User[]        @relation("PartnerReferral")
+  endorsements Endorsement[]
+  activities   Activity[]
+  signups      Signup[]
+
+  @@index([shortName])
+  @@index([status])
+  @@map("partners")
+}
+
+model Signup {
+  id        Int      @id @default(autoincrement())
+  ipAddress String?  @map("ip_address") @db.VarChar(16)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  partnerId Int     @map("partner_id")
+  partner   Partner @relation(fields: [partnerId], references: [id])
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id])
+
+  @@index([partnerId])
+  @@index([userId])
+  @@map("signups")
+}
+
+// ============================================================================
+// MESSAGING & NOTIFICATIONS
+// ============================================================================
+
+model Message {
+  id          Int       @id @default(autoincrement())
+  type        String?   @db.VarChar(60)
+  status      String?   @db.VarChar(20)
+  title       String?   @db.VarChar(60)
+  content     String?   @db.Text
+  contentHtml String?   @map("content_html") @db.Text
+  sentAt      DateTime? @map("sent_at")
+  readAt      DateTime? @map("read_at")
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  senderId    Int  @map("sender_id")
+  sender      User @relation("SentMessages", fields: [senderId], references: [id])
+  recipientId Int  @map("recipient_id")
+  recipient   User @relation("ReceivedMessages", fields: [recipientId], references: [id])
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([status])
+  @@index([type])
+  @@map("messages")
+}
+
+model Notification {
+  id             Int       @id @default(autoincrement())
+  status         String?   @db.VarChar(20)
+  type           String?   @db.VarChar(60)
+  notifiableId   Int?      @map("notifiable_id")
+  notifiableType String?   @map("notifiable_type")
+  sentAt         DateTime? @map("sent_at")
+  readAt         DateTime? @map("read_at")
+  processedAt    DateTime? @map("processed_at")
+  deletedAt      DateTime? @map("deleted_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  senderId    Int?       @map("sender_id")
+  sender      User?      @relation("SentNotifications", fields: [senderId], references: [id])
+  recipientId Int?       @map("recipient_id")
+  recipient   User?      @relation("ReceivedNotifications", fields: [recipientId], references: [id])
+
+  // Polymorphic targets
+  priorityId    Int?         @map("priority_id")
+  priority      Priority?    @relation(fields: [priorityId], references: [id])
+  endorsementId Int?         @map("endorsement_id")
+  endorsement   Endorsement? @relation(fields: [endorsementId], references: [id])
+  activityId    Int?         @map("activity_id")
+  activity      Activity?    @relation(fields: [activityId], references: [id])
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([status, type])
+  @@index([notifiableType, notifiableId])
+  @@map("notifications")
+}
+
+// ============================================================================
+// TAGS & TAGGING
+// ============================================================================
+
+model Tag {
+  id                      Int      @id @default(autoincrement())
+  name                    String   @db.VarChar(60)
+  title                   String?  @db.VarChar(60)
+  description             String?  @db.VarChar(200)
+  slug                    String?  @db.VarChar(60)
+  prompt                  String?  @db.VarChar(100)
+  topPriorityId           Int?     @map("top_priority_id")
+  controversialPriorityId Int?     @map("controversial_priority_id")
+  risingPriorityId        Int?     @map("rising_priority_id")
+  upEndorsersCount        Int      @default(0) @map("up_endorsers_count")
+  downEndorsersCount      Int      @default(0) @map("down_endorsers_count")
+  prioritiesCount         Int      @default(0) @map("priorities_count")
+  discussionsCount        Int      @default(0) @map("discussions_count")
+  pointsCount             Int      @default(0) @map("points_count")
+  documentsCount          Int      @default(0) @map("documents_count")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  // Has many
+  taggings   Tagging[]
+  activities Activity[]
+
+  @@index([slug])
+  @@index([topPriorityId])
+  @@map("tags")
+}
+
+model Tagging {
+  id           Int      @id @default(autoincrement())
+  taggableId   Int      @map("taggable_id")
+  taggableType String   @map("taggable_type") @db.VarChar(50)
+  taggerId     Int?     @map("tagger_id")
+  taggerType   String?  @map("tagger_type") @db.VarChar(50)
+  context      String?  @db.VarChar(50)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  tagId Int @map("tag_id")
+  tag   Tag @relation(fields: [tagId], references: [id])
+
+  @@index([tagId])
+  @@index([taggableId, taggableType, context])
+  @@map("taggings")
+}
+
+// ============================================================================
+// ADS
+// ============================================================================
+
+model Ad {
+  id            Int       @id @default(autoincrement())
+  showAdsCount  Int       @default(0) @map("show_ads_count")
+  shownAdsCount Int       @default(0) @map("shown_ads_count")
+  cost          Int?
+  perUserCost   Float?    @map("per_user_cost")
+  spent         Float     @default(0)
+  yesCount      Int       @default(0) @map("yes_count")
+  noCount       Int       @default(0) @map("no_count")
+  skipCount     Int       @default(0) @map("skip_count")
+  status        String?   @db.VarChar(40)
+  content       String?   @db.VarChar(140)
+  position      Int       @default(0)
+  finishedAt    DateTime? @map("finished_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  priorityId Int      @map("priority_id")
+  priority   Priority @relation(fields: [priorityId], references: [id])
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+
+  // Has many
+  shownAds   ShownAd[]
+  activities Activity[]
+
+  @@index([priorityId])
+  @@index([status])
+  @@map("ads")
+}
+
+model ShownAd {
+  id        Int      @id @default(autoincrement())
+  value     Int      @default(0)
+  ipAddress String?  @map("ip_address") @db.VarChar(16)
+  userAgent String?  @map("user_agent") @db.VarChar(100)
+  referrer  String?  @db.VarChar(100)
+  seenCount Int      @default(1) @map("seen_count")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  adId   Int  @map("ad_id")
+  ad     Ad   @relation(fields: [adId], references: [id])
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  @@index([adId, userId])
+  @@map("shown_ads")
+}
+
+// ============================================================================
+// RELATIONSHIPS
+// ============================================================================
+
+model Relationship {
+  id              Int      @id @default(autoincrement())
+  type            String?  @db.VarChar(70)
+  percentage      Int?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  priorityId      Int      @map("priority_id")
+  priority        Priority @relation("PriorityRelationships", fields: [priorityId], references: [id])
+  otherPriorityId Int      @map("other_priority_id")
+  otherPriority   Priority @relation("OtherPriorityRelationships", fields: [otherPriorityId], references: [id])
+
+  @@index([priorityId])
+  @@index([otherPriorityId])
+  @@index([type])
+  @@map("relationships")
+}
+
+// ============================================================================
+// MISC MODELS
+// ============================================================================
+
+model Blast {
+  id          Int       @id @default(autoincrement())
+  name        String?
+  status      String?
+  type        String?
+  code        String?   @db.VarChar(40)
+  clicksCount Int       @default(0) @map("clicks_count")
+  sentAt      DateTime? @map("sent_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+  tagId  Int? @map("tag_id")
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([code])
+  @@map("blasts")
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  bio       String?  @db.Text
+  bioHtml   String?  @map("bio_html") @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  @@map("profiles")
+}
+
+model Picture {
+  id          Int      @id @default(autoincrement())
+  name        String?  @db.VarChar(200)
+  height      Int?
+  width       Int?
+  contentType String?  @map("content_type") @db.VarChar(100)
+  data        Bytes?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Has many
+  users User[]
+
+  @@map("pictures")
+}
+
+model ColorScheme {
+  id                       Int      @id @default(autoincrement())
+  name                     String?  @db.VarChar(60)
+  navBackground            String   @default("f0f0f0") @map("nav_background") @db.VarChar(6)
+  navText                  String   @default("000000") @map("nav_text") @db.VarChar(6)
+  navSelectedBackground    String   @default("dddddd") @map("nav_selected_background") @db.VarChar(6)
+  navSelectedText          String   @default("000000") @map("nav_selected_text") @db.VarChar(6)
+  background               String   @default("ffffff") @db.VarChar(6)
+  box                      String   @default("f0f0f0") @db.VarChar(6)
+  text                     String   @default("444444") @db.VarChar(6)
+  link                     String   @default("13499b") @db.VarChar(6)
+  heading                  String   @default("000000") @db.VarChar(6)
+  border                   String   @default("dddddd") @db.VarChar(6)
+  error                    String   @default("bc0000") @db.VarChar(6)
+  up                       String   @default("009933") @db.VarChar(6)
+  down                     String   @default("bc0000") @db.VarChar(6)
+  fonts                    String   @default("Arial, Helvetica, sans-serif") @db.VarChar(50)
+  isFeatured               Boolean  @default(false) @map("is_featured")
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  // Has many
+  governments Government[]
+
+  @@map("color_schemes")
+}
+
+model Constituent {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  legislatorId Int        @map("legislator_id")
+  legislator   Legislator @relation(fields: [legislatorId], references: [id])
+  userId       Int        @map("user_id")
+  user         User       @relation(fields: [userId], references: [id])
+
+  @@index([legislatorId, userId])
+  @@map("constituents")
+}
+
+model Legislator {
+  id                Int       @id @default(autoincrement())
+  name              String?   @db.VarChar(100)
+  fullname          String?   @db.VarChar(100)
+  title             String?   @db.VarChar(10)
+  firstname         String?   @db.VarChar(60)
+  lastname          String?   @db.VarChar(60)
+  gender            String?   @db.VarChar(1)
+  party             String?   @db.VarChar(1)
+  state             String?   @db.VarChar(2)
+  district          String?   @db.VarChar(15)
+  inOffice          Boolean   @default(true) @map("in_office")
+  govtrackId        Int?      @unique @map("govtrack_id")
+  phone             String?   @db.VarChar(20)
+  email             String?   @db.VarChar(80)
+  website           String?   @db.VarChar(100)
+  twitterId         String?   @map("twitter_id") @db.VarChar(20)
+  constituentsCount Int       @default(0) @map("constituents_count")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  // Has many
+  constituents Constituent[]
+
+  @@index([name])
+  @@map("legislators")
+}
+
+model UserContact {
+  id             Int       @id @default(autoincrement())
+  name           String?
+  email          String?
+  facebookUid    Int?      @map("facebook_uid")
+  status         String?   @db.VarChar(30)
+  isFromRealname Boolean   @default(false) @map("is_from_realname")
+  sentAt         DateTime? @map("sent_at")
+  acceptedAt     DateTime? @map("accepted_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  userId      Int  @map("user_id")
+  user        User @relation("UserContacts", fields: [userId], references: [id])
+  otherUserId Int? @map("other_user_id")
+  followingId Int? @map("following_id")
+
+  @@index([userId])
+  @@index([otherUserId])
+  @@index([email])
+  @@index([facebookUid])
+  @@index([status])
+  @@map("user_contacts")
+}
+
+model PriorityChart {
+  id            Int       @id @default(autoincrement())
+  dateYear      Int       @map("date_year")
+  dateMonth     Int       @map("date_month")
+  dateDay       Int       @map("date_day")
+  position      Int?
+  upCount       Int?      @map("up_count")
+  downCount     Int?      @map("down_count")
+  volumeCount   Int?      @map("volume_count")
+  changePercent Float     @default(0) @map("change_percent")
+  change        Int       @default(0)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  priorityId Int      @map("priority_id")
+  priority   Priority @relation(fields: [priorityId], references: [id])
+
+  @@index([priorityId])
+  @@index([dateYear, dateMonth, dateDay])
+  @@map("priority_charts")
+}
+
+model UserChart {
+  id          Int      @id @default(autoincrement())
+  dateYear    Int      @map("date_year")
+  dateMonth   Int      @map("date_month")
+  dateDay     Int      @map("date_day")
+  position    Int?
+  upCount     Int?     @map("up_count")
+  downCount   Int?     @map("down_count")
+  volumeCount Int?     @map("volume_count")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([dateYear, dateMonth, dateDay])
+  @@map("user_charts")
+}
+
+model Unsubscribe {
+  id                       Int      @id @default(autoincrement())
+  email                    String?
+  reason                   String?  @db.Text
+  isCommentsSubscribed     Boolean  @default(false) @map("is_comments_subscribed")
+  isVotesSubscribed        Boolean  @default(false) @map("is_votes_subscribed")
+  isNewsletterSubscribed   Boolean  @default(false) @map("is_newsletter_subscribed")
+  isPointChangesSubscribed Boolean  @default(false) @map("is_point_changes_subscribed")
+  isMessagesSubscribed     Boolean  @default(false) @map("is_messages_subscribed")
+  isFollowersSubscribed    Boolean  @default(true) @map("is_followers_subscribed")
+  isFinishedSubscribed     Boolean  @default(true) @map("is_finished_subscribed")
+  isAdminSubscribed        Boolean  @default(false) @map("is_admin_subscribed")
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  @@map("unsubscribes")
+}
+
+model EmailTemplate {
+  id        Int      @id @default(autoincrement())
+  name      String?  @db.VarChar(50)
+  subject   String?  @db.VarChar(150)
+  content   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@map("email_templates")
+}
+
+model Page {
+  id        Int      @id @default(autoincrement())
+  name      String?  @db.VarChar(100)
+  shortName String?  @map("short_name") @db.VarChar(30)
+  linkName  String?  @map("link_name") @db.VarChar(60)
+  content   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("pages")
+}
