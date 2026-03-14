@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { EndorsementButton } from "@/components/endorsements/endorsement-button";
+import { CommentThread } from "@/components/ui/comment-thread";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -10,6 +13,9 @@ export default async function PriorityDetailPage({ params }: Props) {
   const { id: idParam } = await params;
   const id = parseInt(idParam);
   if (isNaN(id)) notFound();
+
+  const session = await auth();
+  const userId = session?.user?.id ? parseInt(session.user.id) : null;
 
   const priority = await prisma.priority.findUnique({
     where: { id },
@@ -32,7 +38,15 @@ export default async function PriorityDetailPage({ params }: Props) {
           comments: {
             where: { status: "published" },
             take: 3,
-            include: { user: { select: { id: true, login: true } } },
+            orderBy: { createdAt: "asc" },
+            select: {
+              id: true,
+              content: true,
+              isEndorser: true,
+              isOpposer: true,
+              createdAt: true,
+              user: { select: { id: true, login: true } },
+            },
           },
         },
       },
@@ -40,6 +54,16 @@ export default async function PriorityDetailPage({ params }: Props) {
   });
 
   if (!priority) notFound();
+
+  // Fetch current user's endorsement value for this priority
+  let currentEndorsementValue: number | null = null;
+  if (userId) {
+    const endorsement = await prisma.endorsement.findFirst({
+      where: { priorityId: id, userId, status: "active" },
+      select: { value: true },
+    });
+    currentEndorsementValue = endorsement?.value ?? null;
+  }
 
   const supportingPoints = priority.points.filter((p) => p.value > 0);
   const opposingPoints = priority.points.filter((p) => p.value < 0);
@@ -76,14 +100,12 @@ export default async function PriorityDetailPage({ params }: Props) {
               )}
             </div>
           </div>
-          <div className="flex gap-2">
-            <button className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700">
-              Endorse ({priority.upEndorsementsCount})
-            </button>
-            <button className="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700">
-              Oppose ({priority.downEndorsementsCount})
-            </button>
-          </div>
+          <EndorsementButton
+            priorityId={priority.id}
+            upCount={priority.upEndorsementsCount}
+            downCount={priority.downEndorsementsCount}
+            currentValue={currentEndorsementValue}
+          />
         </div>
 
         {/* Movement stats */}
@@ -230,21 +252,21 @@ export default async function PriorityDetailPage({ params }: Props) {
               <span className="font-medium text-gray-900">
                 {activity.user?.login}
               </span>{" "}
-              <span className="text-gray-400">{activity.type}</span>
+              <span className="text-gray-400">
+                {activity.type?.replace(/^Activity/, "").replace(/([A-Z])/g, " $1").trim()}
+              </span>
               <span className="ml-2 text-xs text-gray-400">
                 {new Date(activity.createdAt).toLocaleDateString()}
               </span>
             </div>
-            {activity.comments.length > 0 && (
-              <div className="mt-2 space-y-2 pl-4 border-l-2 border-gray-100">
-                {activity.comments.map((comment) => (
-                  <div key={comment.id} className="text-sm">
-                    <span className="font-medium">{comment.user.login}: </span>
-                    <span className="text-gray-600">{comment.content}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+            <CommentThread
+              activityId={activity.id}
+              comments={activity.comments.map((c) => ({
+                ...c,
+                createdAt: c.createdAt.toISOString(),
+              }))}
+              totalCount={activity.commentsCount}
+            />
           </div>
         ))}
         {priority.activities.length === 0 && (

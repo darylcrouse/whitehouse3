@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { EndorsementButton } from "@/components/endorsements/endorsement-button";
 
 interface PriorityCardProps {
   priority: {
@@ -17,6 +18,7 @@ interface PriorityCardProps {
     isControversial: boolean;
     user: { id: number; login: string };
   };
+  currentEndorsementValue?: number | null;
 }
 
 function getMovementIndicator(change: number) {
@@ -25,7 +27,7 @@ function getMovementIndicator(change: number) {
   return { text: "-", color: "text-gray-400" };
 }
 
-export function PriorityCard({ priority }: PriorityCardProps) {
+export function PriorityCard({ priority, currentEndorsementValue }: PriorityCardProps) {
   const movement24hr = getMovementIndicator(priority.position24hrChange);
   const movement7days = getMovementIndicator(priority.position7daysChange);
 
@@ -74,13 +76,13 @@ export function PriorityCard({ priority }: PriorityCardProps) {
         </div>
 
         {/* Endorse/Oppose buttons */}
-        <div className="flex-shrink-0 flex flex-col gap-1">
-          <button className="px-3 py-1 text-xs font-medium bg-green-50 text-green-700 border border-green-200 rounded hover:bg-green-100">
-            +{priority.upEndorsementsCount}
-          </button>
-          <button className="px-3 py-1 text-xs font-medium bg-red-50 text-red-700 border border-red-200 rounded hover:bg-red-100">
-            -{priority.downEndorsementsCount}
-          </button>
+        <div className="flex-shrink-0">
+          <EndorsementButton
+            priorityId={priority.id}
+            upCount={priority.upEndorsementsCount}
+            downCount={priority.downEndorsementsCount}
+            currentValue={currentEndorsementValue}
+          />
         </div>
       </div>
     </div>

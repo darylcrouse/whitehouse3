@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { CommentThread } from "@/components/ui/comment-thread";
+import { Pagination } from "@/components/ui/pagination";
 
 interface Props {
   searchParams: Promise<{ page?: string; filter?: string }>;
@@ -41,7 +43,14 @@ export default async function NewsPage({ searchParams }: Props) {
           where: { status: "published" },
           take: 3,
           orderBy: { createdAt: "asc" },
-          include: { user: { select: { id: true, login: true } } },
+          select: {
+            id: true,
+            content: true,
+            isEndorser: true,
+            isOpposer: true,
+            createdAt: true,
+            user: { select: { id: true, login: true } },
+          },
         },
       },
     }),
@@ -112,23 +121,16 @@ export default async function NewsPage({ searchParams }: Props) {
                 {new Date(activity.createdAt).toLocaleDateString()}
               </span>
             </div>
-            {activity.commentsCount > 0 && (
-              <div className="mt-2 space-y-2 pl-4 border-l-2 border-gray-100">
-                {activity.comments.map((comment) => (
-                  <div key={comment.id} className="text-sm">
-                    <span className="font-medium text-gray-900">
-                      {comment.user.login}:{" "}
-                    </span>
-                    <span className="text-gray-600">{comment.content}</span>
-                  </div>
-                ))}
-                {activity.commentsCount > 3 && (
-                  <div className="text-xs text-blue-600">
-                    View all {activity.commentsCount} comments
-                  </div>
-                )}
-              </div>
-            )}
+            <div className="mt-2">
+              <CommentThread
+                activityId={activity.id}
+                comments={activity.comments.map((c) => ({
+                  ...c,
+                  createdAt: c.createdAt.toISOString(),
+                }))}
+                totalCount={activity.commentsCount}
+              />
+            </div>
           </div>
         ))}
       </div>
@@ -139,30 +141,7 @@ export default async function NewsPage({ searchParams }: Props) {
         </div>
       )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center gap-2">
-          {page > 1 && (
-            <Link
-              href={`/news?filter=${filter}&page=${page - 1}`}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50"
-            >
-              Previous
-            </Link>
-          )}
-          <span className="px-4 py-2 text-sm text-gray-600">
-            Page {page} of {totalPages}
-          </span>
-          {page < totalPages && (
-            <Link
-              href={`/news?filter=${filter}&page=${page + 1}`}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50"
-            >
-              Next
-            </Link>
-          )}
-        </div>
-      )}
+      <Pagination page={page} totalPages={totalPages} baseUrl={`/news?filter=${filter}`} />
     </div>
   );
 }
