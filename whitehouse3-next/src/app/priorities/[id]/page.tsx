@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { EndorsementButton } from "@/components/endorsements/endorsement-button";
 import { CommentThread } from "@/components/ui/comment-thread";
+import { PointForm } from "@/components/points/point-form";
+import { QualityButtons } from "@/components/points/quality-buttons";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -63,6 +65,16 @@ export default async function PriorityDetailPage({ params }: Props) {
       select: { value: true },
     });
     currentEndorsementValue = endorsement?.value ?? null;
+  }
+
+  // Fetch current user's point quality votes
+  let pointQualityMap: Record<number, number> = {};
+  if (userId && priority.points.length > 0) {
+    const qualities = await prisma.pointQuality.findMany({
+      where: { userId, pointId: { in: priority.points.map((p) => p.id) } },
+      select: { pointId: true, value: true },
+    });
+    pointQualityMap = Object.fromEntries(qualities.map((q) => [q.pointId, q.value]));
   }
 
   const supportingPoints = priority.points.filter((p) => p.value > 0);
@@ -174,18 +186,21 @@ export default async function PriorityDetailPage({ params }: Props) {
               {point.content && (
                 <p className="text-sm text-gray-600 mt-1">{point.content}</p>
               )}
-              <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
-                <span>by {point.user.login}</span>
-                <span>
-                  {point.helpfulCount} helpful / {point.unhelpfulCount}{" "}
-                  unhelpful
-                </span>
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-xs text-gray-500">by {point.user.login}</span>
+                <QualityButtons
+                  pointId={point.id}
+                  helpfulCount={point.helpfulCount}
+                  unhelpfulCount={point.unhelpfulCount}
+                  currentVote={pointQualityMap[point.id] ?? null}
+                />
               </div>
             </div>
           ))}
           {supportingPoints.length === 0 && (
             <p className="text-sm text-gray-500">No supporting points yet.</p>
           )}
+          <PointForm priorityId={priority.id} defaultValue={1} />
         </div>
 
         {/* Opposing */}
@@ -202,18 +217,21 @@ export default async function PriorityDetailPage({ params }: Props) {
               {point.content && (
                 <p className="text-sm text-gray-600 mt-1">{point.content}</p>
               )}
-              <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
-                <span>by {point.user.login}</span>
-                <span>
-                  {point.helpfulCount} helpful / {point.unhelpfulCount}{" "}
-                  unhelpful
-                </span>
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-xs text-gray-500">by {point.user.login}</span>
+                <QualityButtons
+                  pointId={point.id}
+                  helpfulCount={point.helpfulCount}
+                  unhelpfulCount={point.unhelpfulCount}
+                  currentVote={pointQualityMap[point.id] ?? null}
+                />
               </div>
             </div>
           ))}
           {opposingPoints.length === 0 && (
             <p className="text-sm text-gray-500">No opposing points yet.</p>
           )}
+          <PointForm priorityId={priority.id} defaultValue={-1} />
         </div>
       </div>
 
@@ -232,8 +250,14 @@ export default async function PriorityDetailPage({ params }: Props) {
               {point.content && (
                 <p className="text-sm text-gray-600 mt-1">{point.content}</p>
               )}
-              <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
-                <span>by {point.user.login}</span>
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-xs text-gray-500">by {point.user.login}</span>
+                <QualityButtons
+                  pointId={point.id}
+                  helpfulCount={point.helpfulCount}
+                  unhelpfulCount={point.unhelpfulCount}
+                  currentVote={pointQualityMap[point.id] ?? null}
+                />
               </div>
             </div>
           ))}

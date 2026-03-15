@@ -6,7 +6,7 @@ export default auth((req) => {
   const pathname = req.nextUrl.pathname;
 
   // Protected routes that require authentication
-  const protectedPaths = ["/settings", "/priorities/new"];
+  const protectedPaths = ["/settings", "/priorities/new", "/messages", "/notifications"];
   if (protectedPaths.some((p) => pathname.startsWith(p)) && !isLoggedIn) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
@@ -20,5 +20,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/settings/:path*", "/priorities/new", "/admin/:path*"],
+  matcher: ["/settings/:path*", "/priorities/new", "/admin/:path*", "/messages/:path*", "/notifications/:path*"],
 };
