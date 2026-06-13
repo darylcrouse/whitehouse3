@@ -1,14 +1,9 @@
-<%= render :partial => "header" %>
-<%= render :partial => "nav" %>
-<p>
-
-<% if logged_in? %>
-	<%= render :partial => "bulletins/form", :locals => {:activity => Activity.new, :comment => Comment.new } %>				
-<% end %>
-<div id="activities">
-<% for activity in @activities %>
-<%= render :partial => "activities/show", :locals => {:activity => activity, :suffix => "_noself"} %>
-<% end %>
+<% page_title "Activity · #{@priority.name}" %>
+<div class="panel">
+  <h1>Activity</h1>
+  <p class="muted"><%= link_to @priority.name, @priority %></p>
+  <% if @activities.any? %>
+    <% @activities.each do |a| %><%= render "activities/activity", activity: a %><% end %>
+    <%= pager(@activities) %>
+  <% else %><p class="empty">No activity yet.</p><% end %>
 </div>
-<p>
-<%= will_paginate(@activities) %>

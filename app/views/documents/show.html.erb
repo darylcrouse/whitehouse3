@@ -1,35 +1,19 @@
-<%= render :partial => "documents/header" %>
-<%= render :partial => "documents/nav" %>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr>
-		
-		<td valign="top">
-
-			<%= @document.content_html %>
-			
-			<% if @priority %>
-				<% if @priority.down_documents_count > 1 and @document.is_down? %>
-					<%= render :partial => "priorities/documents", :locals => {:documents => @documents, :document_value => -1, :qualities => @qualities}%>
-				<% end %>
-				<% if @priority.neutral_documents_count > 1 and @document.is_neutral? %>
-					<%= render :partial => "priorities/documents", :locals => {:documents => @documents, :document_value => 2, :qualities => @qualities}%>
-				<% end %>
-				<% if @priority.up_documents_count  > 1 and @document.is_up? %>
-					<%= render :partial => "priorities/documents", :locals => {:documents => @documents, :document_value => 1, :qualities => @qualities}%>
-				<% end %>	
-			<% end %>		
-			
-			<div class="heading">Recent activity on this document</div>
-			<% for activity in @document.activities.active.by_recently_created.find(:all, :limit => 10) %>
-				<%= render :partial => "activities/show", :locals => {:activity => activity, :suffix => "_noself" }%>
-			<% end %>
-			
-		</td>	
-		
-		<td valign="top" width="150" style="padding-left: 20px;">
-			<%= render :partial => "documents/authors", :locals => {:users => @document.authors } %>	
-			<%= render :partial => "documents/left_nav" %>
-		</td>		
-	
-	</tr>
-</table>
+<% page_title @document.name %>
+<div class="layout-split">
+  <article class="panel">
+    <div class="badge <%= @document.supporting? ? 'badge-up' : (@document.opposing? ? 'badge-down' : '') %>"><%= @document.side_name %></div>
+    <h1><%= @document.name %></h1>
+    <p class="muted small">On <%= link_to @priority.name, @priority %> · by <%= @document.user&.name || "someone" %> · <%= relative_time @document.created_at %></p>
+    <div><%= simple_format @document.content %></div>
+    <% if logged_in? && (current_user.admin? || current_user.id == @document.user_id) %>
+      <p class="small"><%= link_to "Edit", edit_priority_document_path(@priority, @document) %></p>
+    <% end %>
+  </article>
+  <aside>
+    <div class="panel">
+      <h3>Priority</h3>
+      <p><%= link_to @priority.name, @priority %></p>
+      <%= render "priorities/endorse_buttons", priority: @priority %>
+    </div>
+  </aside>
+</div>

@@ -1,12 +1,17 @@
-<div id="hp_intro"><%= @page_title %></div>
-<p>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	
-	<tr><td valign="top" width="160">
-			<%= render :partial => "nav" %>
-		</td>
-		<td valign="top" style="padding-left: 20px;">
-			<%= t('branches.intro')%>
-		</td>
-	</tr>
-</table>
+<% page_title "Branches" %>
+<div class="panel">
+  <h1>Branches</h1>
+  <p class="muted">Sub-communities, each with their own ranked priorities.</p>
+  <% if logged_in? %><%= link_to "New branch", new_branch_path, class: "btn btn-sm" %><% end %>
+  <ul class="item-list" style="margin-top:12px">
+    <% @branches.each do |b| %>
+      <li class="priority-row">
+        <div class="priority-main">
+          <div class="ptitle"><%= link_to b.name, b %></div>
+          <div class="priority-meta"><%= pluralize b.users_count, "member" %> · <%= pluralize b.endorsements_count, "endorsement" %></div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+  <% if @branches.empty? %><p class="empty">No branches yet.</p><% end %>
+</div>

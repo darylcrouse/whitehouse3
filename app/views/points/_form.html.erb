@@ -1,0 +1,29 @@
+<%= form_with model: [@priority, @point] do |f| %>
+  <% if @point.errors.any? %>
+    <div class="errors">
+      <strong><%= pluralize(@point.errors.count, "error") %>:</strong>
+      <ul><% @point.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul>
+    </div>
+  <% end %>
+
+  <div class="form-field">
+    <%= f.label :value, "Does this point support or oppose the priority?" %>
+    <%= f.select :value, [["Supports", 1], ["Opposes", -1], ["Neutral / clarifying", 0]] %>
+  </div>
+  <div class="form-field">
+    <%= f.label :name, "Headline" %>
+    <%= f.text_field :name, placeholder: "A short summary of your point", autofocus: true %>
+  </div>
+  <div class="form-field">
+    <%= f.label :content, "Details" %>
+    <%= f.text_area :content, placeholder: "Make your case…" %>
+  </div>
+  <div class="form-field">
+    <%= f.label :website, "Source link (optional)" %>
+    <%= f.url_field :website, placeholder: "https://" %>
+  </div>
+  <div class="form-actions">
+    <%= f.submit @point.persisted? ? "Save point" : "Add point", class: "btn btn-primary" %>
+    <%= link_to "Cancel", priority_path(@priority), class: "btn btn-ghost" %>
+  </div>
+<% end %>

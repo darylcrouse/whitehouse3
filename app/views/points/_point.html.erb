@@ -1,0 +1,15 @@
+<%# A single point. `point` local required. %>
+<div class="argument <%= point.supporting? ? 'support' : (point.opposing? ? 'oppose' : '') %>">
+  <div class="ahead"><%= link_to point.name, point_path(point) %></div>
+  <div><%= truncate(point.content.to_s, length: 200) %></div>
+  <div class="ameta">
+    by <%= point.user ? link_to(point.user.name, user_path(point.user)) : "someone" %> ·
+    <%= relative_time point.created_at %> ·
+    <span class="count-up">▲ <%= point.helpful_count %></span>
+    <span class="count-down"><%= point.unhelpful_count %> ▼</span>
+    <% if logged_in? %>
+      · <%= button_to "Helpful", quality_point_path(point), class: "linkish", style: "color:var(--up)" %>
+      <%= button_to "Not helpful", unquality_point_path(point), class: "linkish", style: "color:var(--down)" %>
+    <% end %>
+  </div>
+</div>

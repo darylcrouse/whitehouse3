@@ -1,0 +1,17 @@
+<h1>Priorities</h1>
+<div class="panel">
+  <table class="data">
+    <thead><tr><th>Name</th><th>Endorsers</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      <% @priorities.each do |p| %>
+        <tr>
+          <td><%= link_to p.name, p %></td>
+          <td><%= p.endorsements_count %></td>
+          <td><%= p.status %></td>
+          <td><%= button_to "Delete", admin_priority_path(p), method: :delete, class: "linkish", style: "color:var(--down)", data: { turbo_confirm: "Delete?" } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= pager(@priorities) %>
+</div>

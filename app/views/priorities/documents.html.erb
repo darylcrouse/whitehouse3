@@ -1,14 +1,16 @@
-<%= render :partial => "header" %>
-<%= render :partial => "nav" %>
-<p>
-
-<% if @documents.empty? and not @priority.replaced? %>
-<%= t('document.empty')%> <%= link_to t('menu.briefing.add_document.name'), new_priority_document_path(@priority) %>
-<% end %>			
-
-<% if @documents.any? %>
-	<% for document in @documents %>
-		<%= render :partial => "documents/show", :locals => {:document => document, :priority => @priority}%>
-	<% end %>
-	<%= will_paginate(@documents) %>
-<% end %>
+<% page_title "Documents · #{@priority.name}" %>
+<div class="panel">
+  <h1>Documents</h1>
+  <p class="muted"><%= link_to @priority.name, @priority %></p>
+  <% if @documents.any? %>
+    <ul class="item-list">
+      <% @documents.each do |doc| %>
+        <li class="argument <%= doc.supporting? ? 'support' : (doc.opposing? ? 'oppose' : '') %>">
+          <div class="ahead"><%= link_to doc.name, priority_document_path(@priority, doc) %></div>
+          <div class="ameta"><%= doc.side_name %> · by <%= doc.user&.name || "someone" %> · <%= relative_time doc.created_at %></div>
+        </li>
+      <% end %>
+    </ul>
+    <%= pager(@documents) %>
+  <% else %><p class="empty">No documents yet.</p><% end %>
+</div>

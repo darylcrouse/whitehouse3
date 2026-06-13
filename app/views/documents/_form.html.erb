@@ -1,0 +1,24 @@
+<%= form_with model: [@priority, @document] do |f| %>
+  <% if @document.errors.any? %>
+    <div class="errors">
+      <strong><%= pluralize(@document.errors.count, "error") %>:</strong>
+      <ul><% @document.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul>
+    </div>
+  <% end %>
+  <div class="form-field">
+    <%= f.label :value, "Position" %>
+    <%= f.select :value, [["Supports the priority", 1], ["Opposes the priority", -1], ["Neutral", 0]] %>
+  </div>
+  <div class="form-field">
+    <%= f.label :name, "Title" %>
+    <%= f.text_field :name, autofocus: true %>
+  </div>
+  <div class="form-field">
+    <%= f.label :content, "Document" %>
+    <%= f.text_area :content, style: "min-height:300px", placeholder: "Write the full argument…" %>
+  </div>
+  <div class="form-actions">
+    <%= f.submit @document.persisted? ? "Save document" : "Publish document", class: "btn btn-primary" %>
+    <%= link_to "Cancel", priority_path(@priority), class: "btn btn-ghost" %>
+  </div>
+<% end %>

@@ -1,0 +1,19 @@
+<% page_title "New message" %>
+<div class="panel" style="max-width:560px;margin:0 auto">
+  <h1>New message</h1>
+  <%= form_with model: @message do |f| %>
+    <% if @message.errors.any? %>
+      <div class="errors"><ul><% @message.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul></div>
+    <% end %>
+    <div class="form-field">
+      <%= f.label :recipient_id, "To" %>
+      <%= f.select :recipient_id, User.active.order(:login).map { |u| [u.name, u.id] }, include_blank: "Choose a person" %>
+    </div>
+    <div class="form-field"><%= f.label :title, "Subject" %><%= f.text_field :title %></div>
+    <div class="form-field"><%= f.label :content, "Message" %><%= f.text_area :content %></div>
+    <div class="form-actions">
+      <%= f.submit "Send", class: "btn btn-primary" %>
+      <%= link_to "Cancel", messages_path, class: "btn btn-ghost" %>
+    </div>
+  <% end %>
+</div>

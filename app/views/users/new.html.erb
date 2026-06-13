@@ -1,6 +1,38 @@
-
-<%= blurb("signup_intro")%>
-
-<%= render :partial => "form_long" %>
-
-<%= blurb("rules")%>
+<% page_title "Join" %>
+<div class="panel" style="max-width:480px;margin:24px auto">
+  <h1>Join <%= gov.name %></h1>
+  <p class="muted">Create an account to endorse priorities, make points and join the debate.</p>
+  <%= form_with model: @user, url: users_path do |f| %>
+    <% if @user.errors.any? %>
+      <div class="errors">
+        <strong><%= pluralize(@user.errors.count, "error") %>:</strong>
+        <ul><% @user.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul>
+      </div>
+    <% end %>
+    <div class="form-field">
+      <%= f.label :login, "Username" %>
+      <%= f.text_field :login, autofocus: true, placeholder: "jane_doe" %>
+      <div class="hint">Letters, numbers and underscores. This appears on your profile.</div>
+    </div>
+    <div class="form-field">
+      <%= f.label :email_address, "Email" %>
+      <%= f.email_field :email_address, autocomplete: "username" %>
+    </div>
+    <div class="two-col">
+      <div class="form-field"><%= f.label :first_name %><%= f.text_field :first_name %></div>
+      <div class="form-field"><%= f.label :last_name %><%= f.text_field :last_name %></div>
+    </div>
+    <div class="form-field">
+      <%= f.label :password %>
+      <%= f.password_field :password, autocomplete: "new-password" %>
+    </div>
+    <div class="form-field">
+      <%= f.label :password_confirmation, "Confirm password" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    </div>
+    <div class="form-actions">
+      <%= f.submit "Create account", class: "btn btn-primary" %>
+      <%= link_to "Already a member?", login_path, class: "small" %>
+    </div>
+  <% end %>
+</div>

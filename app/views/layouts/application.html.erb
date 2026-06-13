@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="<%= Government.current.language_code %>">
+  <head>
+    <title><%= content_for(:title) ? "#{yield(:title)} · #{Government.current.name}" : Government.current.name %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="<%= Government.current.tagline %>">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="<%= root_path %>" class="brand">
+          <span class="brand-mark">★</span>
+          <span class="brand-name"><%= Government.current.name %></span>
+        </a>
+        <nav class="main-nav">
+          <%= link_to "Priorities", priorities_path %>
+          <% if Government.current.tags? %><%= link_to Government.current.tags_name.pluralize, tags_path %><% end %>
+          <%= link_to "Activity", feed_path %>
+          <%= link_to "People", users_path %>
+          <% if Government.current.branches? %><%= link_to "Branches", branches_path %><% end %>
+        </nav>
+        <div class="account-nav">
+          <% if logged_in? %>
+            <%= link_to "Add a priority", new_priority_path, class: "btn btn-primary btn-sm" %>
+            <%= link_to "My priorities", endorsements_path %>
+            <%= link_to current_user.name, user_path(current_user) %>
+            <% if current_user.admin? %><%= link_to "Admin", admin_root_path, class: "muted" %><% end %>
+            <%= button_to "Sign out", logout_path, method: :delete, class: "linkish" %>
+          <% else %>
+            <%= link_to "Sign in", login_path %>
+            <%= link_to "Join", signup_path, class: "btn btn-primary btn-sm" %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <% if notice %><div class="flash flash-notice container"><%= notice %></div><% end %>
+    <% if alert %><div class="flash flash-alert container"><%= alert %></div><% end %>
+
+    <main class="container main-content">
+      <%= yield %>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p><strong><%= Government.current.name %></strong> — <%= Government.current.tagline %></p>
+        <p class="muted">
+          <%= link_to "Priorities", priorities_path %> ·
+          <%= link_to "Activity", feed_path %> ·
+          <%= link_to "People", users_path %>
+          <% Page.order(:name).limit(5).each do |p| %>· <%= link_to p.name, page_path(p) %><% end %>
+        </p>
+        <p class="muted small">A modern rebuild of the open-source White House 2 democratic-priorities platform.</p>
+      </div>
+    </footer>
+  </body>
+</html>

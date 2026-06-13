@@ -1,0 +1,38 @@
+<% page_title "My priorities" %>
+<div class="layout-split">
+  <div class="panel">
+    <h1>My priorities</h1>
+    <p class="muted">Drag to rank them. Your top choices carry more weight in the leaderboard.</p>
+    <% if @endorsements.any? %>
+      <ol class="sortable" data-controller="sortable" data-sortable-url-value="<%= reorder_endorsements_path %>" style="padding-left:0">
+        <% @endorsements.each_with_index do |e, i| %>
+          <li class="priority-row" data-sortable-item data-id="<%= e.id %>" style="list-style:none">
+            <div class="rank" data-rank><%= i + 1 %></div>
+            <div class="priority-main">
+              <div class="ptitle"><%= link_to e.priority.name, e.priority %></div>
+              <div class="priority-meta">
+                <span class="badge <%= e.up? ? 'badge-up' : 'badge-down' %>"><%= e.value_name %></span>
+                · <%= pluralize e.priority.endorsements_count, "endorser" %>
+              </div>
+            </div>
+            <div>
+              <%= button_to "Remove", unendorse_priority_path(e.priority), class: "btn btn-sm btn-ghost" %>
+            </div>
+          </li>
+        <% end %>
+      </ol>
+      <p class="hint">☰ Tip: drag the rows up and down to re-rank.</p>
+    <% else %>
+      <div class="empty">
+        <p>You haven't endorsed any priorities yet.</p>
+        <%= link_to "Browse priorities", priorities_path, class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+  <aside>
+    <div class="panel">
+      <h3>How ranking works</h3>
+      <p class="small">Each person ranks their priorities. The higher you rank something, the more weight your endorsement gives it. The community's combined rankings produce the leaderboard.</p>
+    </div>
+  </aside>
+</div>

@@ -1,0 +1,17 @@
+<%# `comment` local required. %>
+<div class="comment">
+  <%= avatar comment.user, 28 %>
+  <div>
+    <div>
+      <strong><%= link_to comment.user.name, user_path(comment.user) %></strong>
+      <% if comment.is_endorser? %><span class="badge badge-up">endorser</span>
+      <% elsif comment.is_opposer? %><span class="badge badge-down">opposer</span><% end %>
+    </div>
+    <div><%= simple_format comment.content %></div>
+    <div class="cmeta"><%= relative_time comment.created_at %>
+      <% if logged_in? && (current_user.admin? || current_user.id == comment.user_id) %>
+        · <%= button_to "delete", activity_comment_path(comment.activity, comment), method: :delete, class: "linkish", style: "color:var(--down)" %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<% page_title @message.title.presence || "Message" %>
+<div class="panel" style="max-width:640px;margin:0 auto">
+  <h1><%= @message.title.presence || "(no subject)" %></h1>
+  <div class="priority-meta">
+    from <%= link_to @message.sender.name, user_path(@message.sender) %>
+    to <%= @message.recipient.name %> · <%= relative_time @message.created_at %>
+  </div>
+  <div style="margin-top:14px"><%= simple_format @message.content %></div>
+  <div class="form-actions">
+    <%= link_to "Reply", new_message_path(to: @message.sender_id), class: "btn btn-sm btn-primary" %>
+    <%= link_to "Back to inbox", messages_path, class: "btn btn-sm" %>
+    <% if @message.recipient_id == current_user.id %>
+      <%= button_to "Delete", message_path(@message), method: :delete, class: "btn btn-sm btn-ghost" %>
+    <% end %>
+  </div>
+</div>

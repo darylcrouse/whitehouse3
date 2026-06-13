@@ -1,20 +1,27 @@
-<%= render :partial => "users/header" %>
-<p>
-
-<div id="messages">
-<% for message in @unread_messages %>
-	<%= render :partial => "messages/show", :locals => {:message => message} %>
-<% end %>
-<%= render :partial => "messages/form", :locals => {:message => @message} %>
-<p>
-
-<% if @read_messages.any? %>
-	<%= t('messages.previously_read')%>
-	<p>
-		<% for message in @read_messages %>
-			<%= render :partial => "messages/show", :locals => {:message => message} %>
-		<% end %>
-		<p>				
-	<%= will_paginate(@read_messages) %>
-<% end %>
+<% page_title "Messages" %>
+<div class="panel">
+  <div style="display:flex; justify-content:space-between; align-items:center">
+    <h1>Messages</h1>
+    <%= link_to "New message", new_message_path, class: "btn btn-sm btn-primary" %>
+  </div>
+  <nav class="tabs">
+    <%= link_to "Inbox", messages_path, class: ("active" unless action_name == "sent") %>
+    <%= link_to "Sent", sent_messages_path, class: ("active" if action_name == "sent") %>
+  </nav>
+  <% if @messages.any? %>
+    <ul class="item-list">
+      <% @messages.each do |m| %>
+        <li class="priority-row">
+          <div class="priority-main">
+            <div class="ptitle"><%= link_to (m.title.presence || "(no subject)"), m %>
+              <% unless m.read? || m.sender_id == current_user.id %><span class="badge badge-up">new</span><% end %></div>
+            <div class="priority-meta">
+              <% if m.sender_id == current_user.id %>to <%= m.recipient.name %><% else %>from <%= m.sender.name %><% end %>
+              · <%= relative_time m.created_at %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %><p class="empty">No messages.</p><% end %>
 </div>

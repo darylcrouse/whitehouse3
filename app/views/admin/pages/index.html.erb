@@ -1,0 +1,20 @@
+<div style="display:flex;justify-content:space-between;align-items:center">
+  <h1>Pages</h1>
+  <%= link_to "New page", new_admin_page_path, class: "btn btn-sm btn-primary" %>
+</div>
+<div class="panel">
+  <table class="data">
+    <thead><tr><th>Name</th><th>URL</th><th></th></tr></thead>
+    <tbody>
+      <% @pages.each do |p| %>
+        <tr>
+          <td><%= p.name %></td>
+          <td class="small"><%= link_to "/pages/#{p.short_name}", page_path(p) %></td>
+          <td class="small"><%= link_to "Edit", edit_admin_page_path(p) %> ·
+            <%= button_to "Delete", admin_page_path(p), method: :delete, class: "linkish", style: "color:var(--down)" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @pages.empty? %><p class="empty">No pages yet.</p><% end %>
+</div>

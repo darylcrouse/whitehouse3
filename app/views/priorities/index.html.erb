@@ -1,74 +1,79 @@
-<% endorsement = nil %>
-<div id="hp_intro"><%= current_government.prompt %></div>
+<% page_title "Priorities" %>
+<% tab = @tab || "top" %>
 
-<%= render :partial => "priorities/form" %>
+<div class="layout-split">
+  <div>
+    <% unless logged_in? %>
+      <div class="hero">
+        <h1><%= gov.name %></h1>
+        <p><%= gov.tagline %></p>
+        <div class="prompt">
+          <%= link_to "Join the debate →", signup_path, class: "btn btn-primary" %>
+          <%= link_to "Add a priority", new_priority_path, class: "btn btn-ghost", style: "color:#fff;border-color:rgba(255,255,255,.4)" %>
+        </div>
+      </div>
+    <% else %>
+      <h1>Priorities</h1>
+      <p class="muted"><%= gov.prompt %></p>
+    <% end %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr><td valign="top">
-		<% if @issues.total_pages > 1 %>
-		<p>
-		<%= will_paginate (@issues) %>
-		<% end %>
-		<% for tag in @issues %>
-			<div class="home_issue">
-			<div class="home_issue_name"><a href="/issues/<%= tag.slug %>"><%= tag.title %></a></div>
-			
-			<% if tag.top_priority %>
-			<div class="home_issue_priority" id="priority_<%= tag.top_priority_id %>">
-			<%= t('priorities.top.short')%> <span class="home_issue_priority_name"><%= link_to tag.top_priority.name, tag.top_priority %></span><br/>
-			<%= render :partial => "priorities/action_show", :locals => {:priority => tag.top_priority, :endorsement => (@endorsements.detect {|e| e.priority_id == tag.top_priority_id } if @endorsements) }%>
-			</div>
-			<% end %>
-			
-			<% if tag.controversial_priority %>
-				<div class="home_issue_priority" id="priority_<%= tag.controversial_priority_id %>">
-				<%= t('priorities.controversial.short')%> <span class="home_issue_priority_name"><%= link_to tag.controversial_priority.name, tag.controversial_priority %></span><br/>
-				<%= render :partial => "priorities/action_show", :locals => {:priority => tag.controversial_priority, :endorsement => (@endorsements.detect {|e| e.priority_id == tag.controversial_priority_id } if @endorsements)}%>		
-				</div>
-			<% end %>
-	
-			<% if tag.rising_priority %>
-				<div class="home_issue_priority" id="priority_<%= tag.rising_priority_id %>">
-				<%= t('priorities.rising.short')%> <span class="home_issue_priority_name"><%= link_to tag.rising_priority.name, tag.rising_priority %></span><br/>
-			<%= render :partial => "priorities/action_show", :locals => {:priority => tag.rising_priority, :endorsement => (@endorsements.detect {|e| e.priority_id == tag.rising_priority_id } if @endorsements)}%>		
-				</div>
-			<% end %>
-	
-			</div>
-		<% end %>
-		<p>
-		<%= will_paginate (@issues) %>
-		
-		
-	</td><td valign="top" width="160" style="padding-left: 20px;">
-		<p>
-		<% if logged_in? and current_user.endorsements_count > 4 %>
-			<% if current_government.has_official? %>
-				<%= render :partial => "users/index_chart_with_obama", :locals => {:user => current_user }%>
-			<% else %>
-				<%= render :partial => "users/index_chart", :locals => {:user => current_user }%>
-			<% end %>
-		<% elsif current_government.has_official? %>
-			<%= render :partial => "users/index_chart", :locals => {:user => current_government.official_user }%>
-		<% end %>
-		
-		<% @finished = Priority.finished.by_most_recent_status_change.all(:limit => 5) %>
-		<% if @finished.any? %>
-			<p>
-			<div class="heading"><%= t('priorities.finished.heading')%></div>
-			<% for priority in @finished %>
-			<div class="priority_finished">
-				<%= link_to_unless_current h(priority.name), priority, :class => "priority_name_link" %><br/>
-				<%= official_status(priority) %>
-				<span class="priority_finished_time"><%= time_ago(priority.status_changed_at) %></span>
-			</div>
-			<% end %>
-			<%= t('priorities.finished.see_all', :url => finished_priorities_url)%> &rarr;
-		<% end %>
-	</td>
-</tr>
-</table>
+    <nav class="tabs">
+      <%= link_to "Top", top_priorities_path, class: ("active" if tab == "top") %>
+      <%= link_to "Rising", rising_priorities_path, class: ("active" if tab == "rising") %>
+      <%= link_to "Falling", falling_priorities_path, class: ("active" if tab == "falling") %>
+      <%= link_to "Controversial", controversial_priorities_path, class: ("active" if tab == "controversial") %>
+      <%= link_to "Newest", newest_priorities_path, class: ("active" if tab == "newest") %>
+      <%= link_to "Finished", finished_priorities_path, class: ("active" if tab == "finished") %>
+      <% if logged_in? %><%= link_to "Yours", yours_priorities_path, class: ("active" if tab == "yours") %><% end %>
+    </nav>
 
-<% if @issues.current_page == 1 and @issues.size > 0 %>
-	<p><%= blurb("overview_more")%>
-<% end %>
+    <div class="panel">
+      <% if @priorities.any? %>
+        <% @priorities.each_with_index do |priority, i| %>
+          <%= render "priorities/priority", priority: priority %>
+        <% end %>
+        <%= pager(@priorities) %>
+      <% else %>
+        <div class="empty">
+          <p>No priorities here yet.</p>
+          <%= link_to "Add the first one", new_priority_path, class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <aside>
+    <div class="panel">
+      <h3>Add a priority</h3>
+      <p class="muted small">What do you think the government should do?</p>
+      <%= link_to "Add a priority", new_priority_path, class: "btn btn-primary", style: "width:100%" %>
+    </div>
+
+    <% if gov.tags? %>
+      <div class="panel">
+        <h3><%= gov.tags_name.pluralize %></h3>
+        <div class="tag-cloud">
+          <% Tag.where("priorities_count > 0").popular.limit(20).each do |t| %>
+            <%= link_to t.display_title, tag_path(t), title: pluralize(t.priorities_count, "priority") %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="panel">
+      <h3>Recent activity</h3>
+      <% Activity.feed.includes(:user).limit(6).each do |a| %>
+        <div class="feed-item" style="padding:8px 0">
+          <div class="feed-icon"><%= a.icon %></div>
+          <div class="feed-body small">
+            <% if a.user %><%= link_to a.user.name, user_path(a.user) %><% else %>Someone<% end %>
+            <%= a.sentence %>
+            <% if a.priority %><%= link_to truncate(a.priority.name, length: 40), a.priority %><% end %>
+            <div class="ftime"><%= relative_time a.created_at %></div>
+          </div>
+        </div>
+      <% end %>
+      <p class="small"><%= link_to "See all activity →", feed_path %></p>
+    </div>
+  </aside>
+</div>

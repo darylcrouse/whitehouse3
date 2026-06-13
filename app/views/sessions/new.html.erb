@@ -1,34 +1,19 @@
-<table border="0" cellspacing="0" cellpadding="0">
-	<tr><td valign="top">
-		<%= blurb('signup_quick')%>
-		<p>
-		<%= render :partial => "users/form" %>
-	</td><td valign="top" style="padding-left: 40px; padding-right: 20px;">
-		<%= t('users.new.login')%>
-		<p>
-		<%= render :partial => "sessions/form" %>
-		<p>
-		<%= link_to t('sessions.new.forgot'), new_password_path %>
-
-		<% if current_government.has_facebook_enabled? or current_government.has_twitter_enabled? %>
-			<p>
-			<%= t('sessions.new.login.options')%>
-			<p>
-
-			<% if current_government.has_facebook_enabled? %>
-			<a href="#" onclick="FB.Connect.requireSession(function(){window.location.href=window.location.href=window.location.href;}); return false;"><%= image_tag("facebook_signin.png", :border => 0)%></a>
-			<p>
-			<% end %>
-			<% if current_government.has_twitter_enabled? %>
-			<%= link_to image_tag("twitter_signin.png", :border => 0), :controller => "twitter", :action => "create" %>
-			<% end %>	
-
-		<% end %>
-
-
-	</td>
-	
-	</tr>
-	
-</table>
-<p>
+<% page_title "Sign in" %>
+<div class="panel" style="max-width:420px;margin:24px auto">
+  <h1>Sign in</h1>
+  <%= form_with url: session_path do |f| %>
+    <div class="form-field">
+      <%= f.label :email_address, "Email" %>
+      <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@example.com", value: params[:email_address] %>
+    </div>
+    <div class="form-field">
+      <%= f.label :password %>
+      <%= f.password_field :password, required: true, autocomplete: "current-password", placeholder: "Your password", maxlength: 72 %>
+    </div>
+    <div class="form-actions">
+      <%= f.submit "Sign in", class: "btn btn-primary" %>
+      <%= link_to "Forgot password?", new_password_path, class: "small" %>
+    </div>
+  <% end %>
+  <p class="small muted" style="margin-top:16px">New here? <%= link_to "Create an account", signup_path %>.</p>
+</div>

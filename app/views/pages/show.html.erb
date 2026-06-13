@@ -1,3 +1,5 @@
-<% cache("views/page-" + @page.short_name) do %>
-	<%= liquidize(@page.content) %>
-<% end %>
+<% page_title @page.name %>
+<div class="panel" style="max-width:720px;margin:0 auto">
+  <h1><%= @page.name %></h1>
+  <div><%= simple_format @page.content %></div>
+</div>

@@ -1,52 +1,24 @@
-<%= render :partial => "priorities/header" %>
-<%= render :partial => "priorities/nav" %>
-<p>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr>
-		
-		<td valign="top">
-			
-			<%= render :partial => "changes/show", :locals => {:change => @change}%>
-			<p>
-			<%= render :partial => "changes/status", :locals => {:change => @change} %>
-			<% if ['sent','approved','declined'].include?(@change.status) %>
-				<%= render :partial => "votes/show", :locals => {:vote => @vote, :change => @change}%>			
-				<%= render :partial => "changes/chart", :locals => {:change => @change} %>
-			<% end %>
-			<p>
-			<% if @activity %>	
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr><td><div class="heading"><%= t('changes.discussion.name') %></div></td>
-				</tr>
-				</table>
-				<div id="activities">
-				<%= render :partial => "activities/show", :locals => {:activity => @activity, :priority => @priority, :suffix => "_noself"} %>
-				</div>
-				<p>
-			<% end %>
-
-			<% if @activities.any? %>
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr><td><div class="heading"><%= t('changes.activities.name') %></div></td>
-					<td>
-						<%= will_paginate(@activities) %>
-					</td>
-				</tr>
-				</table>
-				<div id="activities">
-				<% for activity in @activities %>
-					<%= render :partial => "activities/show", :locals => {:activity => activity, :priority => @priority, :suffix => "_noself"} %>
-				<% end %>
-				</div>
-				<%= will_paginate(@activities) %>
-			<% end %>
-
-		</td>	
-		
-		<td valign="top" width="160" style="padding-left: 20px;">
-			<%= render :partial => "priorities/left_nav" %>
-		</td>		
-	
-	</tr>
-</table>
-
+<% page_title "Proposed change" %>
+<div class="panel" style="max-width:640px;margin:0 auto">
+  <h1>Proposed change</h1>
+  <p class="muted">To <%= link_to @priority.name, @priority %> · status: <strong><%= @change.status %></strong></p>
+  <div><%= simple_format @change.content %></div>
+  <div class="statline">
+    <span class="count-up">▲ <%= @change.yes_votes %> yes</span>
+    <span class="count-down"><%= @change.no_votes %> no ▼</span>
+    <span><%= pluralize @change.votes_count, "vote" %></span>
+  </div>
+  <% if logged_in? && @change.open? %>
+    <div class="form-actions">
+      <%= button_to "Vote yes", priority_change_votes_path(@priority, @change, value: 1), class: "btn btn-up btn-sm" %>
+      <%= button_to "Vote no", priority_change_votes_path(@priority, @change, value: -1), class: "btn btn-down btn-sm" %>
+    </div>
+    <% if current_user.admin? %>
+      <div class="form-actions">
+        <%= button_to "Approve", approve_priority_change_path(@priority, @change), method: :put, class: "btn btn-sm" %>
+        <%= button_to "Decline", decline_priority_change_path(@priority, @change), method: :put, class: "btn btn-sm btn-ghost" %>
+      </div>
+    <% end %>
+  <% end %>
+  <p class="small"><%= link_to "All changes", priority_changes_path(@priority) %></p>
+</div>

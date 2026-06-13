@@ -1,0 +1,33 @@
+<% page_title "Edit settings" %>
+<div class="panel" style="max-width:560px;margin:0 auto">
+  <h1>Profile &amp; account</h1>
+  <%= form_with model: @user, url: settings_path, method: :patch do |f| %>
+    <% if @user.errors.any? %>
+      <div class="errors"><ul><% @user.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul></div>
+    <% end %>
+    <div class="two-col">
+      <div class="form-field"><%= f.label :first_name %><%= f.text_field :first_name %></div>
+      <div class="form-field"><%= f.label :last_name %><%= f.text_field :last_name %></div>
+    </div>
+    <div class="form-field"><%= f.label :bio %><%= f.text_area :bio %></div>
+    <div class="form-field"><%= f.label :website %><%= f.url_field :website %></div>
+    <div class="two-col">
+      <div class="form-field"><%= f.label :city %><%= f.text_field :city %></div>
+      <div class="form-field"><%= f.label :state %><%= f.text_field :state %></div>
+    </div>
+    <% if Government.current.branches? && Branch.any? %>
+      <div class="form-field"><%= f.label :branch_id, "Branch" %>
+        <%= f.select :branch_id, Branch.order(:name).map { |b| [b.name, b.id] }, include_blank: "None" %></div>
+    <% end %>
+    <hr style="margin:18px 0;border:none;border-top:1px solid var(--border)">
+    <div class="form-field"><%= f.label :email_address, "Email" %><%= f.email_field :email_address %></div>
+    <div class="two-col">
+      <div class="form-field"><%= f.label :password, "New password" %><%= f.password_field :password, autocomplete: "new-password" %><div class="hint">Leave blank to keep current.</div></div>
+      <div class="form-field"><%= f.label :password_confirmation, "Confirm" %><%= f.password_field :password_confirmation, autocomplete: "new-password" %></div>
+    </div>
+    <div class="form-actions">
+      <%= f.submit "Save settings", class: "btn btn-primary" %>
+      <%= link_to "Cancel", settings_path, class: "btn btn-ghost" %>
+    </div>
+  <% end %>
+</div>

@@ -1,18 +1,26 @@
-<% if params[:q] %>
-	<p><%= t('priorities.new.suggest') %>
-<% end %>
-<table cellpadding="0" cellspacing="0">
-<% form_for(Priority.new) do |f| %>
-<% if @tag_names %>
-	<%= hidden_field_tag :tag_names, @tag_names %>
-<% end %>
-<tr>
-<td valign="middle">
-		<%= f.text_field :name, :size => 40, :maxlength => 60, :autocomplete =>"off" %>	
-	</td>
-<td valign="middle" style="padding-left: 2px;">
-	<%= f.submit t('priorities.new.submit'), :class => "suggest_button" %>
-</td>
-</tr>
-</table>
+<%= form_with model: @priority do |f| %>
+  <% if @priority.errors.any? %>
+    <div class="errors">
+      <strong><%= pluralize(@priority.errors.count, "error") %> prevented this from being saved:</strong>
+      <ul><% @priority.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul>
+    </div>
+  <% end %>
+
+  <div class="form-field">
+    <%= f.label :name, "What should the government do?" %>
+    <%= f.text_field :name, placeholder: "e.g. Invest in renewable energy infrastructure", autofocus: true %>
+    <div class="hint">Start with a verb. Keep it to one clear idea (3–140 characters).</div>
+  </div>
+
+  <% if gov.tags? %>
+    <div class="form-field">
+      <%= label_tag :issue_list, "#{gov.tags_name.pluralize} (comma separated)" %>
+      <%= text_field_tag :issue_list, @priority.issue_list.join(", "), placeholder: "energy, environment, jobs" %>
+    </div>
+  <% end %>
+
+  <div class="form-actions">
+    <%= f.submit @priority.persisted? ? "Save changes" : "Add priority", class: "btn btn-primary" %>
+    <%= link_to "Cancel", (@priority.persisted? ? priority_path(@priority) : priorities_path), class: "btn btn-ghost" %>
+  </div>
 <% end %>

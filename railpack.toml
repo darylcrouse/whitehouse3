@@ -1,5 +1,14 @@
+# Deployment configuration for Railpack (https://railpack.com).
+#
+# Required environment variable:
+#   SECRET_KEY_BASE  — a long random string (generate with `bin/rails secret`).
+#
+# The app uses SQLite (primary, plus Solid Queue/Cache/Cable databases) stored
+# under ./storage, so mount a persistent volume there to keep data across deploys.
+
 [build]
-cmd = "bundle install && bundle exec rake assets:precompile"
+cmd = "bundle install && SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile"
 
 [start]
-cmd = "bundle exec rails server -b 0.0.0.0 -p 8080"
+# db:prepare creates + migrates (and seeds on first boot); then start the server.
+cmd = "bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0 -p ${PORT:-8080}"

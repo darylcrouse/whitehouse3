@@ -1,60 +1,35 @@
 class PasswordsController < ApplicationController
-  layout "sessions"
-  ssl_required :new, :create, :edit, :update, :reset
-
-  before_action :find_password, only: [:edit, :update, :reset]
-  before_action :login_from_token, only: [:edit, :update]
-  before_action :login_required, only: [:new, :create]
+  allow_unauthenticated_access
+  before_action :set_user_by_token, only: %i[ edit update ]
+  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_password_path, alert: "Try again later." }
 
   def new
-    @page_title = t('passwords.new.title', government_name: current_government.name)
   end
 
   def create
-    @user = User.find_by(email: params[:user][:email])
-    if @user
-      PasswordMailer.reset_password(@user).deliver_now
-      flash[:notice] = t('passwords.sent', government_name: current_government.name)
-      redirect_to login_path
-    else
-      flash[:error] = t('passwords.invalid', government_name: current_government.name)
-      render action: "new"
+    if user = User.find_by(email_address: params[:email_address])
+      PasswordsMailer.reset(user).deliver_later
     end
+
+    redirect_to new_session_path, notice: "Password reset instructions sent (if user with that email address exists)."
   end
 
   def edit
-    @page_title = t('passwords.edit.title', government_name: current_government.name)
   end
 
   def update
-    new_password = params[:user][:password]
-    new_password_confirmation = params[:user][:password_confirmation]
-
-    if @user.update(password: new_password, password_confirmation: new_password_confirmation)
-      flash[:notice] = t('passwords.success')
-      redirect_to login_path
+    if @user.update(params.permit(:password, :password_confirmation))
+      @user.sessions.destroy_all
+      redirect_to new_session_path, notice: "Password has been reset."
     else
-      flash[:error] = t('passwords.invalid', government_name: current_government.name)
-      render action: "edit"
+      redirect_to edit_password_path(params[:token]), alert: "Passwords did not match."
     end
   end
 
-  def reset
-    raise "Password token expired" if @password.expired?
-    @page_title = t('passwords.new.title', government_name: current_government.name)
-    render
-  end
-
   private
-
-  def find_password
-    @password = Password.find_by(param: params[:id])
-    raise "Invalid password" unless @password
-  end
-
-  def login_from_token
-    session[:user_id] = @password.user_id
-    @user = User.find(session[:user_id])
-    raise "Invalid user" unless @user
-  end
+    def set_user_by_token
+      @user = User.find_by_password_reset_token!(params[:token])
+    rescue ActiveSupport::MessageVerifier::InvalidSignature
+      redirect_to new_password_path, alert: "Password reset link is invalid or has expired."
+    end
 end

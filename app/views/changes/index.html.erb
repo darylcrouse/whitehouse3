@@ -1,10 +1,18 @@
-<%= render :partial => "priorities/header" %>
-<%= render :partial => "priorities/nav" %>
-<p>
-<% for change in @changes %>
-	<%= render :partial => "changes/show", :locals => {:change => change}%>
-	<br/>
-	<%= render :partial => "changes/status", :locals => {:change => change}%>
-	<p>
-<% end %>
-<%= will_paginate(@changes) %>
+<% page_title "Proposed changes" %>
+<div class="panel">
+  <h1>Proposed changes</h1>
+  <p class="muted">For <%= link_to @priority.name, @priority %></p>
+  <% if logged_in? %><%= link_to "Propose a change", new_priority_change_path(@priority), class: "btn btn-sm" %><% end %>
+  <% if @changes.any? %>
+    <ul class="item-list" style="margin-top:12px">
+      <% @changes.each do |c| %>
+        <li class="priority-row">
+          <div class="priority-main">
+            <div class="ptitle"><%= link_to truncate(c.content, length: 80), priority_change_path(@priority, c) %></div>
+            <div class="priority-meta"><%= c.status %> · <span class="count-up">▲ <%= c.yes_votes %></span> <span class="count-down"><%= c.no_votes %> ▼</span></div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %><p class="empty">No changes proposed.</p><% end %>
+</div>

@@ -1,0 +1,21 @@
+<% page_title "Activity" %>
+<div class="layout-split">
+  <div class="panel">
+    <h1>Activity</h1>
+    <p class="muted">What's happening across <%= gov.name %>.</p>
+    <% if @activities.any? %>
+      <% @activities.each do |a| %><%= render "activities/activity", activity: a %><% end %>
+      <%= pager(@activities) %>
+    <% else %><p class="empty">Nothing has happened yet. <%= link_to "Add a priority", new_priority_path %> to get started.</p><% end %>
+  </div>
+  <aside>
+    <div class="panel">
+      <h3>Top priorities</h3>
+      <ol style="padding-left:18px">
+        <% Priority.published.top_rank.limit(8).each do |p| %>
+          <li style="margin-bottom:6px"><%= link_to p.name, p %></li>
+        <% end %>
+      </ol>
+    </div>
+  </aside>
+</div>

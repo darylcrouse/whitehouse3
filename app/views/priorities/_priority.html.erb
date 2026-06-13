@@ -1,0 +1,19 @@
+<%# A single leaderboard row. `priority` local required; optional `rank`. %>
+<div class="priority-row">
+  <div class="rank">
+    <%= defined?(rank) && rank ? rank : (priority.position.positive? ? priority.position : "–") %>
+  </div>
+  <div class="priority-main">
+    <div class="ptitle"><%= link_to priority.name, priority %></div>
+    <div class="priority-meta">
+      <%= pluralize priority.endorsements_count, "endorser" %> ·
+      <%= pluralize priority.points_count, "point" %>
+      <% if priority.finished? %>· <span class="badge badge-official"><%= priority.official_status_name %></span><% end %>
+      <% if priority.official_value == 1 %>· <span class="badge badge-official">Officially endorsed</span><% end %>
+      <% priority.issue_list.first(3).each do |t| %>
+        · <%= link_to t, tag_path(t.parameterize), class: "tag" %>
+      <% end %>
+    </div>
+  </div>
+  <%= render "priorities/endorse_buttons", priority: priority %>
+</div>

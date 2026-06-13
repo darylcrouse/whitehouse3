@@ -1,25 +1,17 @@
-class Page < ActiveRecord::Base
+# A simple CMS page (About, Privacy, etc.) editable by admins.
+class Page < ApplicationRecord
+  validates :name, presence: true
+  validates :short_name, presence: true, uniqueness: true
 
-  ReservedShortnames = %w[about faq privacy rules]
-  
-  validates_presence_of :short_name
-  validates_exclusion_of :short_name, :in => ReservedShortnames, :message => 'is already taken'
-  validates_uniqueness_of :short_name
+  before_validation :set_short_name
 
-  validates_presence_of :name
-  
-  before_save :check_link_name
-  after_save :clear_cache
-  
-  def check_link_name
-    self.link_name = self.short_name.humanize unless attribute_present?("link_name")
-    self.short_name = self.short_name.parameterize.wrapped_string
+  def to_param
+    short_name
   end
-  
-  def clear_cache
-    Rails.cache.delete("views/page-" + short_name)
-    Rails.cache.delete("views/pages")
-    return true
+
+  private
+
+  def set_short_name
+    self.short_name ||= name.to_s.parameterize
   end
-  
 end

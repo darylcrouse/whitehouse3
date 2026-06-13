@@ -1,0 +1,8 @@
+<% page_title "Discussion" %>
+<div class="panel" style="max-width:720px;margin:0 auto">
+  <%= render "activities/activity", activity: @activity %>
+  <h3>Comments</h3>
+  <% if @comments.any? %>
+    <% @comments.each do |c| %><%= render "activities/comment", comment: c %><% end %>
+  <% else %><p class="muted small">No comments yet.</p><% end %>
+</div>

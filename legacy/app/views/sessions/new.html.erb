@@ -1,0 +1,34 @@
+<table border="0" cellspacing="0" cellpadding="0">
+	<tr><td valign="top">
+		<%= blurb('signup_quick')%>
+		<p>
+		<%= render :partial => "users/form" %>
+	</td><td valign="top" style="padding-left: 40px; padding-right: 20px;">
+		<%= t('users.new.login')%>
+		<p>
+		<%= render :partial => "sessions/form" %>
+		<p>
+		<%= link_to t('sessions.new.forgot'), new_password_path %>
+
+		<% if current_government.has_facebook_enabled? or current_government.has_twitter_enabled? %>
+			<p>
+			<%= t('sessions.new.login.options')%>
+			<p>
+
+			<% if current_government.has_facebook_enabled? %>
+			<a href="#" onclick="FB.Connect.requireSession(function(){window.location.href=window.location.href=window.location.href;}); return false;"><%= image_tag("facebook_signin.png", :border => 0)%></a>
+			<p>
+			<% end %>
+			<% if current_government.has_twitter_enabled? %>
+			<%= link_to image_tag("twitter_signin.png", :border => 0), :controller => "twitter", :action => "create" %>
+			<% end %>	
+
+		<% end %>
+
+
+	</td>
+	
+	</tr>
+	
+</table>
+<p>

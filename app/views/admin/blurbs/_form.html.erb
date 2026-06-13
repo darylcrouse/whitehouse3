@@ -1,0 +1,11 @@
+<%= form_with model: [:admin, @blurb] do |f| %>
+  <% if @blurb.errors.any? %>
+    <div class="errors"><ul><% @blurb.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul></div>
+  <% end %>
+  <div class="form-field"><%= f.label :name %><%= f.text_field :name, autofocus: true %></div>
+  <div class="form-field"><%= f.label :content %><%= f.text_area :content %></div>
+  <div class="form-actions">
+    <%= f.submit "Save blurb", class: "btn btn-primary" %>
+    <%= link_to "Cancel", admin_blurbs_path, class: "btn btn-ghost" %>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+<% page_title "Settings" %>
+<div class="panel" style="max-width:560px;margin:0 auto">
+  <h1>Settings</h1>
+  <div class="statline">
+    <span>@<%= @user.login %></span>
+    <span><%= @user.email_address %></span>
+  </div>
+  <p><%= link_to "Edit your profile & account", edit_settings_path, class: "btn btn-primary" %></p>
+  <p class="small"><%= link_to "View your public profile →", user_path(@user) %></p>
+</div>

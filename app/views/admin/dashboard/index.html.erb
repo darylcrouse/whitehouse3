@@ -1,0 +1,25 @@
+<h1>Dashboard</h1>
+<div class="stat-cards">
+  <% @counts.each do |label, num| %>
+    <div class="stat-card"><div class="num"><%= num %></div><div class="lbl"><%= label.to_s.titleize %></div></div>
+  <% end %>
+</div>
+
+<div class="two-col">
+  <div class="panel">
+    <h3>Newest priorities</h3>
+    <table class="data">
+      <% @recent_priorities.each do |p| %>
+        <tr><td><%= link_to truncate(p.name, length: 40), p %></td><td class="muted small"><%= p.status %></td></tr>
+      <% end %>
+    </table>
+  </div>
+  <div class="panel">
+    <h3>Newest users</h3>
+    <table class="data">
+      <% @recent_users.each do |u| %>
+        <tr><td><%= link_to u.name, user_path(u) %></td><td class="muted small"><%= u.created_at.to_date %></td></tr>
+      <% end %>
+    </table>
+  </div>
+</div>

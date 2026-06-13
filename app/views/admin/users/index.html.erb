@@ -1,0 +1,21 @@
+<h1>Users</h1>
+<div class="panel">
+  <table class="data">
+    <thead><tr><th>User</th><th>Email</th><th>Priorities</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      <% @users.each do |u| %>
+        <tr>
+          <td><%= link_to u.name, user_path(u) %> <% if u.is_admin? %><span class="badge badge-official">admin</span><% end %></td>
+          <td class="small"><%= u.email_address %></td>
+          <td><%= u.endorsements_count %></td>
+          <td><%= u.status %></td>
+          <td class="small">
+            <%= button_to (u.is_admin? ? "Revoke admin" : "Make admin"), make_admin_admin_user_path(u), class: "linkish" %> ·
+            <%= button_to (u.status == "suspended" ? "Unsuspend" : "Suspend"), suspend_admin_user_path(u), class: "linkish", style: "color:var(--down)" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= pager(@users) %>
+</div>

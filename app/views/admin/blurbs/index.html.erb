@@ -1,0 +1,20 @@
+<div style="display:flex;justify-content:space-between;align-items:center">
+  <h1>Blurbs</h1>
+  <%= link_to "New blurb", new_admin_blurb_path, class: "btn btn-sm btn-primary" %>
+</div>
+<div class="panel">
+  <table class="data">
+    <thead><tr><th>Name</th><th>Content</th><th></th></tr></thead>
+    <tbody>
+      <% @blurbs.each do |b| %>
+        <tr>
+          <td><%= b.name %></td>
+          <td class="small"><%= truncate b.content, length: 60 %></td>
+          <td class="small"><%= link_to "Edit", edit_admin_blurb_path(b) %> ·
+            <%= button_to "Delete", admin_blurb_path(b), method: :delete, class: "linkish", style: "color:var(--down)" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @blurbs.empty? %><p class="empty">No blurbs yet.</p><% end %>
+</div>

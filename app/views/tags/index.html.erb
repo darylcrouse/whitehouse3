@@ -1,12 +1,11 @@
-<div id="hp_intro"><%= @page_title %></div>
-<p>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	
-	<tr><td valign="top" width="160">
-			<%= render :partial => "nav" %>
-		</td>
-		<td valign="top" style="padding-left: 20px;">
-			
-		</td>
-	</tr>
-</table>
+<% page_title gov.tags_name.pluralize %>
+<div class="panel">
+  <h1><%= gov.tags_name.pluralize %></h1>
+  <% if @tags.any? %>
+    <div class="tag-cloud">
+      <% @tags.each do |t| %>
+        <%= link_to "#{t.display_title} (#{t.priorities_count})", tag_path(t) %>
+      <% end %>
+    </div>
+  <% else %><p class="empty">No <%= gov.tags_name.downcase.pluralize %> yet.</p><% end %>
+</div>

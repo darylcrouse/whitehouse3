@@ -1,0 +1,21 @@
+<h1>Site settings</h1>
+<div class="panel" style="max-width:640px">
+  <%= form_with model: @government, url: admin_government_path, method: :patch do |f| %>
+    <% if @government.errors.any? %>
+      <div class="errors"><ul><% @government.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul></div>
+    <% end %>
+    <div class="form-field"><%= f.label :name, "Site name" %><%= f.text_field :name %></div>
+    <div class="form-field"><%= f.label :tagline %><%= f.text_field :tagline %></div>
+    <div class="form-field"><%= f.label :mission %><%= f.text_field :mission %></div>
+    <div class="form-field"><%= f.label :prompt, "Call to action prompt" %><%= f.text_field :prompt %></div>
+    <div class="two-col">
+      <div class="form-field"><%= f.label :tags_name, "Name for tags" %><%= f.text_field :tags_name %></div>
+      <div class="form-field"><%= f.label :currency_name %><%= f.text_field :currency_name %></div>
+    </div>
+    <div class="form-field"><%= f.label :official_user_id, "Official leader (user id)" %><%= f.number_field :official_user_id %>
+      <div class="hint">This user's endorsements mark a priority as officially endorsed.</div></div>
+    <div class="form-field"><label><%= f.check_box :is_tags %> Enable <%= @government.tags_name.downcase.pluralize %></label></div>
+    <div class="form-field"><label><%= f.check_box :is_branches %> Enable branches</label></div>
+    <div class="form-actions"><%= f.submit "Save settings", class: "btn btn-primary" %></div>
+  <% end %>
+</div>

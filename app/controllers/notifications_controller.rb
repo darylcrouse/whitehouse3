@@ -1,31 +1,12 @@
 class NotificationsController < ApplicationController
-  before_action :login_required
-  before_action :set_notification, only: [:show, :destroy]
+  before_action :require_login
 
-  def authorized?
-    current_user.is_admin? || @notification.recipient_id == current_user.id
+  def index
+    @notifications = current_user.notifications.newest.page_list(params[:page])
   end
 
-  def show
-    respond_to do |format|
-      format.html
-      format.xml { render xml: @notification.to_xml(include: [:sender, :notifiable], except: NB_CONFIG['api_exclude_fields']) }
-      format.json { render json: @notification.to_json(include: [:sender, :notifiable], except: NB_CONFIG['api_exclude_fields']) }
-    end
+  def read_all
+    current_user.notifications.unread.update_all(read_at: Time.current, status: "read")
+    redirect_to notifications_path, notice: "All notifications marked read."
   end
-
-  def destroy
-    @notification.delete!
-    respond_to do |format|
-      format.html { redirect_to(controller: "inbox", action: "notifications") }
-      format.js {
-        render js: "document.getElementById('notification_#{@notification.id}').remove();"
-      }
-    end
-  end
-
-  private
-    def set_notification
-      @notification = Notification.find(params[:id])
-    end
 end

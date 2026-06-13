@@ -1,64 +1,57 @@
-<%= render :partial => "header" %>
-<p>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr>
+<% page_title @user.name %>
+<div class="layout-split">
+  <div>
+    <div class="panel">
+      <div style="display:flex; gap:16px; align-items:center">
+        <%= avatar @user, 72 %>
+        <div style="flex:1">
+          <h1 style="margin-bottom:2px"><%= @user.name %></h1>
+          <div class="muted">@<%= @user.login %><% if @user.official? %> · <span class="badge badge-official">Official</span><% end %></div>
+          <div class="statline" style="margin-top:8px">
+            <span><b><%= @user.endorsements_count %></b> priorities</span>
+            <span><b><%= @user.points_count %></b> points</span>
+            <span><b><%= @user.followers_count %></b> followers</span>
+          </div>
+        </div>
+        <% if logged_in? && current_user.id != @user.id %>
+          <% if current_user.following?(@user) %>
+            <%= button_to "Following ✓", unfollow_user_path(@user), class: "btn btn-sm btn-primary" %>
+          <% else %>
+            <%= button_to "Follow", follow_user_path(@user), class: "btn btn-sm" %>
+          <% end %>
+          <%= link_to "Message", new_message_path(to: @user.id), class: "btn btn-sm" %>
+        <% end %>
+      </div>
+      <% if @user.bio.present? %><p style="margin-top:12px"><%= simple_format @user.bio %></p><% end %>
+      <% if @user.website.present? %><p class="small"><a href="<%= @user.website %>" rel="nofollow noopener"><%= @user.website %></a></p><% end %>
+    </div>
 
-		<td valign="top">
-			
-			<% if @user.profile %>
-				<div class="bio">
-				<%= @user.profile.bio_html %>
-				</div>
-			<% end %>
-			
-			<% if @priorities.any? %>
-				<% if @user.endorsements_count > 5 %>
-					<div class="heading"><%= link_to t('users.priorities.top5.more', :priority_count => @user.endorsements_count), priorities_user_path(@user) %></div>
-				<% else %>
-					<div class="heading"><%= t('users.priorities.top5', :count => @priorities.length) %></div>
-				<% end %>
-				<table border="0" cellspacing="0" cellpadding="0">
-				<% for p in @priorities %>
-					<% if @endorsements %>
-						<% endorsement = @endorsements.detect {|e| e.priority_id == p.priority_id } %>
-					<% end %>
-					<tr>
-						<td valign="top" align="right" width="15">
-							<div class="priority_position"><%= p.position %></div>
-						</td>
-						<td valign="top" style="padding-left: 8px;">
-						<div id="priority_<%= p.priority_id %>" class="priority_listing">
-							<div class="point_name" id="priority_<%= p.priority_id %>_name">
-								<% if p.value < 0 %><span class="opposed"><%= t('oppose.ed')%></span><% end %>
-								<%= link_to_unless_current h(p.priority.name), p.priority, :class => "priority_name_link" %>
-							</div>						
-							<%= render :partial => "priorities/action_show", :locals => {:priority => p.priority, :endorsement => endorsement }%>
-						</div>
-						</td>
-					</tr>
-				<% end %>
-				</table>
-				<p>
-			<% end %>
-			
-			<%= render :partial => "bulletins/form", :locals => {:activity => Activity.new, :comment => Comment.new } %>
-			
-			<div id="activities">
-			<% for activity in @activities %>
-				<%= render :partial => "activities/show", :locals => {:activity => activity, :suffix => "_nouser"} %>
-			<% end %>
-			</div>
-			<p>
-			<% if @activities.total_pages > 1 %>
-				<%= will_paginate(@activities, :params => {:action => "activities"} ) %>
-			<% end %>
-			
-		</td>
-		<td valign="top" width="160" style="padding-left: 20px;">
-			
-			<%= render :partial => "left_nav" %>
-			
-		</td>
-		
-	</tr>
-</table>
+    <div class="panel">
+      <h2>Top priorities</h2>
+      <% if @priorities.any? %>
+        <ol style="padding-left:20px">
+          <% @priorities.each do |p| %>
+            <li style="margin-bottom:6px"><%= link_to p.name, p %>
+              <%= endorsement_badge(@user, p) %></li>
+          <% end %>
+        </ol>
+        <p class="small"><%= link_to "All #{@user.name}'s priorities →", priorities_user_path(@user) %></p>
+      <% else %><p class="muted small">No priorities yet.</p><% end %>
+    </div>
+
+    <div class="panel">
+      <h2>Recent activity</h2>
+      <% if @activities.any? %>
+        <% @activities.each do |a| %><%= render "activities/activity", activity: a %><% end %>
+      <% else %><p class="muted small">No activity yet.</p><% end %>
+    </div>
+  </div>
+
+  <aside>
+    <div class="panel">
+      <h3>On the record</h3>
+      <p class="small"><b><%= @user.up_endorsements_count %></b> endorsed · <b><%= @user.down_endorsements_count %></b> opposed</p>
+      <p class="small"><%= link_to "Points", points_user_path(@user) %> · <%= link_to "Activity", activities_user_path(@user) %></p>
+    </div>
+  </aside>
+</div>

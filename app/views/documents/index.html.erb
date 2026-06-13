@@ -1,18 +1,15 @@
-<div id="hp_intro"><%= @page_title %></div>
-<p>
-<% if not @documents or @documents.empty? %>
-	<%= t('document.empty')%>
-<% else %>
-	<%= render :partial => "shared/paginate_with_feed", :locals => {:collection => @documents} %>
-	<% for document in @documents %>
-		<% quality = nil %>
-		<% if @qualities %>
-			<% quality = @qualities.detect {|e| e.document_id == document.id } %>
-		<% end %>				
-		<%= render :partial => "documents/show_full", :locals => {:document => document, :quality => quality, :revision => nil}%>
-	<% end %>
-
-	<p>
-	<%= will_paginate(@documents) %>
-
-<% end %>
+<% page_title "Documents" %>
+<div class="panel">
+  <h1>Documents</h1>
+  <% if @documents.any? %>
+    <ul class="item-list">
+      <% @documents.each do |doc| %>
+        <li class="argument <%= doc.supporting? ? 'support' : (doc.opposing? ? 'oppose' : '') %>">
+          <div class="ahead"><%= link_to doc.name, priority_document_path(doc.priority, doc) %></div>
+          <div class="ameta">on <%= link_to doc.priority.name, doc.priority %> · by <%= doc.user&.name || "someone" %> · <%= relative_time doc.created_at %></div>
+        </li>
+      <% end %>
+    </ul>
+    <%= pager(@documents) %>
+  <% else %><p class="empty">No documents yet.</p><% end %>
+</div>

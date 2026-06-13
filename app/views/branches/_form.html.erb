@@ -1,0 +1,11 @@
+<%= form_with model: @branch do |f| %>
+  <% if @branch.errors.any? %>
+    <div class="errors"><ul><% @branch.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul></div>
+  <% end %>
+  <div class="form-field"><%= f.label :name %><%= f.text_field :name, autofocus: true %></div>
+  <div class="form-field"><%= f.label :description %><%= f.text_area :description %></div>
+  <div class="form-actions">
+    <%= f.submit "Save branch", class: "btn btn-primary" %>
+    <%= link_to "Cancel", branches_path, class: "btn btn-ghost" %>
+  </div>
+<% end %>

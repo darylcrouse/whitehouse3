@@ -1,59 +1,32 @@
-class Following < ActiveRecord::Base
-  
-  named_scope :up, :conditions => "value > 0"
-  named_scope :down, :conditions => "value < 0"
-  
+# A directed relationship: user follows (value 1) or ignores (value -1) other_user.
+class Following < ApplicationRecord
   belongs_to :user
-  belongs_to :other_user, :class_name => "User"
-  
-  has_many :notifications, :as => :notifiable, :dependent => :destroy
-  
-  after_create :add_counts
-  before_destroy :remove_counts
-  
-  def is_ignore?
-    value < 0
-  end
-  
-  def is_follow?
-    value > 0
-  end    
-  
-  def is_up?
-    is_follow?
-  end
-  
-  def is_down?
-    is_ignore?
-  end
-  
-  def add_counts
-    if is_ignore?
-      user.increment!(:ignorings_count)
-      other_user.increment!(:ignorers_count)
-      #ActivityIgnoringNew.create(:user => user, :other_user => other_user)
-      ActivityCapitalIgnorers.create(:user => other_user, :other_user => user, :capital => CapitalIgnorers.create(:recipient => other_user, :amount => -1))
-    else
-      user.increment!(:followings_count)
-      other_user.increment!(:followers_count)
-      ActivityFollowingNew.create(:user => user, :other_user => other_user)
-      ActivityCapitalFollowers.create(:user => other_user, :other_user => user, :capital => CapitalFollowers.create(:recipient => other_user, :amount => 1))
-      notifications << NotificationFollower.new(:sender => self.user, :recipient => self.other_user)    
-    end
-  end
-  
-  def remove_counts
-    if is_ignore?
-      user.decrement!(:ignorings_count)
-      other_user.decrement!(:ignorers_count)      
-      #ActivityIgnoringDelete.create(:user => user, :other_user => other_user)
-      ActivityCapitalIgnorers.create(:user => other_user, :other_user => user, :capital => CapitalIgnorers.create(:recipient => other_user, :amount => 1))
-    else
-      user.decrement!(:followings_count)
-      other_user.decrement!(:followers_count)
-      ActivityFollowingDelete.create(:user => user, :other_user => other_user)    
-      ActivityCapitalFollowers.create(:user => other_user, :other_user => user, :capital => CapitalFollowers.create(:recipient => other_user, :amount => -1))
-    end
+  belongs_to :other_user, class_name: "User"
+
+  validates :user_id, uniqueness: { scope: :other_user_id }
+  validate  :not_self
+
+  after_create  :bump_counts
+  after_destroy :drop_counts
+
+  scope :following, -> { where(value: 1) }
+  scope :ignoring,  -> { where(value: -1) }
+
+  private
+
+  def not_self
+    errors.add(:other_user_id, "can't follow yourself") if user_id == other_user_id
   end
 
+  def bump_counts
+    return unless value == 1
+    User.where(id: user_id).update_all("followings_count = followings_count + 1")
+    User.where(id: other_user_id).update_all("followers_count = followers_count + 1")
+  end
+
+  def drop_counts
+    return unless value == 1
+    User.where(id: user_id).update_all("followings_count = followings_count - 1")
+    User.where(id: other_user_id).update_all("followers_count = followers_count - 1")
+  end
 end

@@ -1,0 +1,21 @@
+<% page_title "Notifications" %>
+<div class="panel">
+  <div style="display:flex; justify-content:space-between; align-items:center">
+    <h1>Notifications</h1>
+    <% if @notifications.any? %><%= button_to "Mark all read", read_all_notifications_path, class: "btn btn-sm" %><% end %>
+  </div>
+  <% if @notifications.any? %>
+    <ul class="item-list">
+      <% @notifications.each do |n| %>
+        <li class="feed-item">
+          <div class="feed-icon">🔔</div>
+          <div class="feed-body">
+            <%= n.type.to_s.titleize %>
+            <% if n.sender %>from <%= link_to n.sender.name, user_path(n.sender) %><% end %>
+            <div class="ftime"><%= relative_time n.created_at %><% unless n.read? %> · <span class="badge badge-up">new</span><% end %></div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %><p class="empty">No notifications.</p><% end %>
+</div>

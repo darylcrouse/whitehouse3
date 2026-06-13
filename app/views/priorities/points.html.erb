@@ -1,19 +1,9 @@
-<%= render :partial => "header" %>
-<%= render :partial => "nav" %>
-<p>
-<% if @points.empty? and not @priority.replaced? %>
-	<%= t('points.empty') %>
-<% else %>
-	<% if @points.total_pages > 1 %>
-	<%= will_paginate(@points) %>
-	<p>
-	<% end %>
-	<% for point in @points %>
-		<% quality = nil %>
-		<% if @qualities %>
-			<% quality = @qualities.detect {|e| e.point_id == point.id } %>
-		<% end %>				
-		<%= render :partial => "points/show", :locals => {:point => point, :priority => @priority, :quality => quality }%>
-	<% end %>
-	<%= will_paginate(@points) %>
-<% end %>
+<% page_title "Points · #{@priority.name}" %>
+<div class="panel">
+  <h1>Points</h1>
+  <p class="muted"><%= link_to @priority.name, @priority %></p>
+  <% if @points.any? %>
+    <% @points.each do |point| %><%= render "points/point", point: point %><% end %>
+    <%= pager(@points) %>
+  <% else %><p class="empty">No points yet.</p><% end %>
+</div>

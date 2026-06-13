@@ -1,0 +1,31 @@
+<%# A single feed item with its comment thread. `activity` local required. %>
+<div class="feed-item">
+  <div class="feed-icon"><%= activity.icon %></div>
+  <div class="feed-body">
+    <div>
+      <% if activity.user %><strong><%= link_to activity.user.name, user_path(activity.user) %></strong><% else %><strong>Someone</strong><% end %>
+      <%= activity.sentence %>
+      <% if activity.priority %><%= link_to activity.priority.name, activity.priority %><% end %>
+      <% if activity.point %>— <%= link_to truncate(activity.point.name, length: 50), point_path(activity.point) %><% end %>
+    </div>
+    <div class="ftime">
+      <%= relative_time activity.created_at %>
+      <% if activity.comments_count.to_i > 0 %>· <%= link_to pluralize(activity.comments_count, "comment"), activity_path(activity) %><% end %>
+    </div>
+
+    <% if activity.comments.loaded? || activity.comments_count.to_i > 0 %>
+      <div style="margin-top:8px">
+        <% activity.comments.first(3).each do |c| %><%= render "activities/comment", comment: c %><% end %>
+      </div>
+    <% end %>
+
+    <% if logged_in? && activity.commentable? %>
+      <%= form_with model: [activity, Comment.new], url: activity_comments_path(activity), class: "inline-comment" do |f| %>
+        <div style="display:flex; gap:8px; margin-top:6px">
+          <%= f.text_field :content, placeholder: "Add a comment…", style: "flex:1" %>
+          <%= f.submit "Reply", class: "btn btn-sm" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

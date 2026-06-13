@@ -1,32 +1,62 @@
 class DocumentsController < ApplicationController
-  
-  before_filter :login_required, :only => [:new, :create, :quality, :unquality, :index, :your_priorities, :destroy]
-  before_filter :admin_required, :only => [:edit, :update]
+  before_action :require_login, only: %i[new create edit update destroy]
+  before_action :set_priority, only: %i[index new create edit update destroy], if: -> { params[:priority_id] }
+  before_action :set_document, only: %i[show edit update destroy]
 
-  # GET /documents
-  # GET /documents.xml
   def index
-    @page_title = t('document.yours.title')
-    @documents = Document.published.by_author(current_user).paginate(:page => params[:page])
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @documents.to_xml }
+    if @priority
+      @documents = @priority.documents.published.newest.page_list(params[:page])
+    else
+      @documents = Document.published.newest.page_list(params[:page])
     end
   end
 
-  # GET /documents/1
-  # GET /documents/1.xml
   def show
-    @document = Document.find(params[:id])
-    @point = Point.new
-    @qualities = nil
-    if logged_in? and @document.priority
-      @qualities = @document.priority.points.published.by_quality_score.find(:all, :conditions => ["points.user_id = ?", current_user.id], :include => :priority, :limit => 3)
-    end    
+    @document ||= Document.find(params[:id])
+    @priority = @document.priority
   end
 
-  # GET /documents/new
-  # GET /documents/new.xml
   def new
-    @document = Document.new
-    @page
+    @document = @priority.documents.new(value: params[:value] || 1)
+  end
+
+  def create
+    @document = @priority.documents.new(document_params)
+    @document.user = current_user
+    if @document.save
+      redirect_to priority_document_path(@priority, @document), notice: "Your document was published."
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    if @document.update(document_params)
+      redirect_to priority_document_path(@document.priority, @document), notice: "Document updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @document.destroy if current_user&.admin? || @document.user_id == current_user&.id
+    redirect_to priority_path(@document.priority), notice: "Document removed."
+  end
+
+  private
+
+  def set_priority
+    @priority = Priority.find(params[:priority_id].to_i)
+  end
+
+  def set_document
+    @document = Document.find(params[:id])
+  end
+
+  def document_params
+    params.require(:document).permit(:name, :content, :value)
+  end
+end

@@ -1,3 +1,9 @@
-
-<%= link_to 'Edit', edit_tag_path(@tag) %> |
-<%= link_to 'Back', tags_path %>
+<% page_title @tag.display_title %>
+<div class="panel">
+  <h1><%= @tag.display_title %></h1>
+  <% if @tag.description.present? %><p class="muted"><%= @tag.description %></p><% end %>
+  <% if @priorities.any? %>
+    <% @priorities.each do |p| %><%= render "priorities/priority", priority: p %><% end %>
+    <%= pager(@priorities) %>
+  <% else %><p class="empty">No priorities in this <%= gov.tags_name.downcase %> yet.</p><% end %>
+</div>

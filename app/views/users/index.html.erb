@@ -1,0 +1,21 @@
+<% page_title "People" %>
+<div class="panel">
+  <h1>People</h1>
+  <nav class="tabs">
+    <%= link_to "Most active", users_path(tab: "active"), class: ("active" if @tab == "active") %>
+    <%= link_to "Newest", users_path(tab: "newest"), class: ("active" if @tab == "newest") %>
+    <%= link_to "Top score", users_path(tab: "score"), class: ("active" if @tab == "score") %>
+  </nav>
+  <div class="people-grid">
+    <% @users.each do |u| %>
+      <div class="person-card">
+        <%= avatar u, 44 %>
+        <div>
+          <div class="pname"><%= link_to u.name, user_path(u) %></div>
+          <div class="small muted"><%= pluralize u.endorsements_count, "priority" %></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <%= pager(@users) %>
+</div>

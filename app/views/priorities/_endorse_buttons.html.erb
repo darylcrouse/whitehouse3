@@ -1,0 +1,22 @@
+<%# Endorse / oppose controls for a priority. `priority` local required. %>
+<div class="endorse-box">
+  <div class="count-pill">
+    <span class="count-up">▲ <%= priority.up_endorsements_count %></span>
+    <span class="count-down"><%= priority.down_endorsements_count %> ▼</span>
+  </div>
+  <% if logged_in? %>
+    <% if current_user.endorsed?(priority) %>
+      <%= button_to "✓ Endorsed", unendorse_priority_path(priority), class: "btn btn-up btn-sm" %>
+      <%= button_to "Switch to oppose", oppose_priority_path(priority), class: "btn btn-sm btn-ghost" %>
+    <% elsif current_user.opposed?(priority) %>
+      <%= button_to "✓ Opposed", unendorse_priority_path(priority), class: "btn btn-down btn-sm" %>
+      <%= button_to "Switch to endorse", endorse_priority_path(priority), class: "btn btn-sm btn-ghost" %>
+    <% else %>
+      <%= button_to "Endorse", endorse_priority_path(priority), class: "btn btn-up btn-sm" %>
+      <%= button_to "Oppose", oppose_priority_path(priority), class: "btn btn-down btn-sm" %>
+    <% end %>
+  <% else %>
+    <%= link_to "Endorse", login_path, class: "btn btn-up btn-sm" %>
+    <%= link_to "Oppose", login_path, class: "btn btn-down btn-sm" %>
+  <% end %>
+</div>
