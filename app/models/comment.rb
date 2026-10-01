@@ -20,7 +20,7 @@ class Comment < ActiveRecord::Base
   liquid_methods :id, :activity_id, :content, :user, :activity, :show_url
   
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  enum :status, { published: 0, deleted: 1, abusive: 2 }, prefix: :status
+  enum :status, { published: 'published', deleted: 'deleted', abusive: 'abusive' }, prefix: :status
 
   aasm column: :status, enum: true, whiny_transitions: false do
     state :published, initial: true, before_enter: :do_publish
@@ -40,8 +40,21 @@ class Comment < ActiveRecord::Base
     end
   end
   
+  # aasm 6 fires before_enter for the INITIAL state at after_initialize (i.e.
+  # on .new), before associations exist. do_publish defers itself for that
+  # case; fire it for real once the comment is created.
+  after_create :fire_initial_state_effects
+
+  def fire_initial_state_effects
+    do_publish if aasm.current_state == :published
+  end
+
   def do_publish
     return unless self.activity
+    # aasm 6 fires before_enter for the initial state at after_initialize,
+    # i.e. before anything (user, etc.) is assigned. Defer the real work to
+    # create/transition time.
+    return if new_record? || self.user.nil?
 
     self.activity.changed_at = Time.now
     self.activity.comments_count += 1

@@ -2,9 +2,9 @@ class Blast < ActiveRecord::Base
   include AASM
   belongs_to :user
   
-  aasm column: :status, :initial => :pending do
-    state :pending
-    state :sent, :enter => :do_send
+  aasm column: :status do
+    state :pending, initial: true
+    state :sent, after_enter: :do_send
     state :notsent
   
     event :send do

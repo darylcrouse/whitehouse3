@@ -26,12 +26,12 @@ class UserContact < ActiveRecord::Base
   belongs_to :following
 
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  aasm column: :status, initial: :unsent do
-    state :unsent
-    state :tosend, :enter => :do_invite
-    state :sent, :enter => :do_send
-    state :accepted, :enter => :do_accept
-    state :deleted, :enter => :do_delete
+  aasm column: :status do
+    state :unsent, initial: true
+    state :tosend, after_enter: :do_invite
+    state :sent, after_enter: :do_send
+    state :accepted, after_enter: :do_accept
+    state :deleted, after_enter: :do_delete
     
     event :invite do
       transitions from: :unsent, to: :tosend

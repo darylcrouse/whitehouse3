@@ -1,6 +1,5 @@
 class DocumentQuality < ActiveRecord::Base
 
-  extend ActiveSupport::Concern
 
   belongs_to :user
   belongs_to :document

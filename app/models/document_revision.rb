@@ -11,13 +11,13 @@ class DocumentRevision < ActiveRecord::Base
   has_many :notifications, :as => :notifiable, :dependent => :destroy
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  enum :status, { draft: 0, archived: 1, published: 2, deleted: 3 }
+  enum :status, { draft: 'draft', archived: 'archived', published: 'published', deleted: 'deleted' }
 
   aasm column: :status, enum: true do
     state :draft
-    state :archived, :enter => :do_archive
-    state :published, :enter => :do_publish
-    state :deleted, :enter => :do_delete
+    state :archived, after_enter: :do_archive
+    state :published, after_enter: :do_publish
+    state :deleted, after_enter: :do_delete
 
     event :publish do
       transitions :from => [:draft, :archived], :to => :published

@@ -10,7 +10,7 @@ en:
     24hr: "24 hours"
     7days: "Last 7 days"
     30days: "Last 30 days"
-    last_updated: "Last updated {{time_ago}}"
+    last_updated: "Last updated %{time_ago}"
     doit: "YES"
     dont: "NO"
     rank: "Rank"
@@ -30,7 +30,7 @@ en:
         rss: "RSS Feed"
         activity: "Activity feed"
         discussions: "Discussions feed"
-        via: "via {{source}}"
+        via: "via %{source}"
         column:
             heading: "News from other sites"    
     status:
@@ -40,8 +40,8 @@ en:
         compromised: "compromised"
         unknown: "unknown"
     pc:
-        name: "{{capital}}{{currency_short_name}}"
-        html: "<span class='pc'>{{capital}}{{currency_short_name}}</span>"
+        name: "%{capital}%{currency_short_name}"
+        html: "<span class='pc'>%{capital}%{currency_short_name}</span>"
     endorse: 
         name: "endorse"
         ed: "endorsed"
@@ -87,43 +87,43 @@ en:
         title: "This is helpful"
         ing: "Marking helpful..."
         to: 
-            one: "See all <a href='{{everyone_link}}'>documents</a>, or just those helpful to <a href='{{endorser_link}}'>endorsers</a>, <a href='{{opposer_link}}'>opposers</a>, or <a href='{{undeclared_link}}'>undeclared</a>."
-            other: "See all <a href='{{everyone_link}}'>{{count}} documents</a>, or just those helpful to <a href='{{endorser_link}}'>endorsers</a>, <a href='{{opposer_link}}'>opposers</a>, or <a href='{{undeclared_link}}'>undeclared</a>."
+            one: "See all <a href='%{everyone_link}'>documents</a>, or just those helpful to <a href='%{endorser_link}'>endorsers</a>, <a href='%{opposer_link}'>opposers</a>, or <a href='%{undeclared_link}'>undeclared</a>."
+            other: "See all <a href='%{everyone_link}'>%{count} documents</a>, or just those helpful to <a href='%{endorser_link}'>endorsers</a>, <a href='%{opposer_link}'>opposers</a>, or <a href='%{undeclared_link}'>undeclared</a>."
         delete:
             title: "This is no longer helpful"
         first:
             one: "1 person found this helpful."
-            other: "{{count}} people found this helpful."
+            other: "%{count} people found this helpful."
         both: 
-            one: "1 person found this helpful, {{other_count}} didn't."
-            other: "{{count}} people found this helpful, {{other_count}} didn't."            
+            one: "1 person found this helpful, %{other_count} didn't."
+            other: "%{count} people found this helpful, %{other_count} didn't."            
         endorsers:
             title: "Helpful to endorsers?"
             chart: "Helpfulness to endorsers"
             first:
                 one: "1 endorser found this helpful."
-                other: "{{count}} endorsers found this helpful."
+                other: "%{count} endorsers found this helpful."
             both: 
-                one: "1 endorser found this helpful, {{other_count}} didn't."
-                other: "{{count}} endorsers found this helpful, {{other_count}} didn't."
+                one: "1 endorser found this helpful, %{other_count} didn't."
+                other: "%{count} endorsers found this helpful, %{other_count} didn't."
         opposers:
             title: "Helpful to opposers?"
             chart: "Helpfulness to opposers"
             first:
                 one: "1 opposer found this helpful."
-                other: "{{count}} opposers found this helpful."
+                other: "%{count} opposers found this helpful."
             both: 
-                one: "1 opposer found this helpful, {{other_count}} didn't."
-                other: "{{count}} opposers found this helpful, {{other_count}} didn't."            
+                one: "1 opposer found this helpful, %{other_count} didn't."
+                other: "%{count} opposers found this helpful, %{other_count} didn't."            
         undeclared:
             title: "Helpful to undeclared?"
             chart: "Helpfulness to undeclared"
             first:
                 one: "1 undeclared found this helpful."
-                other: "{{count}} undeclareds found this helpful."
+                other: "%{count} undeclareds found this helpful."
             both: 
-                one: "1 undeclared found this helpful, {{other_count}} didn't."
-                other: "{{count}} undeclareds found this helpful, {{other_count}} didn't."            
+                one: "1 undeclared found this helpful, %{other_count} didn't."
+                other: "%{count} undeclareds found this helpful, %{other_count} didn't."            
     unhelpful:
         name: "unhelpful"
         capitalized: "Not Helpful?"
@@ -134,80 +134,80 @@ en:
             title: "This is no longer unhelpful"
         first:
             one: "1 person found this <i>not</i> helpful."
-            other: "{{count}} people found this <i>not</i> helpful."
+            other: "%{count} people found this <i>not</i> helpful."
         both: 
-            one: "1 person found this <i>not</i> helpful, {{other_count}} didn't."
-            other: "{{count}} people found this <i>not</i> helpful, {{other_count}} didn't."            
+            one: "1 person found this <i>not</i> helpful, %{other_count} didn't."
+            other: "%{count} people found this <i>not</i> helpful, %{other_count} didn't."            
         endorsers:
             first:
                 one: "1 endorser found this not helpful"
-                other: "{{count}} endorsers found this <i>not</i> helpful."
+                other: "%{count} endorsers found this <i>not</i> helpful."
             both: 
-                one: "1 endorser found this not helpful, {{other_count}} did."
-                other: "{{count}} endorsers found this <i>not</i> helpful, {{other_count}} did."
+                one: "1 endorser found this not helpful, %{other_count} did."
+                other: "%{count} endorsers found this <i>not</i> helpful, %{other_count} did."
         opposers:
             first:
                 one: "1 opposer found this not helpful."
-                other: "{{count}} opposers found this <i>not</i> helpful."
+                other: "%{count} opposers found this <i>not</i> helpful."
             both: 
-                one: "1 opposer found this not helpful, {{other_count}} did."
-                other: "{{count}} opposers found this <i>not</i> helpful, {{other_count}} did."          
+                one: "1 opposer found this not helpful, %{other_count} did."
+                other: "%{count} opposers found this <i>not</i> helpful, %{other_count} did."          
         undeclared:
             first:
                 one: "1 undeclared found this not helpful"
-                other: "{{count}} undeclareds found this <i>not</i> helpful."
+                other: "%{count} undeclareds found this <i>not</i> helpful."
             both: 
-                one: "1 undeclared found this not helpful, {{other_count}} didn't."
-                other: "{{count}} undeclareds found this <i>not</i> helpful, {{other_count}} didn't."     
+                one: "1 undeclared found this not helpful, %{other_count} didn't."
+                other: "%{count} undeclareds found this <i>not</i> helpful, %{other_count} didn't."     
     addthis:
         name: "Post and share on other sites" 
         facebook:
             name: "Post on Facebook"
     meta:
         description:
-            priorities: "{{prompt}} {{priority_name}}.  Learn more at {{government_name}}"
-            users: "{{user_name}} top priority for {{target}}: {{priority_name}}"
+            priorities: "%{prompt} %{priority_name}.  Learn more at %{government_name}"
+            users: "%{user_name} top priority for %{target}: %{priority_name}"
         rss:
-            priorities: "Top 25 priorities at {{government_name}}"
+            priorities: "Top 25 priorities at %{government_name}"
     application:
         bad_token: "Sorry, that last page already expired. Please try what you were doing again."
         fb_session_expired: "Your Facebook session expired."
     about:
-        index: "About {{government_name}}"
-        faq: "Answers to Frequently Asked Questions at {{government_name}}"
-        rules: "{{government_name}} Rules"
-        privacy: "{{government_name}} Privacy Policy"
+        index: "About %{government_name}"
+        faq: "Answers to Frequently Asked Questions at %{government_name}"
+        rules: "%{government_name} Rules"
+        privacy: "%{government_name} Privacy Policy"
     activities:
         empty: "No activity here yet."
     admin:
-        impersonate: "You are now logged in as {{user_name}}"
-        logo: "Change logo for {{government_name}}"
-        fav_icon: "Change favicon for {{government_name}}"
+        impersonate: "You are now logged in as %{user_name}"
+        logo: "Change logo for %{government_name}"
+        fav_icon: "Change favicon for %{government_name}"
         fav_icon_explanation: "The 'fav icon' is the little 16x16 icon in your browser bar.  Right now it should look like this:"
-        buddy_icon: "Change buddy icon for {{government_name}}"
+        buddy_icon: "Change buddy icon for %{government_name}"
     ads:
         index:
-            title: "All ads for {{priority_name}}"
+            title: "All ads for %{priority_name}"
         show:
-            title: "Ad for {{priority_name}}"
-            intro: "{{user_name}} asks you to consider {{priority_name}}"
-            seen: "Shown to {{seen_count}} of {{total_count}} members so far<br/>{{user_name}} spent <span class='pc'>{{cost}}{{currency_short_name}}</span> or <span class='pc'>{{per_user_cost}}{{currency_short_name}}</span> per member"
-            current_position: "This ad is currently #{{position}}.  You can see all the ads running <a href='{{ads_url}}'>here</a>."
+            title: "Ad for %{priority_name}"
+            intro: "%{user_name} asks you to consider %{priority_name}"
+            seen: "Shown to %{seen_count} of %{total_count} members so far<br/>%{user_name} spent <span class='pc'>%{cost}%{currency_short_name}</span> or <span class='pc'>%{per_user_cost}%{currency_short_name}</span> per member"
+            current_position: "This ad is currently #%{position}.  You can see all the ads running <a href='%{ads_url}'>here</a>."
             endorsed:
                 one: "1 endorsed"
-                other: "{{count}} endorsed"
+                other: "%{count} endorsed"
             opposed:
                 one: "1 opposed"
-                other: "{{count}} opposed"
+                other: "%{count} opposed"
             noresponse:
                 one: "1 no response"
-                other: "{{count}} no response"                                    
+                other: "%{count} no response"                                    
         new:
-            title: "Buy an ad for {{priority_name}}"
+            title: "Buy an ad for %{priority_name}"
             top25error: "You cannot buy an ad for a priority that's already in the top 25."
             errors:
                 header_message: "There was a problem creating your ad"
-            success: "Purchased an ad for {{priority_name}}"
+            success: "Purchased an ad for %{priority_name}"
             content:
                 label: "Your message to go underneath the link to the priority:"
             showto: "Show to"
@@ -216,7 +216,7 @@ en:
             submit: "Save and publish your Ad"
         per_member: "per member"
         empty:
-            user: "{{user_name}} hasn't purchased any ads yet."
+            user: "%{user_name} hasn't purchased any ads yet."
         shown_to: "Shown to"
         your_message: "Put your message here"
         current: "Currently running ads"
@@ -224,77 +224,77 @@ en:
         yours:
             intro: "These are your ads, and the bars show how many members have <span class='endorsed'>&nbsp; &nbsp;</span> &nbsp;endorsed, <span class='opposed'>&nbsp; &nbsp;</span> &nbsp;opposed, or <span class='compromised'>&nbsp; &nbsp;</span> &nbsp;not responded yet. <br/>To place an ad, click on one of your priorities, then Action > Purchase an ad."
     blurbs:
-        index: "All blurbs for {{government_name}}"
+        index: "All blurbs for %{government_name}"
         new:
-            title: "Customize {{blurb_name}} blurb"
-            success: "Saved customized {{blurb_name}}"
+            title: "Customize %{blurb_name} blurb"
+            success: "Saved customized %{blurb_name}"
             submit: "Save custom blurb"
             restore: "Restore default"
             current: "Here's what it currently looks like:"
-        destroy: "Restored default {{blurb_name}}"
+        destroy: "Restored default %{blurb_name}"
     branches:
         intro: "We use the concept of branches a bit differently than how it works in the U.S. Instead of it being Judiciary, Legislative and Executive, it’s a way to organize constituencies. For example, a corporation might have Management, Employees, Shareholders, Customers, and Partners. A government might have Politicians, Citizens, Employees, Diplomats.    <p>The point of branches are to provide checks and balances so no one constituency dominates the agenda.  This is the basic reason the framers of the U.S. Constitution created it, so we're keeping that spirit alive.<p>In deciding how to structure your nation, you should consider where the goals of your different constituences diverge.  For example, shareholders care primarily about the stock price going up, while customers want more value, and employees want higher salaries.  By separating them, it gives you a way to balance different interests and build a strong foundation for your nation.<p>Each branch will have equal weight in the rankings, so if one branch has a thousand members, and another has 2, then those 2 members will have a much bigger impact.<p> It's entirely up to you how you want to use branches, or if you want to use them at all, and keep in mind that a member can only belong to one branch at a time."
         index:
-            title: "Branches of {{government_name}}"
+            title: "Branches of %{government_name}"
         new:
             title: "Add a new branch"
-            success: "Saved {{branch_name}}"
+            success: "Saved %{branch_name}"
             submit: "Save branch"
             name:
                 label: "Name"
         destroy:
-            success: "Deleted {{branch_name}}"
+            success: "Deleted %{branch_name}"
         edit:
             title: "Editing branch"
         default:
             label: "This is currently the default branch for members who have not chosen one"
             new: "Make this the default branch for members who have not chosen one"
-            success: "Members who have not chosen a branch will be included in {{branch_name}} now.  The priority rankings will not update right away, give it an hour or so."
+            success: "Members who have not chosen a branch will be included in %{branch_name} now.  The priority rankings will not update right away, give it an hour or so."
             priorities:
                 name: "priorities"
                 deleted: "That priority was deleted"
-                replaced: "This priority was replaced by {{priority_name}}"
+                replaced: "This priority was replaced by %{priority_name}"
     branch_endorsements:
         top:
-            title: "{{branch_name}} top priorities"
+            title: "%{branch_name} top priorities"
         rising:
-            title: "{{branch_name}} rising priorities"
+            title: "%{branch_name} rising priorities"
         falling:
-            title: "{{branch_name}} falling priorities"
+            title: "%{branch_name} falling priorities"
         controversial:
-            title: "{{branch_name}} controversial priorities"
+            title: "%{branch_name} controversial priorities"
         random:
-            title: "{{branch_name}} random priorities"
+            title: "%{branch_name} random priorities"
         newest:
-            title: "{{branch_name}} new priorities"
+            title: "%{branch_name} new priorities"
         finished:
-            title: "{{branch_name}} finished priorities"
+            title: "%{branch_name} finished priorities"
         importance:
-            more: "+{{number}} more important to {{branch_name}}"
-            less: "-{{number}} less important to {{branch_name}}"
+            more: "+%{number} more important to %{branch_name}"
+            less: "-%{number} less important to %{branch_name}"
     branch_users:
         influential: 
-            title: "Meet the most influential {{branch_name}} at {{government_name}}"
+            title: "Meet the most influential %{branch_name} at %{government_name}"
         talkative: 
-            title: "Most talkative {{branch_name}} at {{government_name}}"
+            title: "Most talkative %{branch_name} at %{government_name}"
         ambassadors: 
-            title: "{{branch_name}} Ambassadors at {{government_name}}"
+            title: "%{branch_name} Ambassadors at %{government_name}"
         twitterers: 
-            title: "{{branch_name}} Twitterers at {{government_name}}"
+            title: "%{branch_name} Twitterers at %{government_name}"
         newest: 
-            title: "New {{branch_name}} members at {{government_name}}"
+            title: "New %{branch_name} members at %{government_name}"
     briefing:
         search:
-            title: "Search {{government_name}} {{briefing_name}}"
-            results: "{{briefing_name}} search results for '{{query}}'"
+            title: "Search %{government_name} %{briefing_name}"
+            results: "%{briefing_name} search results for '%{query}'"
             blank: "Please specify a search term"
             empty: "No results found"
             documents:
-                title: "Search documents at {{government_name}}"
-                results: "Document search results for '{{query}}'"
+                title: "Search documents at %{government_name}"
+                results: "Document search results for '%{query}'"
             points:
-                title: "Search talking points at {{government_name}}"
-                results: "Talking point search results for '{{query}}'"
+                title: "Search talking points at %{government_name}"
+                results: "Talking point search results for '%{query}'"
         points:
             title: "Your priorities without any talking points"
             needed:
@@ -304,13 +304,13 @@ en:
             needed:
                 empty: "All of your priorities have at least one document."
         contributors:
-            title: "{{number}} people have contributed to the {{briefing_name}}"    
+            title: "%{number} people have contributed to the %{briefing_name}"    
     bulletins:
         new:
             name: "What's happening?"
             point: "Start a discussion on this talking point"
             document: "Start a discussion on this document"
-            profile: "Post a bulletin to {{user_name}} profile"
+            profile: "Post a bulletin to %{user_name} profile"
             priority_discussion: "Start a discussion on this priority"
             priority: "What's happening on this priority?"
             priority_dropdown: "Post to priority: (optional)"
@@ -319,35 +319,35 @@ en:
     changes:
         empty: "No acquisition proposals"
         show:
-            title: "Proposal to acquire {{priority_name}}"
+            title: "Proposal to acquire %{priority_name}"
         activities:
-            title: "Activity on the {{priority_name}} acquisition"
+            title: "Activity on the %{priority_name} acquisition"
             name: "Activity on this acquisition"
         discussion:
             name: "Discussion on this acquisition"
         new:
-            already_proposed: "There is already an acquisition proposal from {{priority_name}}"
-            success: "Successfully proposed an acquisition by {{priority_name}}.  {{admin_name}} will review and schedule a vote."
+            already_proposed: "There is already an acquisition proposal from %{priority_name}"
+            success: "Successfully proposed an acquisition by %{priority_name}.  %{admin_name} will review and schedule a vote."
             is_flip: "Check this if endorsers should flip to opposers of this new priority (or vice versa)"
             new_priority:
-                label: "Which priority should acquire {{priority_name}}?"
+                label: "Which priority should acquire %{priority_name}?"
             cost:
-                label: "The cost is<span class='pc'>0.01{{currency_short_name}}</span> per ballot, so you can include"
+                label: "The cost is<span class='pc'>0.01%{currency_short_name}</span> per ballot, so you can include"
                 endorsers:
                     label:
-                        one: "1 endorser for <span class='pc'>{{capital}}{{currency_short_name}}</span>"
-                        other: "{{count}} endorsers for <span class='pc'>{{capital}}{{currency_short_name}}</span>"
+                        one: "1 endorser for <span class='pc'>%{capital}%{currency_short_name}</span>"
+                        other: "%{count} endorsers for <span class='pc'>%{capital}%{currency_short_name}</span>"
                 opposers:
                     label:
-                        one: "1 opposer for <span class='pc'>{{capital}}{{currency_short_name}}</span>"
-                        other: "{{count}} opposers for <span class='pc'>{{capital}}{{currency_short_name}}</span>"
+                        one: "1 opposer for <span class='pc'>%{capital}%{currency_short_name}</span>"
+                        other: "%{count} opposers for <span class='pc'>%{capital}%{currency_short_name}</span>"
             content:
                 label: "Explain to others why they should vote in favor of this acquisition:"
                 note: "NOTE: If 500 letters isn't enough space, use the talking points on the other priority to enumerate why that priority is good.  You should only use this space to make the case for the acquisition itself."
             submit: "Propose this acquisition"
         start: "Voting is starting, it may take a few minutes depending on how many endorsers and opposers need ballots."
-        stop: "Deleting this proposal, and refunding {{currency_name}} to {{user_name}}"
-        approve: "Approving proposal and awarding {{currency_name}} to {{user_name}}. It may take a few minutes depending on how many endorsements and oppositions need to be adjusted."
+        stop: "Deleting this proposal, and refunding %{currency_name} to %{user_name}"
+        approve: "Approving proposal and awarding %{currency_name} to %{user_name}. It may take a few minutes depending on how many endorsements and oppositions need to be adjusted."
         flip: "Flipping proposal"
         saved: "Saved changes to acquisition"
         destroy: "Removed acquisition"
@@ -364,23 +364,23 @@ en:
             confirm: "This will approve the acquisition immediately without holding a vote."            
         no_vote:
             name: "Don't hold a vote"
-            confirm: "This will delete the proposal, refund the {{currency_name}}, and not hold a vote."
-        voting_underway: "Voting underway!  {{time_left}} to <a href='{{vote_url}}'>vote</a>."
+            confirm: "This will delete the proposal, refund the %{currency_name}, and not hold a vote."
+        voting_underway: "Voting underway!  %{time_left} to <a href='%{vote_url}'>vote</a>."
         status:
             not_started: "Voting has not started yet"
             no_vote: "No vote will be held"
-            approved: "Voting is over, the <span class='endorsed'><a href='{{proposal_url}}'>acquisition was approved</a></span>"
-            declined: "Voting is over, the <span class='opposed'><a href='{{proposal_url}}'>acquisition failed</a></span>"            
+            approved: "Voting is over, the <span class='endorsed'><a href='%{proposal_url}'>acquisition was approved</a></span>"
+            declined: "Voting is over, the <span class='opposed'><a href='%{proposal_url}'>acquisition failed</a></span>"            
         yes_votes:
             one: "1 yes vote"
-            other: "{{count}} yes votes"
+            other: "%{count} yes votes"
         no_votes:
             one: "1 no vote"
-            other: "{{count}} no votes"
+            other: "%{count} no votes"
     charts:
         change: "Change"
         issues: 
-            title: "Most active {{tags_name}} at {{government_name}}"
+            title: "Most active %{tags_name} at %{government_name}"
             label: "falling/rising"
         gainers_24hr: 
             title: "People with the fastest rising priorities in the last 24 hours"
@@ -411,15 +411,15 @@ en:
                 name: "VOLUME"
                 title: "Green is the number of endorsements for this priority each day, and red is the oppositions."
         user:
-            name: "{{user_name}} Agenda"
-            title: "Tracks the movement of {{user_name}} priorities in the rankings over the last 30 days.  The more people who endorse priorities on {{user_name}} agenda at a high priority, the higher it rises."
+            name: "%{user_name} Agenda"
+            title: "Tracks the movement of %{user_name} priorities in the rankings over the last 30 days.  The more people who endorse priorities on %{user_name} agenda at a high priority, the higher it rises."
             obama:
-                title: "Compares how {{user_name}} priorities (green) have moved on the charts compared to {{official_user_name}} (blue) in the last 30 days. The more people who endorse priorities on {{user_name}} agenda at a high priority, the higher it rises."
+                title: "Compares how %{user_name} priorities (green) have moved on the charts compared to %{official_user_name} (blue) in the last 30 days. The more people who endorse priorities on %{user_name} agenda at a high priority, the higher it rises."
     color_schemes:
         theme:
             title: "Choose a color theme"
         new:
-            title: "Design for {{government_name}}"
+            title: "Design for %{government_name}"
             success: "Saved color scheme"
             submit: "Save color scheme"
             text: "Text"
@@ -458,22 +458,22 @@ en:
     comments:
         name:
             link:
-                one: "<a href='{{comment_url}}'>1 comment</a>"
-                other: "<a href='{{comment_url}}'>{{count}} comments</a>"
+                one: "<a href='%{comment_url}'>1 comment</a>"
+                other: "<a href='%{comment_url}'>%{count} comments</a>"
             one: "1 comment"
-            other: "{{count}} comments"
+            other: "%{count} comments"
         deleted: "That comment was deleted"
         abusive: "Comment deleted.  The author received a warning for violating the <a href='/about/rules'>site rules</a>"
-        account_deleted: "Hidden because {{user_name}} deleted their account."
-        account_suspended: "Hidden because {{user_name}} has been suspended."
-        ignoring: "Hidden because you're ignoring {{user_name}}"
+        account_deleted: "Hidden because %{user_name} deleted their account."
+        account_suspended: "Hidden because %{user_name} has been suspended."
+        ignoring: "Hidden because you're ignoring %{user_name}"
         discussions:
             name:
                 one: "1 discussion"
-                other: "{{count}} discussions"
+                other: "%{count} discussions"
             more:
-                one: "1 more discussion in {{priority_name}}"
-                other: "{{count}} more discussions in {{priority_name}}"
+                one: "1 more discussion in %{priority_name}"
+                other: "%{count} more discussions in %{priority_name}"
         discuss:
             name: "Discuss"
         delete:
@@ -485,51 +485,51 @@ en:
         show: "show"
         people: "People commenting"
         add: "Add a comment"
-        participate_intro: "If you'd like to participate, <a href='{{signup_url}}'>please sign up</a>.  Membership is free and you can even use your existing Facebook account."
+        participate_intro: "If you'd like to participate, <a href='%{signup_url}'>please sign up</a>.  Membership is free and you can even use your existing Facebook account."
         edit:
             title: "Editing comment"
         new:
             success: "Saved comment"
             submit: "Post comment"
         flag:
-            confirm: "Is this comment from {{user_name}} a personal attack or a violation of the rules?"
+            confirm: "Is this comment from %{user_name} a personal attack or a violation of the rules?"
             title: "Flag this comment for review"
             number:
                 one: "1 flag"
-                other: "{{count}} flags"
+                other: "%{count} flags"
             issue_warning:
-                action: "Issue {{user_name}} warning #{{warnings_count}}"
+                action: "Issue %{user_name} warning #%{warnings_count}"
                 name: "Issue warning"
                 ing: "Issuing warning"
             clear:
                 name: "Clear flag"
                 ing: "Clearing flag"
     constituents:
-        index: "Constituents of {{legislator_name}}"
-        show: "{{user_name}} is a constituent of {{legislator_name}}"
-        priorities: "Priorities of {{legislator_name}} constituents"
+        index: "Constituents of %{legislator_name}"
+        show: "%{user_name} is a constituent of %{legislator_name}"
+        priorities: "Priorities of %{legislator_name} constituents"
     contacts:
         index:
-            title: "Find people you know at {{government_name}}"
+            title: "Find people you know at %{government_name}"
         following:
-            title: "People you're following at {{government_name}}"
+            title: "People you're following at %{government_name}"
         members:
-            title: "Already members at {{government_name}}"
-            intro: "{{contacts_count}} of your contacts are already {{government_name}} members.<br/>Click the big yellow button to add them to your network."
+            title: "Already members at %{government_name}"
+            intro: "%{contacts_count} of your contacts are already %{government_name} members.<br/>Click the big yellow button to add them to your network."
             submit: "Add checked members to your network"
         not_invited:
             title: "Not members yet, go ahead and invite them."
-            submit: "Invited checked people to join {{government_name}}"
-            intro: "{{contacts_count}} of your contacts are <i>not</i> {{government_name}} members.<br/>Checkbox the people you'd like to invite and click the big yellow button."
+            submit: "Invited checked people to join %{government_name}"
+            intro: "%{contacts_count} of your contacts are <i>not</i> %{government_name} members.<br/>Checkbox the people you'd like to invite and click the big yellow button."
         invited:
-            title: "People you've invited to join {{government_name}}"
+            title: "People you've invited to join %{government_name}"
             intro: "These are people you've invited	who haven't joined yet."
             empty: "You haven't invited anyone yet."
         new:
-            title: "Invite people to join {{government_name}}"
-            invited: "Invited {{user_name}}"
-            already_member: "{{user_name}} is already a member"
-            already_invited: "You already invited {{user_name}}"
+            title: "Invite people to join %{government_name}"
+            invited: "Invited %{user_name}"
+            already_member: "%{user_name} is already a member"
+            already_invited: "You already invited %{user_name}"
             submit: "Send email invitation"
             to_name:
                 label: "Their name"
@@ -550,9 +550,9 @@ en:
                 to_email: "THEIR EMAIL"
         multiple:
             blank: "Please check the box next to the people you want to follow"
-            success: "Thanks for inviting people to join {{government_name}}.  We'll send you an email when they join, and you'll earn 5{{currency_short_name}} too."
+            success: "Thanks for inviting people to join %{government_name}.  We'll send you an email when they join, and you'll earn 5%{currency_short_name} too."
     currency:
-        empty: "{{user_name}} hasn't earned any {{currency_name}} yet."
+        empty: "%{user_name} hasn't earned any %{currency_name} yet."
     document:
         name: "documents"
         title: "Documents"
@@ -574,51 +574,51 @@ en:
         revised:
             title: "Recently revised documents"
         activity:
-            title: "Activity on {{document_name}}"
+            title: "Activity on %{document_name}"
         discussions:
-            title: "Discussions on {{document_name}}"
+            title: "Discussions on %{document_name}"
         new:
-            title: "Add a document to {{priority_name}}"
-            success: "Thank you for contributing {{document_name}}"
-            save: "{{document_name}} saved"
+            title: "Add a document to %{priority_name}"
+            success: "Thank you for contributing %{document_name}"
+            save: "%{document_name} saved"
         edit:
-            title: "Edit {{document_name}}"
+            title: "Edit %{document_name}"
         intro:
-            endorsed: "Document in support of {{priority_name}}:"
-            opposed: "Document in <span class='opposed'>opposition</span> to {{priority_name}}:" 
-            neutral: "Document about {{priority_name}}:"         
+            endorsed: "Document in support of %{priority_name}:"
+            opposed: "Document in <span class='opposed'>opposition</span> to %{priority_name}:" 
+            neutral: "Document about %{priority_name}:"         
         revision:
-            sentence: "added {{sentence}}"
+            sentence: "added %{sentence}"
             show: 
-                title: "{{document_name}} - revised by {{user_name}}"
-                intro: "This shows the changes from the previous revision.  You can also <a href='{{clean_url}}'>see the clean version</a>"
+                title: "%{document_name} - revised by %{user_name}"
+                intro: "This shows the changes from the previous revision.  You can also <a href='%{clean_url}'>see the clean version</a>"
             new:
-                title: "Revise {{document_name}}"
-                success: "Saved revision of {{document_name}}"
+                title: "Revise %{document_name}"
+                success: "Saved revision of %{document_name}"
                 content:
                     label: "Why did you make this change?"
                 position:
-                    label: "Is this document {{support_radio}} in support {{neutral_radio}} neutral or {{oppose_radio}} in opposition to {{priority_name}}?"
+                    label: "Is this document %{support_radio} in support %{neutral_radio} neutral or %{oppose_radio} in opposition to %{priority_name}?"
                 submit: "Save document"
                 name:
                     label: "Title <span class='small'>60 characters</span>"
                 cancel: "Cancel this revision"
                 intro:
-                    endorse: "This document should only be revised by people who endorse {{priority_name}}.  Documents are meant to be a collaboration of people who basically agree, so if you disagree, please <a href='{{new_document_url}}'>start a new document</a> and expand on your ideas there."
-                    oppose: "This document should only be revised by people who oppose {{priority_name}}.  Documents are meant to be a collaboration of people who basically agree, so if you disagree, please <a href='{{new_document_url}}'>start a new document</a> and expand on your ideas there."
+                    endorse: "This document should only be revised by people who endorse %{priority_name}.  Documents are meant to be a collaboration of people who basically agree, so if you disagree, please <a href='%{new_document_url}'>start a new document</a> and expand on your ideas there."
+                    oppose: "This document should only be revised by people who oppose %{priority_name}.  Documents are meant to be a collaboration of people who basically agree, so if you disagree, please <a href='%{new_document_url}'>start a new document</a> and expand on your ideas there."
             clean:
-                intro: "Here's what this document looked like {{time_ago}}.  You can also <a href='{{revision_url}}'>see the changes</a> in this version from the previous one."
+                intro: "Here's what this document looked like %{time_ago}.  You can also <a href='%{revision_url}'>see the changes</a> in this version from the previous one."
     email_templates:
         index: "Customize emails"
         new:
-            title: "Customize {{email_template_name}} email"
-            success: "Saved {{email_template_name}}"
+            title: "Customize %{email_template_name} email"
+            success: "Saved %{email_template_name}"
             submit: "Save custom email"
             restore: "Restore default"
     endorsements:
         name:
             one: "1 endorsement"
-            other: "{{count}} endorsements"
+            other: "%{count} endorsements"
         change: "change"
         save: "save"
         priority1: "#1 priority:"
@@ -626,24 +626,24 @@ en:
         delete:
             title: "Click the X to remove this priority from your list"
         position:
-            yours: "Your #{{position}} priority."
+            yours: "Your #%{position} priority."
             title: "Click the number to change its position on your list.  You can also drag and drop the names to sort."
     facebook:
         synced: "Your account is now synced with Facebook.  In the future, to sign in, simply click the big blue Facebook button."
         invite:
-            title: "Invite your Facebook friends to join {{government_name}}"
-            success: "Invited {{number}} of your Facebook friends"
+            title: "Invite your Facebook friends to join %{government_name}"
+            success: "Invited %{number} of your Facebook friends"
             connect: "Click this button to connect to Facebook and find your friends."
             request:
                 button: "Yes, I want to get involved"
-                action: "Invite your Facebook friends to join your network at {{government_name}}"
-            nomembers: "None of your Facebook friends are {{government_name}} members yet."
+                action: "Invite your Facebook friends to join your network at %{government_name}"
+            nomembers: "None of your Facebook friends are %{government_name} members yet."
             members: 
-                one: "1 Facebook friend is already a {{government_name}} member, and has been added to <a href='{{network_url}}'>your network</a>.<br/>You can <a href='{{news_url}}'>follow their updates in the news section</a>."
-                other: "{{count}} of your Facebook friends are already {{government_name}} members, and have been added to <a href='{{network_url}}'>your network</a>.<br/>You can <a href='{{news_url}}'>follow their updates in the news section</a>."
+                one: "1 Facebook friend is already a %{government_name} member, and has been added to <a href='%{network_url}'>your network</a>.<br/>You can <a href='%{news_url}'>follow their updates in the news section</a>."
+                other: "%{count} of your Facebook friends are already %{government_name} members, and have been added to <a href='%{network_url}'>your network</a>.<br/>You can <a href='%{news_url}'>follow their updates in the news section</a>."
     following:
         new:
-            success: "Now following {{user_name}}"
+            success: "Now following %{user_name}"
     following_discussions:
         new:
             success: "You will now be notified when others add to this discussion"
@@ -651,8 +651,8 @@ en:
             ing: "Following discussion"
     government:
         settings:
-            title: "{{government_name}} settings"
-            success: "Saved {{government_name}} settings"
+            title: "%{government_name} settings"
+            success: "Saved %{government_name} settings"
             apis:
                 title: "Third Party API settings"
                 submit: "Save API settings"
@@ -715,11 +715,11 @@ en:
             tags_name:
                 label: "Name for tags: (singular, like Category or Issue)"
             is_tags:
-                label: "Enable {{tags_name}}"
+                label: "Enable %{tags_name}"
             homepage:
                 label: "Homepage"
             tags_page:
-                label: "{{tags_name}} page"
+                label: "%{tags_name} page"
             submit: "Save Nation Settings"
     import:
         started: "Importing your contacts"
@@ -738,7 +738,7 @@ en:
             heading: "Now create your Administrator account"
             submit: "Save your account"
         welcome:
-            success: "Welcome to your nation! Check your {{admin_email}} email for your temporary Administrator password"
+            success: "Welcome to your nation! Check your %{admin_email} email for your temporary Administrator password"
             success_loggedin: "Welcome to your nation!"
     inbox:
         index: "Your private messages"
@@ -751,33 +751,33 @@ en:
             sent: "Sent:"
             to: "To:"
     legislators:
-        index: "Legislators at {{government_name}}"
-        show: "{{legislator_name}} at {{government_name}}"
+        index: "Legislators at %{government_name}"
+        show: "%{legislator_name} at %{government_name}"
         name:
-            staff: "a member of {{legislator_name}} staff"
+            staff: "a member of %{legislator_name} staff"
     messages:
-        index: "Your private conversation with {{user_name}}"
+        index: "Your private conversation with %{user_name}"
         new:
             submit: "Send private message"
-        sent: "sent {{time_ago}}"
+        sent: "sent %{time_ago}"
         unread: "unread"
         previously_read: "Messages previously read:"
     network:
         influential: 
-            title: "Meet the most influential people at {{government_name}}"
-            intro: "The most influential rankings are based on the amount of {{currency_name}}<span class='pc'>{{currency_short_name}}</span> someone has earned.
-            <br/>Learn more about<span class='pc'>{{currency_short_name}}</span> in the <a href='/about/faq#pc'>FAQ</a>."
+            title: "Meet the most influential people at %{government_name}"
+            intro: "The most influential rankings are based on the amount of %{currency_name}<span class='pc'>%{currency_short_name}</span> someone has earned.
+            <br/>Learn more about<span class='pc'>%{currency_short_name}</span> in the <a href='/about/faq#pc'>FAQ</a>."
         talkative: 
-            title: "Most talkative at {{government_name}}"
+            title: "Most talkative at %{government_name}"
         ambassadors: 
-            title: "Ambassadors at {{government_name}}"
-            intro: "Ambassadors are people who recruit others to join {{government_name}}"
-            loggedin: "You can be an ambassador too and earn<span class='pc'>5{{currency_short_name}}</span> for each person you recruit.  Get started by simply <a href='{{import_url}}'>importing your Google, Yahoo, Windows Live, or Facebook contacts</a>."
+            title: "Ambassadors at %{government_name}"
+            intro: "Ambassadors are people who recruit others to join %{government_name}"
+            loggedin: "You can be an ambassador too and earn<span class='pc'>5%{currency_short_name}</span> for each person you recruit.  Get started by simply <a href='%{import_url}'>importing your Google, Yahoo, Windows Live, or Facebook contacts</a>."
         twitterers: 
-            title: "Twitterers at {{government_name}}"
-            intro: "If you'd like to be added, click this button and follow the Twitter screen to authorize {{government_name}}."
+            title: "Twitterers at %{government_name}"
+            intro: "If you'd like to be added, click this button and follow the Twitter screen to authorize %{government_name}."
         newest: 
-            title: "New members at {{government_name}}"
+            title: "New members at %{government_name}"
         partners: 
             title: "Meet our partners"
         unverified:
@@ -792,56 +792,56 @@ en:
             title: "Accounts on probation"
         inyournetwork:
             one: "1 person in your network"
-            other: "{{count}} people in your network"
+            other: "%{count} people in your network"
     news:
         discussions:
             name: "Active discussions"
-            title: "What everyone is discussing at {{government_name}}"
+            title: "What everyone is discussing at %{government_name}"
         comments:
-            title: "Latest comments at {{government_name}}"
+            title: "Latest comments at %{government_name}"
         points:
-            title: "Latest activity in the {{briefing_name}} at {{government_name}}"
+            title: "Latest activity in the %{briefing_name} at %{government_name}"
         activities:
-            title: "Everything happening at {{government_name}}"
+            title: "Everything happening at %{government_name}"
         obama:
-            title: "What {{official_user_name}} is doing at {{government_name}}"
+            title: "What %{official_user_name} is doing at %{government_name}"
         capital:
-            title: "{{currency_name}} at {{government_name}}"
+            title: "%{currency_name} at %{government_name}"
         changes:
             title: "Acquisition proposals"
             voting:
                 title: "Voting results on acquisition proposals"
             activity:
-                title: "M&A activity at {{government_name}}"
+                title: "M&A activity at %{government_name}"
         your_activities:
-            title: "What are you doing at {{government_name}}?"
+            title: "What are you doing at %{government_name}?"
         your_capital: 
-            title: "Your {{currency_name}} at {{government_name}}"
+            title: "Your %{currency_name} at %{government_name}"
         your_changes:
-            title: "Your M&A activity at {{government_name}}"
+            title: "Your M&A activity at %{government_name}"
         your_points:
-            title: "Your {{briefing_name}} activity at {{government_name}}"
+            title: "Your %{briefing_name} activity at %{government_name}"
         your_discussions:
             name: "Your discussions"
-            title: "Discussions you're following at {{government_name}}"
+            title: "Discussions you're following at %{government_name}"
         your_followers_activities:
-            title: "Your followers' activity at {{government_name}}"
+            title: "Your followers' activity at %{government_name}"
         your_followers_discussions:
             title: "Discussions your followers are participating in"
         your_followers_points:
             title: "Talking points and documents from your followers"
         your_followers_capital:
-            title: "Your followers' {{currency_name}}"
+            title: "Your followers' %{currency_name}"
         your_followers_changes:
             title: "M&A activity from your followers"
         your_network_activities:
-            title: "What's happening in your {{government_name}}?"
+            title: "What's happening in your %{government_name}?"
         your_network_discussions:
             title: "Discussions in your network"
         your_network_points:
             title: "Talking points and documents in your network"
         your_network_capital:
-            title: "{{currency_name}} in your network"
+            title: "%{currency_name} in your network"
         your_network_changes:
             title: "M&A activity in your network"            
         your_priority_activities:
@@ -849,7 +849,7 @@ en:
         your_priority_discussions:
             title: "Discussions on your priorities"
         your_priority_obama:
-            title: "What {{official_user_name}} is doing on your priorities"
+            title: "What %{official_user_name} is doing on your priorities"
         your_priority_points:
             title: "Talking points and documents on your priorities"
         your_priority_changes:
@@ -861,17 +861,17 @@ en:
         your_priorities_created_activities:
             title: "Everything happening on priorities you created"            
         your_priorities_created_obama:
-            title: "What {{official_user_name}} is doing on priorities you created"
+            title: "What %{official_user_name} is doing on priorities you created"
         your_priorities_created_changes:
             title: "M&A activity on priorities you created"
         your_priorities_created_discussions:
             title: "Discussions on priorities you created"
         your_priorities_created_points:
-            title: "{{briefing_name}} activity on priorities you created"
+            title: "%{briefing_name} activity on priorities you created"
     oppositions:
         name:
             one: "1 opposition"
-            other: "{{count}} oppositions"
+            other: "%{count} oppositions"
     pages:
         errors:
             header_message: "There was a problem saving this page"
@@ -888,8 +888,8 @@ en:
         edit: 
             tite: "Edit a page"
             submit: "Save Partner Info"
-        saved: "Saved {{page_name}}"
-        destroy: "Deleted {{page_name}}"
+        saved: "Saved %{page_name}"
+        destroy: "Deleted %{page_name}"
     partners:
         picture:
             title: "Upload partner logo"
@@ -900,7 +900,7 @@ en:
             success: "Saved settings"
             emails: "Email list settings"
         new:
-            title: "Partner with {{government_name}}"
+            title: "Partner with %{government_name}"
             success: "Thanks for partnering with us!"
             submit: "Become a partner"
             short_name:
@@ -916,7 +916,7 @@ en:
         edit:
             submit: "Save partner settings"
         email:
-            intro: "Turning this on will add a checkbox to all the signup forms on http://{{partner_short_name}}.{{base_url}}/ for people to opt-in for your email list. It defaults to checked."
+            intro: "Turning this on will add a checkbox to all the signup forms on http://%{partner_short_name}.%{base_url}/ for people to opt-in for your email list. It defaults to checked."
             submit: "Update email list info"
             is_optin:
                 label: "Request every new member's permission to be added to your email list."
@@ -930,9 +930,9 @@ en:
                 label: "URL where people can <i>un</i>subscribe"
     passwords:
         new:
-            title: "Reset your {{government_name}} password"
-            facebook: "Your password is handled on Facebook, not at {{government_name}}.  Click the Facebook button to sign in."
-            sent: "Sent a new temporary password to {{email}}"
+            title: "Reset your %{government_name} password"
+            facebook: "Your password is handled on Facebook, not at %{government_name}.  Click the Facebook button to sign in."
+            sent: "Sent a new temporary password to %{email}"
             email: 
                 label: "Your email address"
             current:
@@ -944,7 +944,7 @@ en:
             submit: "Request a new password"
             nevermind: "Never mind, I remember it now"
         change:
-            title: "Change your {{government_name}} password"
+            title: "Change your %{government_name} password"
             facebook: "Your password is the same as your Facebook password, so you must change it on Facebook."
             success: "Password changed"
             nomatch: "Password confirmation did not match"
@@ -959,19 +959,19 @@ en:
         title: "Talking points"
         empty: "No talking points yet."
         source: "Source:"
-        supporting: "Supporting {{priority_name}}"
+        supporting: "Supporting %{priority_name}"
         priority:
-            intro: "Please tell us why we should endorse or oppose this priority by <a href='{{new_point_url}}'>adding a talking point</a>. You can even suggest a different priority instead."
+            intro: "Please tell us why we should endorse or oppose this priority by <a href='%{new_point_url}'>adding a talking point</a>. You can even suggest a different priority instead."
         intro:
             endorsed:
-                first: "Talking point supporting {{priority_name}}:"
-                both: "Talking point supporting {{priority_name}} and {{other_priority_name}}:"
+                first: "Talking point supporting %{priority_name}:"
+                both: "Talking point supporting %{priority_name} and %{other_priority_name}:"
             opposed:
-                first: "Talking point opposing {{priority_name}}:"
-                both: "Talking point opposing {{priority_name}} and supporting {{other_priority_name}}:"
+                first: "Talking point opposing %{priority_name}:"
+                both: "Talking point opposing %{priority_name} and supporting %{other_priority_name}:"
             neutral:
-                first: "Talking point about {{priority_name}}:"
-                both: "Talking point about {{priority_name}} and {{other_priority_name}}:"
+                first: "Talking point about %{priority_name}:"
+                both: "Talking point about %{priority_name} and %{other_priority_name}:"
         yours:
             title: "Your talking points"
         newest:
@@ -989,14 +989,14 @@ en:
         show:
             recent_activity: "Recent activity on this talking point"
             clean:
-                intro: "Here's what this talking point looked like {{time_ago}}.  You can also <a href='{{revision_url}}'>see the changes</a> in this version from the previous one."
-            intro: "This shows the changes from the previous revision.  You can also <a href='{{clean_url}}'>see the clean version</a>"
+                intro: "Here's what this talking point looked like %{time_ago}.  You can also <a href='%{revision_url}'>see the changes</a> in this version from the previous one."
+            intro: "This shows the changes from the previous revision.  You can also <a href='%{clean_url}'>see the clean version</a>"
         new:
             errors:
                 message: "We need a change to your talking point"
                 header_message: "Please review"
                 content_maximum: "has a maximum of 500 characters"
-            title: "Add a talking point to {{priority_name}}"
+            title: "Add a talking point to %{priority_name}"
             success: "Thanks for contributing your talking point"
             submit: "Save talking point"
             content:
@@ -1004,7 +1004,7 @@ en:
             website:
                 label: "Include a website source link"
             position:
-                label: "Is this talking point {{support_radio}} in support {{neutral_radio}} neutral or {{oppose_radio}} in opposition to {{priority_name}}?"    
+                label: "Is this talking point %{support_radio} in support %{neutral_radio} neutral or %{oppose_radio} in opposition to %{priority_name}?"    
             name:
                 label: "Summarize your talking point in <span class='small'>60 characters</span>"
             other_priority_name:
@@ -1016,31 +1016,31 @@ en:
             name: "Edit"
             title: "Can you make this talking point more persuasive?  Go ahead, change it!"
         update:
-            success: "Saved {{point_name}}"
+            success: "Saved %{point_name}"
         activity:
-            title: "Activity regarding {{point_name}}"
+            title: "Activity regarding %{point_name}"
         discussions:
-            title: "Discussions on {{point_name}}"
+            title: "Discussions on %{point_name}"
         destroy:
             access_denied: "Only the author of a talking point can delete it"
         revision:
             show:
-                title: "{{user_name}} revision of {{point_name}}"
+                title: "%{user_name} revision of %{point_name}"
             new:
-                title: "Revise {{point_name}}"
-                success: "Revised {{point_name}}"
-            destroy: "Deleted revision of {{point_name}}"
+                title: "Revise %{point_name}"
+                success: "Revised %{point_name}"
+            destroy: "Deleted revision of %{point_name}"
     priorities:
         name: "priorities"
         deleted: "That priority was deleted"
-        replaced: "This priority was replaced by {{priority_name}}"
+        replaced: "This priority was replaced by %{priority_name}"
         short_url:
             name: "Short URL:"
             link: "Make a short URL for Twitter"
         top:
             name: "Top priorities"
             short: "Top:"
-            title: "Top priorities for {{target}}"
+            title: "Top priorities for %{target}"
         rising:
             name: "Rising priorities"
             short: "Rising:"
@@ -1056,112 +1056,112 @@ en:
             name: "Finished priorities"
             title: "Finished priorities"
             heading: "Recently finished"
-            see_all: "See all <a href='{{url}}'>finished priorities</a>"
+            see_all: "See all <a href='%{url}'>finished priorities</a>"
             empty: "This is where priorities that have been finished, either successfully or unsuccessfully will be."
         random:
             name: "Random priorities"
-            title: "Random priorities for {{target}}"
+            title: "Random priorities for %{target}"
         newest:
             name: "New priorities"
-            title: "Newest priorities for {{target}}"
+            title: "Newest priorities for %{target}"
             added: "Added"
         untagged:
             name: "Untagged priorities"
             title: "Untagged (or uncategorized) priorities"
         yours:
             name: "Your priorities"
-            title: "Your priorities at {{government_name}}"
+            title: "Your priorities at %{government_name}"
             prompt: "Add a priority to your list"
-            heading: "{{user_name}} priorities"
+            heading: "%{user_name} priorities"
             outro: "You can also follow all the <a href='/news/your_priority_activities'>activity</a> and <a href='/news/your_priority_discussions'>discussions</a> on your priorities."            
         yours_finished:
             name: "Your finished priorities"
-            title: "Your finished priorities at {{government_name}}"
+            title: "Your finished priorities at %{government_name}"
             intro: "Like a to do list, when priorities you've endorsed or opposed are finished, they will fall off your list and be placed here."
         yours_created:
             name: "Priorities you created"
-            title: "Priorities you created at {{government_name}}"
+            title: "Priorities you created at %{government_name}"
             intro: "This is where priorities you've created go, so you can easily reference them and track their progress."
             outro: "You can also follow all the <a href='/news/your_priorities_created_activities'>activity</a> and <a href='/news/your_priorities_created_discussions'>discussions</a> on priorities you created."
         yours_top:
-            title: "Your priorities ranked highest by {{government_name}} members"
+            title: "Your priorities ranked highest by %{government_name} members"
         yours_lowest:
-            title: "Your priorities ranked lowest by {{government_name}} members"
+            title: "Your priorities ranked lowest by %{government_name} members"
         network:
             name: "Your network's priorities"
             title: "Your network's priorities"
             intro: 
                 none: "You don't have anyone in your network yet because you aren't following anyone."
-                one: "Here are just your priorities and the one other person in <a href='{{url}}'>your network</a>, not all of {{government_name}}."
-                other: "Here are just your priorities and the <a href='{{url}}'>{{count}} people in your network</a>, not all of {{government_name}}."
+                one: "Here are just your priorities and the one other person in <a href='%{url}'>your network</a>, not all of %{government_name}."
+                other: "Here are just your priorities and the <a href='%{url}'>%{count} people in your network</a>, not all of %{government_name}."
         yours_ads:
             title: "Your ads"
         consider:
             title: "Priorities you should consider"
             need_endorsements: "You need to endorse a few things before we can recommend other priorities for you to consider. Here are a few random priorities to get started."
         ads:
-            title: "Ads running at {{government_name}}"
+            title: "Ads running at %{government_name}"
         official:
-            title: "{{official_user_name}} priorities"
-            intro: "These are the priorities {{official_user_name}} endorses, as prioritized by all members."
+            title: "%{official_user_name} priorities"
+            intro: "These are the priorities %{official_user_name} endorses, as prioritized by all members."
         not_official:
-            title: "Priorities NOT on {{official_user_name}} agenda"
-            intro: "These are the priorities NOT on {{official_user_name}} agenda as prioritized by all members."            
+            title: "Priorities NOT on %{official_user_name} agenda"
+            intro: "These are the priorities NOT on %{official_user_name} agenda as prioritized by all members."            
         official_opposed:
-            title: "Priorities {{official_user_name}} opposes"
-            intro: "These are the priorities {{official_user_name}} opposes, as prioritized by all members."            
+            title: "Priorities %{official_user_name} opposes"
+            intro: "These are the priorities %{official_user_name} opposes, as prioritized by all members."            
         everyone_points:
-            title: "Best talking points on {{priority_name}}"
+            title: "Best talking points on %{priority_name}"
         endorser_points:
-            title: "Talking points supporting {{priority_name}}"            
+            title: "Talking points supporting %{priority_name}"            
         neutral_points:
-            title: "Talking points about {{priority_name}}"            
+            title: "Talking points about %{priority_name}"            
         opposer_points:
-            title: "Talking points opposing {{priority_name}}"            
+            title: "Talking points opposing %{priority_name}"            
         everyone_documents:
-            title: "Best documents on {{priority_name}}"
+            title: "Best documents on %{priority_name}"
         endorser_documents:
-            title: "Documents supporting {{priority_name}}"            
+            title: "Documents supporting %{priority_name}"            
         neutral_documents:
-            title: "Documents about {{priority_name}}"            
+            title: "Documents about %{priority_name}"            
         opposer_documents:
-            title: "Documents opposing {{priority_name}}"
+            title: "Documents opposing %{priority_name}"
         discussions:
-            title: "Discussions on {{priority_name}}"
+            title: "Discussions on %{priority_name}"
         activities:
-            title: "Activity on {{priority_name}}"
+            title: "Activity on %{priority_name}"
         comments:
-            title: "Latest comments on {{priority_name}}"
+            title: "Latest comments on %{priority_name}"
         endorsers:
-            title: "{{number}} people endorse {{priority_name}}"
+            title: "%{number} people endorse %{priority_name}"
             limit: "Only displaying the top 500 endorsers"
-            relationship: "{{percentage}} endorse {{priority_name}}"
+            relationship: "%{percentage} endorse %{priority_name}"
             branch:
-                one: "1 {{branch_name}} endorses"
-                other: "{{count}} endorsers are {{branch_name}}"
+                one: "1 %{branch_name} endorses"
+                other: "%{count} endorsers are %{branch_name}"
         opposers:
-            title: "{{number}} people opposed {{priority_name}}"
+            title: "%{number} people opposed %{priority_name}"
             limit: "Only displaying the top 500 opposers"
             branch:
-                one: "1 {{branch_name}} opposes"
-                other: "{{count}} opposers are {{branch_name}}"            
+                one: "1 %{branch_name} opposes"
+                other: "%{count} opposers are %{branch_name}"            
         change:
             already_active: "You cannot change a priority's name once other people have endorsed it."
-            flagged: "Flagged {{priority_name}} for review by {{admin_name}}"
+            flagged: "Flagged %{priority_name} for review by %{admin_name}"
         edit:
-            title: "Edit {{priority_name}}"
+            title: "Edit %{priority_name}"
             submit: "Save priority"
-            success: "Saved {{priority_name}}"
+            success: "Saved %{priority_name}"
             issue_list: 
-                label: "{{tags_name}} (separated multiple with commas)"
+                label: "%{tags_name} (separated multiple with commas)"
             name:
                 label: "Priority name"
         destroy:
-            success: "Permanently deleting {{priority_name}}.  This may take a few minutes depending on how many endorsements/oppositions need to be removed."
+            success: "Permanently deleting %{priority_name}.  This may take a few minutes depending on how many endorsements/oppositions need to be removed."
         new:
-            need_account: "First you need to fill out this quick form and agree to the rules, then you can start adding your priorities for {{target}}."
+            need_account: "First you need to fill out this quick form and agree to the rules, then you can start adding your priorities for %{target}."
             blank: "Please type in your priority, or click on the endorse button underneath each priority to add it to yours."
-            success: "Thanks for adding {{priority_name}}"
+            success: "Thanks for adding %{priority_name}"
             submit: "Make a priority"
             suggest: "Now just click on 'Suggest'"
             click:
@@ -1169,25 +1169,25 @@ en:
                 other: "Click <span class='priority_add'>ENDORSE</span> if any of these other priorities matches your intent."
             check:
                 name: "The priority you just entered:"
-                one: "Before we add your priority, please see if <b>{{priority_name}}</b> will work instead. Your endorsement will carry more weight when it is pooled with others."
+                one: "Before we add your priority, please see if <b>%{priority_name}</b> will work instead. Your endorsement will carry more weight when it is pooled with others."
                 other: "Before we add your priority, please see if one of these other priorities will work instead.  Your endorsement will carry more weight when it is pooled with others."
         recent_activity: "What's happening on this priority"
-        buried: "{{priority_name}} is now buried, it will no longer be displayed in the charts."
-        successful: "{{priority_name}} is now marked finished and successful"
-        failed: "{{priority_name}} is now marked finished and failed"
-        intheworks: "{{priority_name}} is now marked 'in the works'"
-        compromised: "{{priority_name}} is now marked finished but compromised"
+        buried: "%{priority_name} is now buried, it will no longer be displayed in the charts."
+        successful: "%{priority_name} is now marked finished and successful"
+        failed: "%{priority_name} is now marked finished and failed"
+        intheworks: "%{priority_name} is now marked 'in the works'"
+        compromised: "%{priority_name} is now marked finished but compromised"
         other_endorsements: "What other priorities do they endorse?"
         relationship:
-            name: "Endorsed by {{sentence}}"
+            name: "Endorsed by %{sentence}"
             header: "Other priorities to consider"
-            tags_sentence: "Other priorities in {{sentence}} to consider"
-            undeclared: "{{percentage}} of undeclared"
-            endorsers: "{{percentage}} of endorsers"
-            opposers: "{{percentage}} of <span class='opposed'>opposers</span>"
+            tags_sentence: "Other priorities in %{sentence} to consider"
+            undeclared: "%{percentage} of undeclared"
+            endorsers: "%{percentage} of endorsers"
+            opposers: "%{percentage} of <span class='opposed'>opposers</span>"
         position:
-            number: "Priority #{{position}}"
-            title: "This is the #{{position}} highest ranked priority across all {{government_name}} members."
+            number: "Priority #%{position}"
+            title: "This is the #%{position} highest ranked priority across all %{government_name} members."
             nochange:
                 title: "This priority hasn't moved up or down in the rankings at all this month."
             new:
@@ -1196,53 +1196,53 @@ en:
             up:
                 24hr:
                     one: "This priority moved up one spot in the rankings in the last 24 hours"
-                    other: "This priority moved up {{count}} spots in the rankings in the last 24 hours"
+                    other: "This priority moved up %{count} spots in the rankings in the last 24 hours"
                 7days:
                     one: "This priority moved up one spot in the rankings this week"
-                    other: "This priority moved up {{count}} spots in the rankings this week"
+                    other: "This priority moved up %{count} spots in the rankings this week"
                     short:
                         one: "up 1 spot this week"
-                        other: "up {{count}} spots this week"
+                        other: "up %{count} spots this week"
                 30days:
                     one: "This priority moved up one spot in the rankings this month"
-                    other: "This priority moved up {{count}} spots in the rankings this month"
+                    other: "This priority moved up %{count} spots in the rankings this month"
             down:
                 24hr:
                     one: "This priority moved down one spot in the rankings in the last 24 hours"
-                    other: "This priority moved down {{count}} spots in the rankings in the last 24 hours"                
+                    other: "This priority moved down %{count} spots in the rankings in the last 24 hours"                
                 7days:
                     one: "This priority moved down one spot in the rankings this week"
-                    other: "This priority moved down {{count}} spots in the rankings this week"
+                    other: "This priority moved down %{count} spots in the rankings this week"
                     short:
                         one: "down 1 spot this week"
-                        other: "down {{count}} spots this week"                    
+                        other: "down %{count} spots this week"                    
                 30days:
                     one: "This priority moved down one spot in the rankings this month"
-                    other: "This priority moved down {{count}} spots in the rankings this month"     
+                    other: "This priority moved down %{count} spots in the rankings this month"     
             no_change:
                 7days:
                     short: "no change this week"
     prioritizer:
         index:
-            title: "{{government_name}} Priority Quiz"
+            title: "%{government_name} Priority Quiz"
         endorse:
-            msg: "Endorsed {{priority_name}} at priority #{{position}}"
+            msg: "Endorsed %{priority_name} at priority #%{position}"
             moved:
-                msg: "Moved {{priority_name}} up to priority #{{position}}"
+                msg: "Moved %{priority_name} up to priority #%{position}"
         oppose:
-            msg: "Opposed {{priority_name}} at priority #{{position}}"
+            msg: "Opposed %{priority_name} at priority #%{position}"
             moved:
-                msg: "Moved opposing {{priority_name}} up to priority #{{position}}"
+                msg: "Moved opposing %{priority_name} up to priority #%{position}"
         same:
-            msg: "Moved to priorities #{{position}} and #{{position2}}"
+            msg: "Moved to priorities #%{position} and #%{position2}"
         duel:
             question: "Which priority is more important?"
             same: "About the same"
         explanation: "This is a new experimental feature designed to make it easy to create and prioritize a large list.<p>It will ask whether you endorse or oppose a priority, but it also works a bit like a <a href='http://www.thetennisladder.com/whatisatennisladder.asp'>tennis ladder</a>, showing two priorities fairly close in your list and asking which is more important.  If you decide the lower priority is more important, it moves it higher."
     profiles:
         new:
-            intro: "Your bio will go at the top of <a href='{{url}}'>your profile page</a>, above your top 5 priorities."
-            title: "Your bio at {{government_name}}"
+            intro: "Your bio will go at the top of <a href='%{url}'>your profile page</a>, above your top 5 priorities."
+            title: "Your bio at %{government_name}"
             success: "Saved your bio"
             submit: "Save your bio"
             content:
@@ -1252,39 +1252,39 @@ en:
     revisions:
         name:
             one: "1 revision"
-            other: "{{count}} revisions"
+            other: "%{count} revisions"
         title: "Revisions"
-        user: "{{user_name}} revision"
-        byline: "by {{author_sentence}}"
-        revised: "revised {{time_ago}}"
-        added: "added {{time_ago}}"
+        user: "%{user_name} revision"
+        byline: "by %{author_sentence}"
+        revised: "revised %{time_ago}"
+        added: "added %{time_ago}"
         activity:
             name: "Activity on this revision"
         word_count:
             one: "1 word"
-            other: "{{count}} words"
+            other: "%{count} words"
         errors:
-            processing: "Normally, you would see the changes made here, but there was some kind of processing error, so please check out the <a            href='{{clean_url}}'>clean version</a>"        
+            processing: "Normally, you would see the changes made here, but there was some kind of processing error, so please check out the <a            href='%{clean_url}'>clean version</a>"        
     rss:
-        your_notifications: "{{user_name}} notifications at {{government_name}}"
-        your_comments: "Latest comments on {{user_name}} discussions"
+        your_notifications: "%{user_name} notifications at %{government_name}"
+        your_comments: "Latest comments on %{user_name} discussions"
     searches:
         index: 
-            title: "Search {{government_name}} priorities"
-        results: "Search {{government_name}} priorites for '{{query}}'"
+            title: "Search %{government_name} priorities"
+        results: "Search %{government_name} priorites for '%{query}'"
         new:
             submit: "Search"
         member:
             submit: "Find a member"
     settings:
         index:
-            title: "Your {{government_name}} settings"
+            title: "Your %{government_name} settings"
         notifications:
             title: "Your email notifications"
         saved: "Saved your settings"
         delete:
             name: "Delete your account"
-            title: "Delete your {{government_name}} account"
+            title: "Delete your %{government_name} account"
             submit: "I understand, delete my account now."
         destroy: "Your account was deleted.  Good bye!"
         picture:
@@ -1303,7 +1303,7 @@ en:
         connect_intro: "We will never post to your Facebook or Twitter stream without your explicit permission first."
         twitter_connected: "Your Twitter account is now linked"
         branch_change:
-            success: "Successfully changed your branch to {{branch_name}}"
+            success: "Successfully changed your branch to %{branch_name}"
         edit:
             first_name:
                 label: "First name"
@@ -1339,77 +1339,77 @@ en:
             submit: "Save your settings"            
     signups:
         saved: "Saved signup"
-        also_rss: "You can also get all your notifications in an {{rss_url}}"
+        also_rss: "You can also get all your notifications in an %{rss_url}"
         edit:
             submit: "Save email settings"
     splash:
         index:
-            title: "Watch what people are doing at {{government_name}}"
+            title: "Watch what people are doing at %{government_name}"
         enter: "Enter site"
         endorsements:
-            one: "Priority #{{position}}, endorsed by 1 person, and opposed by {{oppose_count}}."
-            other: "Priority #{{position}}, endorsed by {{count}} people, and opposed by {{oppose_count}}."
+            one: "Priority #%{position}, endorsed by 1 person, and opposed by %{oppose_count}."
+            other: "Priority #%{position}, endorsed by %{count} people, and opposed by %{oppose_count}."
     tags:
-        title: "All {{tags_name}}"
+        title: "All %{tags_name}"
         new:
-            name: "New {{tags_name}}"
-            title: "Add a {{tags_name}}"
-            submit: "Save {{tags_name}}"
-            success: "Saved {{tag_name}}"
+            name: "New %{tags_name}"
+            title: "Add a %{tags_name}"
+            submit: "Save %{tags_name}"
+            success: "Saved %{tag_name}"
         edit:
             name:
                 label: "Name"
-                unchangeable: "Name: {{tag_name}}"
+                unchangeable: "Name: %{tag_name}"
             display_name:
                 label: "Title (usually the same as name)"
-            title: "Editing {{tag_name}}"
+            title: "Editing %{tag_name}"
             prompt:
                 label: "Prompt"
             description:
                 label: "Description"
         errors:
-            header_message: "There was a problem saving {{tags_name}}"
+            header_message: "There was a problem saving %{tags_name}"
         show:
-            title: "{{tag_name}} priorities"
-            empty: "No priorities for {{tag_name}} yet"
-            gone: "That {{tags_name}} doesn't exist anymore"
+            title: "%{tag_name} priorities"
+            empty: "No priorities for %{tag_name} yet"
+            gone: "That %{tags_name} doesn't exist anymore"
         yours:
-            title: "Your {{tag_name}} priorities"
+            title: "Your %{tag_name} priorities"
         network:
-            title: "Your network's {{tag_name}} priorities"
+            title: "Your network's %{tag_name} priorities"
         obama:
-            title: "{{official_user_name}} {{tag_name}} priorities"
-            intro: "This is the {{official_user_name}} agenda for {{tag_name}} as prioritized by all members"
+            title: "%{official_user_name} %{tag_name} priorities"
+            intro: "This is the %{official_user_name} agenda for %{tag_name} as prioritized by all members"
         not_obama:
-            title: "{{tag_name}} priorities NOT on {{official_user_name}} agenda"
-            intro: "These are our members' {{tag_name}} priorities NOT on {{official_user_name}} agenda"
+            title: "%{tag_name} priorities NOT on %{official_user_name} agenda"
+            intro: "These are our members' %{tag_name} priorities NOT on %{official_user_name} agenda"
         obama_opposed:
-            title: "{{tag_name}} priorities {{official_user_name}} opposes"
-            intro: "These are our members' {{tag_name}} priorities that {{official_user_name}} opposes"
+            title: "%{tag_name} priorities %{official_user_name} opposes"
+            intro: "These are our members' %{tag_name} priorities that %{official_user_name} opposes"
         rising:
-            title: "Rising {{tag_name}} priorities"
+            title: "Rising %{tag_name} priorities"
         falling:
-            title: "Falling {{tag_name}} priorities"
+            title: "Falling %{tag_name} priorities"
         controversial:
-            title: "Controversial {{tag_name}} priorities"
+            title: "Controversial %{tag_name} priorities"
         random:
-            title: "Random {{tag_name}} priorities"
+            title: "Random %{tag_name} priorities"
         finished:
-            title: "Finished {{tag_name}} priorities"
+            title: "Finished %{tag_name} priorities"
         yours_finished:
-            title: "Your finished {{tag_name}} priorities"
+            title: "Your finished %{tag_name} priorities"
         yours_created:
-            title: "{{tag_name}} priorities you created"
+            title: "%{tag_name} priorities you created"
         newest: 
-            title: "New {{tag_name}} priorities"
+            title: "New %{tag_name} priorities"
         discussions:
-            title: "Discussions on {{tag_name}}"
+            title: "Discussions on %{tag_name}"
         documents:
-            title: "Documents on {{tag_name}}"
+            title: "Documents on %{tag_name}"
         points:
-            title: "{{tag_name}} talking points"
+            title: "%{tag_name} talking points"
         twitter:
-            title: "What people are saying right now about {{tag_name}}"
+            title: "What people are saying right now about %{tag_name}"
     unsubscribe:
         weekly: "Weekly update on your priorities"
         comments: "Comments on your discussions"
@@ -1419,13 +1419,13 @@ en:
         messages: "Private messages and profile bulletins"
         admin: "For administrators"
         votes: "When your vote is needed on an acquisition"
-        success: "You will no longer receive email updates from {{government_name}}"
+        success: "You will no longer receive email updates from %{government_name}"
         new:
             intro: "Uncheck any of the notifications you'd like to turn off."
             submit: "Update Email Notifications"
     users:
         new:
-            success: "Welcome to {{government_name}}"
+            success: "Welcome to %{government_name}"
             submit_and_endorse: "Endorse and join"
             submit_and_oppose: "Oppose and join"
             submit: "Join the network"
@@ -1438,85 +1438,85 @@ en:
                 confirm: "and re-type it"
             error_message: "There was a problem creating your account"
         signups:
-            title: "Email notifications for {{user_name}}"
-            also_rss: "{{rss_url}} of {{user_name}} notifications"
+            title: "Email notifications for %{user_name}"
+            also_rss: "%{rss_url} of %{user_name} notifications"
         legislators:
-            title: "Legislators for {{user_name}}"
+            title: "Legislators for %{user_name}"
         edit:
-            title: "Changing settings for {{user_name}}"
-            saved: "Saved settings for {{user_name}}"
+            title: "Changing settings for %{user_name}"
+            saved: "Saved settings for %{user_name}"
             submit: "Save settings"
         priorities:
-            title: "{{user_name}} priorities at {{government_name}}"
+            title: "%{user_name} priorities at %{government_name}"
             top5:
-                more: "Top 5 of {{priority_count}} priorities"
+                more: "Top 5 of %{priority_count} priorities"
                 one: "#1 priority"
-                other: "Top {{count}} priorities"
+                other: "Top %{count} priorities"
         influential:
-            name: "#{{position}} most influential"
+            name: "#%{position} most influential"
         show:
-            title: "{{user_name}} at {{government_name}}"
+            title: "%{user_name} at %{government_name}"
         activities:
-            title: "What {{user_name}} is doing at {{government_name}}"
+            title: "What %{user_name} is doing at %{government_name}"
         comments:
-            title: "{{user_name}} comments at {{government_name}}"
+            title: "%{user_name} comments at %{government_name}"
         discussions:
-            title: "{{user_name}} discussions at {{government_name}}"
+            title: "%{user_name} discussions at %{government_name}"
         ads:
-            title: "{{user_name}} ads at {{government_name}}"
+            title: "%{user_name} ads at %{government_name}"
         points:
-            title: "{{user_name}} talking points at {{government_name}}"
+            title: "%{user_name} talking points at %{government_name}"
         documents:
-            title: "{{user_name}} documents at {{government_name}}"
+            title: "%{user_name} documents at %{government_name}"
         issues:
-            title: "{{tags_name}} {{user_name}} is involved in"
+            title: "%{tags_name} %{user_name} is involved in"
         not_activated:
             heading: "Please verify your account"
         followers:
             name:
                 one: "1 follower"
-                other: "{{count}} followers"
+                other: "%{count} followers"
             title:
-                one: "1 person is following {{user_name}}"
-                other: "{{count}} people are following {{user_name}}"
+                one: "1 person is following %{user_name}"
+                other: "%{count} people are following %{user_name}"
         ignorers:
             title:
-                one: "1 person is ignoring {{user_name}}"
-                other: "{{count}} people are ignoring {{user_name}}"
+                one: "1 person is ignoring %{user_name}"
+                other: "%{count} people are ignoring %{user_name}"
         following:
             empty: "You are not following anyone yet."
             intro: "These are the people you're following, ranked by their influence on the site. <br/>You can also <a href='/news/your_network_activities'>follow their updates in the news section</a>, or <a href='/priorities/network'>see all their priorities in one list</a>."
             title:
-                one: "{{user_name}} is following 1 person"
-                other: "{{user_name}} is following {{count}} people"
+                one: "%{user_name} is following 1 person"
+                other: "%{user_name} is following %{count} people"
         ignoring:
             title:
-                one: "{{user_name}} is ignoring 1 person"
-                other: "{{user_name}} is ignoring {{count}} people"     
+                one: "%{user_name} is ignoring 1 person"
+                other: "%{user_name} is ignoring %{count} people"     
         recruited:
             name:
                 one: "Recruited 1 member"
-                other: "Recruited {{count}} members"
+                other: "Recruited %{count} members"
         invited:
             name:
                 one: "Invited 1 person"
-                other: "Invited {{count}} people"
+                other: "Invited %{count} people"
         capital:
-            title: "{{user_name}} {{currency_name}} at {{government_name}}"            
+            title: "%{user_name} %{currency_name} at %{government_name}"            
         activate:
             success: "Thanks for verifying your email address"
-            resend: "Resent verification email to {{email}}"
-        joined: "Joined {{time_ago}}"
-        last_visit: "Last visit {{time_ago}}"
+            resend: "Resent verification email to %{email}"
+        joined: "Joined %{time_ago}"
+        last_visit: "Last visit %{time_ago}"
         twitter_count:
-            one: "1 follower on <a href='http://twitter.com/{{twitter_login}}'>Twitter</a>"
-            other: "{{count}} followers on <a href='http://twitter.com/{{twitter_login}}'>Twitter</a>"            
+            one: "1 follower on <a href='http://twitter.com/%{twitter_login}'>Twitter</a>"
+            other: "%{count} followers on <a href='http://twitter.com/%{twitter_login}'>Twitter</a>"            
         missing: "Could not find that member"
         deleted: "That user deleted their account"
-        suspended: "{{user_name}} is suspended"
-        reinstated: "{{user_name}} has been reinstated"
-        make_admin: "{{user_name}} is now an Administrator"
-        empty: "{{user_name}} has no priorities yet."
+        suspended: "%{user_name} is suspended"
+        reinstated: "%{user_name} has been reinstated"
+        make_admin: "%{user_name} is now an Administrator"
+        empty: "%{user_name} has no priorities yet."
         errors:
             need_zip: "You must supply your zip code"
             need_email: "You must supply your email address"
@@ -1529,26 +1529,26 @@ en:
                 twitter: "Twitter"
                 facebook: "Facebook"
                 options: "or <b>sign in instantly</b> with:"
-            intro: "<b><a href='{{signup_url}}'>Sign up</a></b> or <a href='#' id='login_link'>Sign in with {{government_name}}</a>."
+            intro: "<b><a href='%{signup_url}'>Sign up</a></b> or <a href='#' id='login_link'>Sign in with %{government_name}</a>."
             forgot: "I forgot my password"
             email:
                 label: "Email address"
             password:
                 label: "Password"
         create:
-            success: "Welcome back, {{user_name}}."
+            success: "Welcome back, %{user_name}."
             failed: "You were NOT signed in, please check your name and password, or click on the 'I forgot my password' to get a new password."  
             failed_twitter: "Sign in from Twitter failed."
             try_again: "Oops, try again."
         destroy: "Logged out.  Please come again soon."
         please_login: "Please sign in first."
         signup: 
-            name: "I need a {{government_name}} account"
+            name: "I need a %{government_name} account"
     vote:
-        approve: "Your endorsement/opposition was transferred to {{priority_name}}"
+        approve: "Your endorsement/opposition was transferred to %{priority_name}"
         decline: "Your endorsement/opposition will remain unchanged."
         error: "Could not find that ballot, check to make sure your link is correct and didn't get chopped up by your email program."
-        already_voted_yes: "You already voted yes on this acquisition.  Your endorsement/opposition was transferred to {{priority_name}}"
+        already_voted_yes: "You already voted yes on this acquisition.  Your endorsement/opposition was transferred to %{priority_name}"
         already_voted_now: "You already voted NO on this acquisition.  Your endorsement/opposition remained unchanged"
         implicit_approved: "Voting is over, the proposal passed, and your endorsement/opposition was moved to this priority"
         implicit_declined: "Voting is over, the proposal failed, so your endorsement/opposition remains with this priority."
@@ -1557,8 +1557,8 @@ en:
         new:
             success: "Voted"
             novote: "Only people endorsing or opposing this priority before the vote started get a vote."
-            dontvote: "If you don't vote within {{time_left}}, and the proposal gets at least 70% of the vote, the acquisition will pass and your endorsement will be converted to {{priority_name}}.  If it fails to receive a 70% super-majority, your endorsement will remain the same."
-            cantvote: "If this proposal gets at least 70% of the vote, anyone who didn't vote will be converted to {{priority_name}}.  If it fails to receive a 70% super-majority, nothing will happen."
+            dontvote: "If you don't vote within %{time_left}, and the proposal gets at least 70% of the vote, the acquisition will pass and your endorsement will be converted to %{priority_name}.  If it fails to receive a 70% super-majority, your endorsement will remain the same."
+            cantvote: "If this proposal gets at least 70% of the vote, anyone who didn't vote will be converted to %{priority_name}.  If it fails to receive a 70% super-majority, nothing will happen."
             approve:
                 endorser: "YES, I endorse"
                 opposer: "YES, I oppose"
@@ -1573,16 +1573,16 @@ en:
     warnings:
         name:
             one: "1 warning"
-            other: "{{count}} warnings"
+            other: "%{count} warnings"
     widgets:
         index:
             title: "Widgets for your blog or website"
         priorities:
-            title: "Put {{government_name}} priorities on your website"
+            title: "Put %{government_name} priorities on your website"
         points:
-            title: "Put {{government_name}} talking points on your website"
+            title: "Put %{government_name} talking points on your website"
         discussions:
-            title: "Put {{government_name}} discussions on your website"
+            title: "Put %{government_name} discussions on your website"
         preview:
             label: "It will look like this, except with your site's font and colors:"    
         new:

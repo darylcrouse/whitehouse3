@@ -21,8 +21,8 @@ class Partner < ActiveRecord::Base
   has_many :activities
     
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  aasm column: :status, initial: :passive do
-    state :passive
+  aasm column: :status do
+    state :passive, initial: true
     state :pending
     state :active do
       after_transition :on => :activate, :do => :do_activate

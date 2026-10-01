@@ -1,7 +1,6 @@
 class Endorsement < ActiveRecord::Base
   include AASM
 
-  extend ActiveSupport::Concern
   
   scope :active, -> { where("endorsements.status = 'active'") }
   scope :deleted, -> { where("endorsements.status = 'deleted'") }
@@ -255,7 +254,18 @@ class Endorsement < ActiveRecord::Base
     delete_update_counts
   end
   
+  # aasm 6 fires before_enter for the INITIAL state at after_initialize (i.e.
+  # on .new), before associations exist; do_activate must run once the
+  # endorsement row exists (move_to_bottom needs the id).
+  after_create :fire_initial_state_effects
+
+  def fire_initial_state_effects
+    do_activate if aasm.current_state == :active
+  end
+
   def do_activate
+    return if new_record?
+
     if self.is_up?
       ActivityEndorsementNew.create(:user => user, :partner => partner, :priority => priority, :position => self.position) 
     else

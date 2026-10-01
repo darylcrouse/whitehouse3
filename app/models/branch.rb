@@ -1,6 +1,5 @@
 class Branch < ActiveRecord::Base
 
-  extend ActiveSupport::Concern
 
   has_many :users, :dependent => :nullify
   has_many :endorsements, :class_name => "BranchEndorsement", :dependent => :destroy

@@ -44,13 +44,13 @@ en:
             all_activity: "All activity"     
             research:
                 name: "Contribute research"
-                needed: "Priorities needing {{points_name}} or {{documents_name}}"
+                needed: "Priorities needing %{points_name} or %{documents_name}"
                 points_needed: "Priorities needing talking points"
                 documents_needed: "Priorities needing documents"
                 contributors:
                     name: "Contributors"
                     one: "Meet the 1 contributor"
-                    other: "Meet the {{count}} contributors"
+                    other: "Meet the %{count} contributors"
             edit: "Edit"
             full_text: "Full text"
             delete: 
@@ -59,26 +59,26 @@ en:
             discussions:
                 name: "Discussions"
                 one: "1 discussion"
-                other: "{{count}} discussions"
+                other: "%{count} discussions"
             revisions:
                 name: "revisions"
                 one: "1 revision"
-                other: "{{count}} revisions"        
+                other: "%{count} revisions"        
             documents:
                 name: "Documents"
                 one: "1 document"
-                other: "{{count}} documents"
+                other: "%{count} documents"
             priorities:
                 name: "Priorities"
                 one: "1 priority"
-                other: "{{count}} priorities"
+                other: "%{count} priorities"
             points:
                 name: "Talking points"
                 one: "1 talking point"
-                other: "{{count}} talking points"
+                other: "%{count} talking points"
         charts:
             name: "Charts and stats"
-            active_issues: "Most active {{tags_name}}"
+            active_issues: "Most active %{tags_name}"
             rising: "Rising agendas"
             falling: "Falling agendas"
         color_schemes:
@@ -91,7 +91,7 @@ en:
             invited: "Invited"
             number:
                 one: "You have 1 contact"
-                other: "You have {{count}} contacts"
+                other: "You have %{count} contacts"
         documents:
             name: "Documents"
         inbox:
@@ -142,7 +142,7 @@ en:
             your_network: "Your network"
             followers: "Followers"
             your_followers: "Your followers"
-            official_user_activity: "{{official_user_name}} activity"
+            official_user_activity: "%{official_user_name} activity"
             manda: "M&A"
             acquisitions: "Mergers and Acquisitions"
             voting: "Voting results"
@@ -163,7 +163,7 @@ en:
             action: "Action"
             add_ad: 
                 name: "Buy an ad for this priority"
-                title: "Spend some of your {{currency_name}} to put this priority at the top of the page for everyone to consider."
+                title: "Spend some of your %{currency_name} to put this priority at the top of the page for everyone to consider."
             add_proposal:
                 name: "Propose an acquisition"
                 title: "Is there another priority this one should merge with?"
@@ -173,27 +173,27 @@ en:
             bury:
                 name: "Remove from rankings"
                 title: "Remove this priority from the rankings"
-                confirm: "You are about to de-list this priority from the rankings: {{priority_name}}. Only do this for things that are insincere, obscene or ridiculous"
+                confirm: "You are about to de-list this priority from the rankings: %{priority_name}. Only do this for things that are insincere, obscene or ridiculous"
             delete:
                 name: "Delete this priority"
                 title: "Permanently delete this priority"
-                confirm: "Are you sure you want to permanently delete {{priority_name}}?"
+                confirm: "Are you sure you want to permanently delete %{priority_name}?"
             successful:
                 name: "Mark this successful"
                 title: "Mark this priority finished and successful"
-                confirm: "You are about to mark this priority finished and successful: {{priority_name}}.  Please be patient, it may take a minute or two to process if this priority has a lot of endorsements"
+                confirm: "You are about to mark this priority finished and successful: %{priority_name}.  Please be patient, it may take a minute or two to process if this priority has a lot of endorsements"
             compromised:
                 name: "Mark this compromised"
                 title: "Mark this priority finished, but compromised"
-                confirm: "You are about to mark this priority finished, but compromised: {{priority_name}}.  Please be patient, it may take a minute or two to process if this priority has a lot of endorsements"
+                confirm: "You are about to mark this priority finished, but compromised: %{priority_name}.  Please be patient, it may take a minute or two to process if this priority has a lot of endorsements"
             intheworks:
                 name: "Mark this as in the works"
                 title: "Mark this priority as in the works"
-                confirm: "You are about to mark this priority as in the works: {{priority_name}}."
+                confirm: "You are about to mark this priority as in the works: %{priority_name}."
             failed:
                 name: "Mark this failed"
                 title: "Mark this priority as finished and failed"
-                confirm: "You are about to mark this priority finished and failed: {{priority_name}}.  Please be patient, it may take a minute or two to process if this priority has a lot of endorsements"
+                confirm: "You are about to mark this priority finished and failed: %{priority_name}.  Please be patient, it may take a minute or two to process if this priority has a lot of endorsements"
             flag:
                 name: "Flag for review"
                 title: "Should the site administrator take a look at this priority?  Also post a bulletin if it's not obvious what the problem is."
@@ -201,15 +201,15 @@ en:
             endorsers:
                 name: "Endorsers"
                 one: "1 endorser"
-                other: "{{count}} endorsers"
+                other: "%{count} endorsers"
             opposers:
                 name: "Opposers"
                 one: "1 opposer"
-                other: "{{count}} opposers"
+                other: "%{count} opposers"
             undeclareds:
                 name: "Undeclared"
                 one: "1 undeclared"
-                other: "{{count}} undeclared"
+                other: "%{count} undeclared"
             everyone:
                 name: "Everyone's priorities"
                 short: "Everyone"
@@ -235,12 +235,12 @@ en:
                 finished: "Finished"
                 created: "Priorities you created"
             official:
-                name: "{{official_user_name}} priorities"
+                name: "%{official_user_name} priorities"
                 agenda_endorsed: "Endorsed"
                 agenda_not: "Not on the agenda"
                 agenda_opposed: "Opposed"
             branch:
-                name: "{{branch_name}} priorities"
+                name: "%{branch_name} priorities"
         points:
             name: "Talking points"
         settings:
@@ -266,25 +266,25 @@ en:
             impersonate:
                 name: "Sign in as this member"
                 title: "Sign in as this member"
-                confirm: "Are you sure you want to sign in as {{user_name}}?  Be careful!"
+                confirm: "Are you sure you want to sign in as %{user_name}?  Be careful!"
             suspend:
                 name: "Suspend this member"
                 title: "Lock out this member completely"
-                confirm: "{{user_name}} will no longer be able to sign in, and their profile will be deleted with a message that they were suspended.  They will NOT receive an email notification of this."
+                confirm: "%{user_name} will no longer be able to sign in, and their profile will be deleted with a message that they were suspended.  They will NOT receive an email notification of this."
             unsuspend:
                 name: "Reinstate this member"
                 title: "Un suspend this person"
-                confirm: "If you reinstate {{user_name}}, their profile will be restored and they will be able to sign in again.  They will NOT receive an email notification of this, so if you want them to know you should contact them directly."
+                confirm: "If you reinstate %{user_name}, their profile will be restored and they will be able to sign in again.  They will NOT receive an email notification of this, so if you want them to know you should contact them directly."
             make_admin:
                 name: "Make an administrator"
                 title: "Make this member an administrator"
-                confirm: "If you make {{user_name}} an administrator, they will have the same privileges as you, and you will NOT be able to remove those privileges."
+                confirm: "If you make %{user_name} an administrator, they will have the same privileges as you, and you will NOT be able to remove those privileges."
             resend_activation:
                 name: "Resend verification email"
             reset_password:
                 name: "Reset password"
         next_steps:
-            intro: "There's a lot you can do at {{government_name}}.  Here's how to get started:"
+            intro: "There's a lot you can do at %{government_name}.  Here's how to get started:"
             outro: "You can get involved whenever and however often you like.  We're open 24 hours a day."
             legislators: "Connect your priorities to Congress"
             branches: "Which group do you best fit into: "

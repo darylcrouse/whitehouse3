@@ -1,6 +1,5 @@
 class Tag < ActiveRecord::Base
 
-  extend ActiveSupport::Concern
 
   scope :by_endorsers_count, -> { order(up_endorsers_count: :desc) }
   scope :alphabetical, -> { order(name: :asc) }

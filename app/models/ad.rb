@@ -38,9 +38,9 @@ class Ad < ActiveRecord::Base
   validates_presence_of :content
   validates_length_of :content, :maximum => 90, :allow_nil => true, :allow_blank => true
 
-  aasm column: :status, initial: :active do
+  aasm column: :status do
     state :inactive, after_enter: :do_inactive
-    state :active, after_enter: :do_active
+    state :active, initial: true, after_enter: :do_active
     state :finished, after_enter: :do_finished
 
     event :start do
@@ -65,7 +65,17 @@ class Ad < ActiveRecord::Base
     end
   end
   
+  # aasm 6 fires after_enter for the INITIAL state at after_initialize (i.e.
+  # on .new); position realignment should happen once the row exists.
+  after_create :fire_initial_state_effects
+
+  def fire_initial_state_effects
+    do_active if aasm.current_state == :active
+  end
+
   def do_active
+    return if new_record?
+
     row = 0
     for a in Ad.active.most_paid.all
       row += 1

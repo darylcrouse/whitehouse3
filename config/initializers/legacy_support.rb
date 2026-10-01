@@ -242,27 +242,35 @@ ActiveRecord::Base.singleton_class.prepend(LegacyDynamicFinders)
 #     e.g. Model.update_all(updates, conditions). ~24 call sites.
 # ---------------------------------------------------------------------------
 module LegacyBulkOperations
-  def update_all(updates = nil, conditions = nil, *rest, **kw)
-    if conditions
+  def update_all(*args, **kw)
+    # Rails 2 form: update_all(updates, conditions) — conditions second.
+    if args.size >= 2 && !args[1].nil?
+      updates, conditions = args[0], args[1]
+      rest = args[2..]
       where(conditions).update_all(updates, *rest, **kw)
+    elsif args.empty? && kw.any?
+      # update_all(status: 'x') — keyword style call
+      super(**kw)
     else
-      super(updates, *rest, **kw)
+      super(*args, **kw)
     end
   end
 
-  def delete_all(conditions = nil, *rest)
-    if conditions
-      where(conditions).delete_all
+  def delete_all(*args, **kw)
+    # Rails 2 form: delete_all(conditions)
+    if args.size == 1 && !args[0].nil?
+      where(args[0]).delete_all
     else
-      super(*rest)
+      super(*args, **kw)
     end
   end
 
-  def destroy_all(conditions = nil, *rest)
-    if conditions
-      where(conditions).destroy_all
+  def destroy_all(*args, **kw)
+    # Rails 2 form: destroy_all(conditions)
+    if args.size == 1 && !args[0].nil?
+      where(args[0]).destroy_all
     else
-      super(*rest)
+      super(*args, **kw)
     end
   end
 end
@@ -702,27 +710,37 @@ ActiveRecord::Base.extend(LegacySolr)
 require 'yaml'
 
 Rails.application.config.to_prepare do
+  # to_prepare re-runs on every dev reload, while ::DelayedJob (an app model)
+  # is reloadable — drop our wrapper whenever its parent class was swapped out
+  # so the `class Job < ::DelayedJob` redefinition can't raise a superclass
+  # mismatch.
+  if Delayed.const_defined?(:Job, false) && Delayed::Job.superclass != ::DelayedJob
+    Delayed.send(:remove_const, :Job)
+  end
+
   module Delayed
-    class Job < ::DelayedJob
-      def self.enqueue(object, priority = 0, run_at = nil)
-        run_at = Time.zone.now if run_at.nil?
-        create!(
-          priority: priority,
-          run_at: run_at,
-          handler: YAML.dump(object),
-          attempts: 0
-        )
-      end
+    unless const_defined?(:Job, false)
+      class Job < ::DelayedJob
+        def self.enqueue(object, priority = 0, run_at = nil)
+          run_at = Time.zone.now if run_at.nil?
+          create!(
+            priority: priority,
+            run_at: run_at,
+            handler: YAML.dump(object),
+            attempts: 0
+          )
+        end
 
-      def payload
-        YAML.unsafe_load(handler)
-      rescue StandardError
-        nil
-      end
+        def payload
+          YAML.unsafe_load(handler)
+        rescue StandardError
+          nil
+        end
 
-      def invoke_job
-        object = payload
-        object.perform if object.respond_to?(:perform)
+        def invoke_job
+          object = payload
+          object.perform if object.respond_to?(:perform)
+        end
       end
     end
 
@@ -745,5 +763,27 @@ Rails.application.config.to_prepare do
         processed
       end
     end
+  end
+end
+
+# ---------------------------------------------------------------------------
+# 11. aasm `event :send` clobbers Kernel#send
+#     aasm 6 generates an instance method named `send` for models with an
+#     `event :send` block. That silently replaces Ruby's Kernel#send, so
+#     every framework-internal `.send(...)` call (ActiveSupport, aasm itself,
+#     mailers) instead fires the aasm event — which transitions state and
+#     attempts real email delivery, hanging the process.
+#     Prepend a module that hands `send` back to Ruby; the transition stays
+#     available under its bang name (`send!`), which is what callers use.
+# ---------------------------------------------------------------------------
+module LegacySendRestore
+  def send(*args, &block)
+    ::Kernel.instance_method(:send).bind_call(self, *args, &block)
+  end
+end
+
+Rails.application.config.to_prepare do
+  [Blast, Change, Invitation, Message, Notification].each do |klass|
+    klass.prepend(LegacySendRestore) unless klass.ancestors.include?(LegacySendRestore)
   end
 end

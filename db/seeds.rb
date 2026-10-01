@@ -141,6 +141,67 @@ if Endorsement.count.zero?
 end
 
 # ---------------------------------------------------------------------------
+# Issues (tags). The homepage renders one block per issue (a Tag with
+# priorities_count > 4) showing its top / rising / controversial priority,
+# so give a few issues enough tagged priorities to qualify.
+# ---------------------------------------------------------------------------
+if Tag.count.zero?
+  issue_seeds = {
+    "Economy" => [
+      "Create a national infrastructure bank",
+      "Simplify the tax code",
+      "Cap credit card interest rates",
+      "Expand unemployment insurance",
+      "Invest in high-speed rail"
+    ],
+    "Health Care" => [
+      "Let Medicare negotiate drug prices",
+      "Expand community health centers",
+      "Fund rural telemedicine",
+      "Strengthen pandemic surveillance",
+      "Reduce emergency room wait times"
+    ],
+    "Energy" => [
+      "Build a modern electric grid",
+      "Extend the clean energy tax credit",
+      "Raise fuel economy standards",
+      "Weatherize low-income housing",
+      "Fund next-generation nuclear research"
+    ]
+  }
+
+  issue_seeds.each do |tag_name, names|
+    names.each do |name|
+      quietly("issue priority: #{name[0..40]}") do
+        p = Priority.find_or_initialize_by(name: name)
+        if p.new_record?
+          p.assign_attributes(
+            user_id: admin.id,
+            status: 'published',
+            published_at: Time.now.utc,
+            ip_address: '127.0.0.1'
+          )
+          p.save(validate: false)
+        end
+        p.issue_list.add(tag_name)
+        p.save(validate: false)
+      end
+    end
+
+    quietly("issue: #{tag_name}") do
+      tag = Tag.find_by_name(tag_name)
+      next unless tag
+      tag.update_counts
+      tagged = tag.priorities.published.order(:id).to_a
+      tag.top_priority_id = tagged[0]&.id
+      tag.rising_priority_id = tagged[1]&.id
+      tag.controversial_priority_id = tagged[2]&.id
+      tag.save(validate: false)
+    end
+  end
+end
+
+# ---------------------------------------------------------------------------
 # Points (pro/con arguments)
 # ---------------------------------------------------------------------------
 if Point.count.zero?

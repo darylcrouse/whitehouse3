@@ -47,8 +47,8 @@ class Change < ActiveRecord::Base
   validates_length_of :content, :maximum => 500, :allow_nil => true, :allow_blank => true  
   
   acts_as_list
-  aasm column: :status, initial: :suggested do
-    state :suggested
+  aasm column: :status do
+    state :suggested, initial: true
     state :notsent, after_enter: :do_notsend
     state :sent, after_enter: :do_send
     state :approved, after_enter: :do_approve

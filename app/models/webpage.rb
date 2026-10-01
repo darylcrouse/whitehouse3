@@ -9,9 +9,9 @@ class Webpage < ActiveRecord::Base
   
   acts_as_taggable_on :issues
   
-  aasm column: :status, initial: :published do
+  aasm column: :status do
     state :draft
-    state :published
+    state :published, initial: true
     state :deleted
 
     event :publish do

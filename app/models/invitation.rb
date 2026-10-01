@@ -13,8 +13,8 @@ class Invitation < ActiveRecord::Base
   # docs: http://www.vaporbase.com/postings/stateful_authentication
   aasm column: :status, whiny_transitions: true do
     state :unsent, initial: true
-    state :sent, enter: :do_send
-    state :accepted, enter: :do_accept
+    state :sent, after_enter: :do_send
+    state :accepted, after_enter: :do_accept
 
     event :send do
       transitions from: :unsent, to: :sent

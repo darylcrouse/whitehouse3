@@ -52,9 +52,9 @@ class Point < ActiveRecord::Base
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
   aasm column: :status, whiny_transitions: false do
     state :draft
-    state :published, initial: true, enter: :do_publish
-    state :deleted, enter: :do_delete
-    state :buried, enter: :do_bury
+    state :published, initial: true, after_enter: :do_publish
+    state :deleted, after_enter: :do_delete
+    state :buried, after_enter: :do_bury
   
     event :publish do
       transitions from: [:draft], to: :published
@@ -79,7 +79,17 @@ class Point < ActiveRecord::Base
     end
   end
 
+  # aasm 6 fires after_enter for the INITIAL state at after_initialize (i.e.
+  # on .new), before associations exist. Defer the real effects to create time.
+  after_create :fire_initial_state_effects
+
+  def fire_initial_state_effects
+    do_publish if aasm.current_state == :published
+  end
+
   def do_publish
+    return if new_record? || priority.nil? || user.nil?
+
     self.published_at = Time.now
     add_counts
     priority.save_with_validation(false)    

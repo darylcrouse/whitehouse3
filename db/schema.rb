@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_16_144516) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_01_000002) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -562,6 +562,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_16_144516) do
     t.index ["short_name"], name: "index_governments_on_short_name"
   end
 
+  create_table "invitations", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "sender_id"
+    t.integer "partner_id"
+    t.integer "to_id"
+    t.string "to_email"
+    t.string "to_name"
+    t.string "from_name"
+    t.string "facebook_uid"
+    t.string "status"
+    t.datetime "sent_at"
+    t.datetime "accepted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sender_id"], name: "invitations_sender_id_index"
+    t.index ["user_id"], name: "invitations_user_id_index"
+  end
+
   create_table "legislators", force: :cascade do |t|
     t.string "name", limit: 100
     t.string "fullname", limit: 100
@@ -916,6 +934,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_16_144516) do
     t.integer "documents_count", default: 0
     t.string "prompt", limit: 100
     t.string "slug", limit: 60
+    t.integer "taggings_count", default: 0, null: false
     t.index ["slug"], name: "index_tags_on_slug"
     t.index ["top_priority_id"], name: "tag_top_priority_id_index"
   end
@@ -1088,6 +1107,42 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_16_144516) do
     t.index ["rss_code"], name: "index_users_on_rss_code"
     t.index ["status"], name: "index_users_on_status"
     t.index ["twitter_id"], name: "index_users_on_twitter_id"
+  end
+
+  create_table "votes", force: :cascade do |t|
+    t.integer "change_id"
+    t.integer "user_id"
+    t.string "code"
+    t.string "status"
+    t.datetime "voted_at"
+    t.integer "value", default: 1
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["change_id"], name: "votes_change_id_index"
+    t.index ["code"], name: "votes_code_index"
+    t.index ["status"], name: "votes_status_index"
+    t.index ["user_id"], name: "votes_user_id_index"
+  end
+
+  create_table "webpages", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "status", limit: 20
+    t.string "url"
+    t.string "title"
+    t.string "description"
+    t.datetime "crawled_at"
+    t.string "content_type"
+    t.string "charset"
+    t.string "content_encoding"
+    t.datetime "published_at"
+    t.string "cached_issue_list", limit: 150
+    t.integer "feed_id"
+    t.string "domain", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feed_id"], name: "index_webpages_on_feed_id"
+    t.index ["status"], name: "index_webpages_on_status"
+    t.index ["user_id"], name: "webpages_user_id_index"
   end
 
   create_table "widgets", force: :cascade do |t|

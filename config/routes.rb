@@ -320,6 +320,8 @@ end
   get "/signup", to: "users#new", as: "signup"
   get "/login", to: "sessions#new", as: "login"
   delete "/logout", to: "sessions#destroy", as: "logout"
+  # Legacy links used plain GET for logout (Rails 2 map.logout).
+  get "/logout", to: "sessions#destroy"
   get "/unsubscribe", to: "unsubscribes#new", as: "unsubscribe_page"
   get '/network', to: 'network#index'
   scope '/network', controller: 'network' do
@@ -450,6 +452,10 @@ end
   get "/vote/:action/:code", to: "vote#:action", as: "vote"
   get "/splash", to: "splash#index", as: "splash"
   resources :issues, param: :slug
+  # Sub-pages linked from the issues index/cloud (Rails 2 default-route era paths).
+  get "issues/:slug/points",      to: "issues#points",      as: :issues_points
+  get "issues/:slug/documents",   to: "issues#documents",   as: :issues_documents
+  get "issues/:slug/discussions", to: "issues#discussions", as: :issues_discussions
 
   # Install the default routes as the lowest priority.
   resources :pictures, param: :short_name do

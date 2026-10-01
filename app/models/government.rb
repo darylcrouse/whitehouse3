@@ -1,6 +1,5 @@
 class Government < ActiveRecord::Base
   include LiquidDroppableHelper
-  extend ActiveSupport::Concern
   begin
     require 'paperclip'
   rescue LoadError

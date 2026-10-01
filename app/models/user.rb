@@ -2,7 +2,6 @@ require 'digest/sha1'
 class User < ActiveRecord::Base
   include AASM
 
-  extend ActiveSupport::Concern
   begin
     require 'paperclip'
   rescue LoadError

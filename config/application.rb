@@ -22,6 +22,12 @@ module Whitehouse2
     # which 404s whole controllers; keep the pre-7.1 tolerance.
     config.action_controller.raise_on_missing_callback_actions = false
 
+    # Rails 2 treated every belongs_to as optional; Rails 5+ requires the
+    # association by default. Every FK column in this schema is nullable, and
+    # the app relies on it (e.g. Endorsement saved with partner/referral nil),
+    # so restore the legacy semantics app-wide.
+    config.active_record.belongs_to_required_by_default = false
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

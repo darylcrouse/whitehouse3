@@ -22,9 +22,9 @@ class Message < ActiveRecord::Base
   
   aasm column: :status, whiny_transitions: true do
     state :draft, initial: true
-    state :sent, enter: :do_send
-    state :read, enter: :do_read
-    state :deleted, enter: :do_delete
+    state :sent, after_enter: :do_send
+    state :read, after_enter: :do_read
+    state :deleted, after_enter: :do_delete
 
     event :send do
       transitions from: [:draft], to: :sent

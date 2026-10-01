@@ -42,7 +42,7 @@ class Activity < ActiveRecord::Base
   has_many :commenters, -> { distinct }, through: :published_comments, source: :user
   has_many :activities, dependent: :destroy
   has_many :notifications, as: :notifiable, dependent: :destroy
-  has_many :followings, -> { where(type: 'FollowingDiscussion') }, class_name: "FollowingDiscussion", foreign_key: "activity_id", dependent: :destroy
+  has_many :followings, class_name: "FollowingDiscussion", foreign_key: "activity_id", dependent: :destroy
   has_many :followers, -> { distinct }, through: :followings, source: :user
   
   
@@ -57,8 +57,8 @@ class Activity < ActiveRecord::Base
   
   
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  aasm column: :status, initial: :active do
-    state :active
+  aasm column: :status do
+    state :active, initial: true
     state :deleted
 
     event :delete do

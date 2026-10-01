@@ -25,10 +25,10 @@ class Notification < ActiveRecord::Base
   liquid_methods :name, :sender, :recipient, :sender_name, :recipient_name, :id
 
   aasm column: :status, whiny_transitions: true do
-    state :unsent, :enter => :queue_sending
-    state :sent, :enter => :do_send
-    state :read, :enter => :do_read  
-    state :deleted, :enter => :do_delete
+    state :unsent, after_enter: :queue_sending
+    state :sent, after_enter: :do_send
+    state :read, after_enter: :do_read  
+    state :deleted, after_enter: :do_delete
     
     event :send do
       transitions from: :unsent, to: :sent
@@ -56,7 +56,18 @@ class Notification < ActiveRecord::Base
     recipient.increment!(:received_notifications_count)
   end
   
+  # aasm 6 fires after_enter for the INITIAL state at after_initialize (i.e.
+  # on .new), before the record is saved; queueing at .new would enqueue a job
+  # for an unsaved notification. Fire on create instead.
+  after_create :fire_initial_state_effects
+
+  def fire_initial_state_effects
+    queue_sending if aasm.current_state == :unsent
+  end
+
   def queue_sending
+    return if new_record?
+
     send_later(:send!)
   end
   

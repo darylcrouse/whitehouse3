@@ -50,9 +50,9 @@ class Document < ActiveRecord::Base
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
   aasm column: :status, whiny_transitions: true do
     state :draft, initial: true
-    state :published, enter: :do_publish
-    state :deleted, enter: :do_delete
-    state :buried, enter: :do_bury
+    state :published, after_enter: :do_publish
+    state :deleted, after_enter: :do_delete
+    state :buried, after_enter: :do_bury
     
     event :publish do
       transitions from: [:draft], to: :published

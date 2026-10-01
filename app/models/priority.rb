@@ -1,6 +1,5 @@
 class Priority < ActiveRecord::Base
   include AASM
-  extend ActiveSupport::Concern
 
   scope :published, -> {
     if Government.current&.is_suppress_empty_priorities?
@@ -76,7 +75,7 @@ class Priority < ActiveRecord::Base
 
   belongs_to :change, optional: true
   
-  # acts_as_taggable_on :issues
+  acts_as_taggable_on :issues
   # acts_as_list
     
   def liquid_attributes
@@ -92,21 +91,21 @@ class Priority < ActiveRecord::Base
   validates_uniqueness_of :name
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  enum :status, { 
-    passive: 0,
-    draft: 1,
-    published: 2,
-    deleted: 3,
-    buried: 4,
-    inactive: 5
+  enum :status, {
+    passive: 'passive',
+    draft: 'draft',
+    published: 'published',
+    deleted: 'deleted',
+    buried: 'buried',
+    inactive: 'inactive'
   }
 
-  aasm column: :status, initial: :published do
+  aasm column: :status do
     state :passive
     state :draft
-    state :published, :enter => :do_publish
-    state :deleted, :enter => :do_delete
-    state :buried, :enter => :do_bury
+    state :published, initial: true, after_enter: :do_publish
+    state :deleted, after_enter: :do_delete
+    state :buried, after_enter: :do_bury
     state :inactive
 
     event :publish do
@@ -557,7 +556,18 @@ class Priority < ActiveRecord::Base
   end
   
   private
+  # aasm 6 fires after_enter for the INITIAL state at after_initialize (i.e.
+  # on .new), before associations exist. Defer the real effects to create time
+  # so publishing a new priority still runs them exactly once.
+  after_create :fire_initial_state_effects
+
+  def fire_initial_state_effects
+    do_publish if aasm.current_state == :published
+  end
+
   def do_publish
+    return if new_record? || user.nil?
+
     self.published_at = Time.now
     ActivityPriorityNew.create(:user => user, :priority => self)    
   end

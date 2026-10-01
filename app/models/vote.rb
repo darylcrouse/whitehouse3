@@ -16,9 +16,9 @@ class Vote < ActiveRecord::Base
   
   aasm column: :status, whiny_transitions: true do
     state :active, initial: true
-    state :approved, enter: :do_approve
-    state :implicit_approved, enter: :do_implicit_approve
-    state :declined, enter: :do_decline
+    state :approved, after_enter: :do_approve
+    state :implicit_approved, after_enter: :do_implicit_approve
+    state :declined, after_enter: :do_decline
     state :implicit_declined
     state :inactive  
     state :deleted
