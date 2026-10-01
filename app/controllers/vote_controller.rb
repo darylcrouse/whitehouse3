@@ -33,6 +33,8 @@ class VoteController < ApplicationController
     @vote = Vote.find_by_code(params[:code])
     if not @vote
       flash[:error] = t('vote.error')
+      redirect_to "/"
+      return
     end
     for n in @vote.notifications.unread
       n.read!
