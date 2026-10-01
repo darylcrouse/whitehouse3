@@ -18,7 +18,7 @@ class ChangesController < ApplicationController
   # GET /priorities/1/changes/1
   # GET /priorities/1/changes/1.xml
   def show
-    @change = @priority.changes.find(params[:id])
+    @change = @priority.priority_changes.find(params[:id])
     @page_title = t('changes.show.title', :priority_name => @priority.name)
     for a in @change.activities.find(:all, :conditions => "type in ('ActivityCapitalAcquisitionProposal','ActivityPriorityMergeProposal')")
       @activity = a
@@ -38,7 +38,7 @@ class ChangesController < ApplicationController
   end
   
   def activities
-    @change = @priority.changes.find(params[:id])
+    @change = @priority.priority_changes.find(params[:id])
     @page_title = t('changes.activities.title', :priority_name => @priority.name)
     for a in @change.activities.find(:all, :conditions => "type in ('ActivityCapitalAcquisitionProposal','ActivityPriorityMergeProposal')")
       @activity = a
@@ -58,7 +58,7 @@ class ChangesController < ApplicationController
   # GET /priorities/1/changes/new
   # GET /priorities/1/changes/new.xml
   def new
-    @change = @priority.changes.new
+    @change = @priority.priority_changes.new
     if @priority.has_change?
       flash[:error] = t('changes.new.already_proposed', :priority_name => @priority.change.new_priority.name)
       return
@@ -79,7 +79,7 @@ class ChangesController < ApplicationController
   # POST /priorities/1/changes
   # POST /priorities/1/changes.xml
   def create
-    @change = @priority.changes.new(params[:change])
+    @change = @priority.priority_changes.new(params[:change])
     @change.user = current_user
     respond_to do |format|
       if @change.save
@@ -103,7 +103,7 @@ class ChangesController < ApplicationController
 
   # PUT /priorities/1/changes/1/start
   def start
-    @change = @priority.changes.find(params[:id])
+    @change = @priority.priority_changes.find(params[:id])
     @change.send_later(:send!)
     flash[:notice] = t('changes.start')
     redirect_to priority_change_path(@priority,@change)
@@ -112,7 +112,7 @@ class ChangesController < ApplicationController
   
   # PUT /priorities/1/changes/1/approve
   def approve
-    @change = @priority.changes.find(params[:id])
+    @change = @priority.priority_changes.find(params[:id])
     @change.send_later(:insta_approve!)
     flash[:notice] = t('changes.approve', :currency_name => current_government.currency_name.downcase, :user_name => @change.user.name)
     redirect_to @change.new_priority
@@ -121,7 +121,7 @@ class ChangesController < ApplicationController
   
   # PUT /priorities/1/changes/1/stop  
   def stop
-    @change = @priority.changes.find(params[:id])
+    @change = @priority.priority_changes.find(params[:id])
     @change.dont_send!
     flash[:notice] = t('changes.stop', :currency_name => current_government.currency_name.downcase, :user_name => @change.user.name)
     ActivityPriorityAcquisitionProposalDeleted.create(:change => @change, :priority => @priority, :user => current_user)    
@@ -131,7 +131,7 @@ class ChangesController < ApplicationController
   
   # PUT /priorities/1/changes/1/flip  
   def flip
-    @change = @priority.changes.find(params[:id])
+    @change = @priority.priority_changes.find(params[:id])
     if @change.new_priority.has_change?
       flash[:error] = t('changes.new.already_proposed', :priority_name => @priority.change.new_priority.name)
       redirect_to @change.new_priority
@@ -152,7 +152,7 @@ class ChangesController < ApplicationController
   # PUT /priorities/1/changes/1
   # PUT /priorities/1/changes/1.xml
   def update
-    @change = @priority.change_with_deleted.find(params[:id])
+    @change = @priority.changes_with_deleted.find(params[:id])
 
     respond_to do |format|
       if @change.update_attributes(params[:change])

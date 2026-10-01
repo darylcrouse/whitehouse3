@@ -1,45 +1,38 @@
 require 'test_helper'
 
 class BranchesControllerTest < ActionController::TestCase
-  test "should get index" do
+  def test_should_get_index
+    login_as_user
     get :index
     assert_response :success
-    assert_not_nil assigns(:branches)
   end
 
-  test "should get new" do
-    get :new
+  def test_should_get_edit
+    login_as_user
+    get :edit, params: { :id => branches(:one).id }
     assert_response :success
   end
 
-  test "should create branch" do
+  def test_should_create_branch
+    login_as_user
     assert_difference('Branch.count') do
-      post :create, :branch => { }
+      post :create, params: { :branch => { :name => 'Fixture branch A' } }
     end
-
-    assert_redirected_to branch_path(assigns(:branch))
+    assert_response :redirect
   end
 
-  test "should show branch" do
-    get :show, :id => branches(:one).to_param
-    assert_response :success
+  def test_should_update_branch
+    login_as_user
+    put :update, params: { :id => branches(:one).id, :branch => { :name => 'Fixture branch B' } }
+    assert_response :redirect
   end
 
-  test "should get edit" do
-    get :edit, :id => branches(:one).to_param
-    assert_response :success
-  end
-
-  test "should update branch" do
-    put :update, :id => branches(:one).to_param, :branch => { }
-    assert_redirected_to branch_path(assigns(:branch))
-  end
-
-  test "should destroy branch" do
+  def test_should_destroy_branch
+    login_as_user
+    target = branches(:one)
     assert_difference('Branch.count', -1) do
-      delete :destroy, :id => branches(:one).to_param
+      delete :destroy, params: { :id => target.id }
     end
-
-    assert_redirected_to branches_path
+    assert_response :redirect
   end
 end

@@ -151,7 +151,7 @@ module ApplicationHelper
   	end
   end
   
-  def liquidize(content, arguments)
+  def liquidize(content, arguments = {})
     Liquid::Template.parse(content).render(arguments, :filters => [LiquidFilters])
   end
 

@@ -1,45 +1,55 @@
 require 'test_helper'
 
+# Nested under users/:user_id (get_user); login required.
 class FollowingsControllerTest < ActionController::TestCase
-  test "should get index" do
-    get :index
-    assert_response :success
-    assert_not_nil assigns(:followings)
+  def user_params(extra = {})
+    { :user_id => LegacyTestData.admin.id }.merge(extra)
   end
 
-  test "should get new" do
-    get :new
+  def test_should_get_index
+    login_as_user
+    get :index, params: user_params
     assert_response :success
   end
 
-  test "should create following" do
+  def test_should_get_new
+    login_as_user
+    get :new, params: user_params
+    assert_response :success
+  end
+
+  def test_should_create_following
+    login_as_user
     assert_difference('Following.count') do
-      post :create, :following => { }
+      post :create, params: user_params(:following => { :other_user_id => LegacyTestData.fixture('users', :quentin).id })
     end
-
-    assert_redirected_to following_path(assigns(:following))
+    assert_response :redirect
   end
 
-  test "should show following" do
-    get :show, :id => followings(:one).id
+  def test_should_show_following
+    login_as_user
+    get :show, params: user_params(:id => followings(:one).id)
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, :id => followings(:one).id
+  def test_should_get_edit
+    login_as_user
+    get :edit, params: user_params(:id => followings(:one).id)
     assert_response :success
   end
 
-  test "should update following" do
-    put :update, :id => followings(:one).id, :following => { }
-    assert_redirected_to following_path(assigns(:following))
+  def test_should_update_following
+    login_as_user
+    put :update, params: user_params(:id => followings(:one).id, :following => { :value => 2 })
+    assert_response :redirect
   end
 
-  test "should destroy following" do
+  def test_should_destroy_following
+    login_as_user
+    target = followings(:one)
     assert_difference('Following.count', -1) do
-      delete :destroy, :id => followings(:one).id
+      delete :destroy, params: user_params(:id => target.id)
     end
-
-    assert_redirected_to followings_path
+    assert_response :redirect
   end
 end

@@ -1,6 +1,6 @@
 <h1>New signup</h1>
 
-<%= form_for(@signup) do |f| %>
+<%= form_for(@signup, :url => (@signup.new_record? ? signup_records_path : signup_record_path(@signup))) do |f| %>
   <%= f.error_messages %>
 
   <p>

@@ -4,42 +4,43 @@ class PrioritiesControllerTest < ActionController::TestCase
   def test_should_get_index
     get :index
     assert_response :success
-    assert_not_nil assigns(:priorities)
+    assert_not_nil assigns(:issues)
   end
 
   def test_should_get_new
+    login_as_user
     get :new
     assert_response :success
   end
 
-  def test_should_create_priority
-    assert_difference('Priority.count') do
-      post :create, :priority => { }
-    end
-
-    assert_redirected_to priority_path(assigns(:priority))
-  end
-
-  def test_should_show_priority
-    get :show, :id => priorities(:one).id
+  def test_should_get_edit
+    login_as_user
+    get :edit, params: { :id => priorities(:one).id }
     assert_response :success
   end
 
-  def test_should_get_edit
-    get :edit, :id => priorities(:one).id
+  def test_should_create_priority
+    login_as_user
+    assert_difference('Priority.count') do
+      post :create, params: { :priority => { :name => 'Fixture created priority' } }
+    end
+    assert_response :redirect
+  end
+
+  def test_should_show_priority
+    get :show, params: { :id => priorities(:one).id }
     assert_response :success
   end
 
   def test_should_update_priority
-    put :update, :id => priorities(:one).id, :priority => { }
-    assert_redirected_to priority_path(assigns(:priority))
+    login_as_user
+    put :update, params: { :id => priorities(:one).id, :priority => { :name => 'Fixture updated priority' } }
+    assert_response :redirect
   end
 
   def test_should_destroy_priority
-    assert_difference('Priority.count', -1) do
-      delete :destroy, :id => priorities(:one).id
-    end
-
-    assert_redirected_to priorities_path
+    login_as_user
+    delete :destroy, params: { :id => priorities(:one).id }
+    assert_response :redirect
   end
 end

@@ -110,6 +110,7 @@ end
 # ---------------------------------------------------------------------------
 module LegacyFinders
   LEGACY_FIND_SYMBOLS = %i[all first last].freeze
+  LEGACY_SCOPE_KEYS = %i[conditions include joins select group having from order limit offset readonly].freeze
 
   def find(*args, &block)
     if args.first.is_a?(Symbol) && LEGACY_FIND_SYMBOLS.include?(args.first)
@@ -127,9 +128,14 @@ module LegacyFinders
   end
 
   def count(*args)
-    if args.length == 1 && args.first.is_a?(Hash) &&
-       (args.first.key?(:conditions) || args.first.key?(:include) || args.first.key?(:joins))
-      legacy_scope_from_options(args.first).count
+    if args.length == 1 && args.first.is_a?(Hash) && (args.first.keys & LEGACY_SCOPE_KEYS).any?
+      options = args.first.dup
+      # Legacy group-counts ordered by the synthesized "count_all" alias; sort
+      # the resulting hash in Ruby instead of handing it to SQL.
+      sort_desc = options[:group] && options[:order].to_s.include?('count_all')
+      options.delete(:order) if sort_desc
+      result = legacy_scope_from_options(options).count
+      sort_desc && result.is_a?(Hash) ? result.sort_by { |_k, v| -v.to_i }.to_h : result
     else
       super
     end
@@ -786,4 +792,152 @@ Rails.application.config.to_prepare do
   [Blast, Change, Invitation, Message, Notification].each do |klass|
     klass.prepend(LegacySendRestore) unless klass.ancestors.include?(LegacySendRestore)
   end
+end
+
+# ---------------------------------------------------------------------------
+# 12. Rails-2 calculation signature: Model.sum(:col, :conditions => ...)
+#     finder-style option hashes are gone from ActiveRecord::Calculations.
+#     ~18 call sites still pass (:conditions/:joins) to sum/count/min/max/avg.
+# ---------------------------------------------------------------------------
+module LegacyCalculations
+  %i[sum count minimum maximum average].each do |calc|
+    define_method(calc) do |*args, **kw, &block|
+      # Ruby 3 funnels the trailing legacy hash into **kw when the method
+      # accepts keywords, so check both shapes for :conditions/:joins.
+      legacy_opts = if kw.key?(:conditions) || kw.key?(:joins)
+                      kw
+                    elsif args.last.is_a?(Hash) &&
+                          (args.last.key?(:conditions) || args.last.key?(:joins))
+                      args.last
+                    end
+      if legacy_opts
+        args.pop if args.last.equal?(legacy_opts)
+        column = args.first
+        relation = all
+        relation = relation.joins(legacy_opts[:joins]) if legacy_opts[:joins]
+        if (conds = legacy_opts[:conditions])
+          relation = relation.where(*Array(conds))
+        end
+        next relation.public_send(calc, column, &block)
+      end
+      super(*args, **kw, &block)
+    end
+  end
+end
+
+ActiveRecord::Base.singleton_class.prepend(LegacyCalculations)
+
+# ---------------------------------------------------------------------------
+# 13. Rails-2 tolerance: scope calls with trailing finder options
+#     (e.g. `Endorsement.by_recently_created(:include => [:user])`) used to
+#     be accepted by AR 2 scopes. Modern scope lambdas enforce arity, so a
+#     0-arity scope called with options raises. Wrap 0-arity scope bodies to
+#     ignore extra args (the options were eager-load hints; lazy loading
+#     returns the same rows).
+# ---------------------------------------------------------------------------
+module LegacyScopeArgs
+  def scope(name, body = nil, &block)
+    body ||= block
+    if body.respond_to?(:arity) && body.arity == 0
+      original = body
+      # instance_exec keeps the relation as self, exactly how AR runs 0-arity
+      # scope bodies itself.
+      body = ->(*_ignored) { instance_exec(&original) }
+    end
+    super(name, body)
+  end
+end
+
+ActiveRecord::Base.singleton_class.prepend(LegacyScopeArgs)
+
+# ---------------------------------------------------------------------------
+# 14. delayed_job's Object#send_later / send_at / send_in
+#     Backed by the Delayed::Job shim above (section 10).
+# ---------------------------------------------------------------------------
+module Delayed
+  class PerformableMethod
+    attr_accessor :object, :method_name, :args
+
+    def initialize(object, method_name, args = [])
+      @object = object
+      @method_name = method_name
+      @args = args
+    end
+
+    def perform
+      object.public_send(method_name, *Array(args))
+    end
+
+    def display_name
+      "#{object.class}##{method_name}"
+    end
+  end
+end
+
+module LegacySendLater
+  def send_later(method_name, *args)
+    ::Delayed::Job.enqueue(::Delayed::PerformableMethod.new(self, method_name, args))
+  end
+
+  def send_at(time, method_name, *args)
+    ::Delayed::Job.enqueue(::Delayed::PerformableMethod.new(self, method_name, args), 0, time)
+  end
+end
+
+Rails.application.config.to_prepare do
+  ActiveRecord::Base.include(LegacySendLater) unless ActiveRecord::Base.include?(LegacySendLater)
+end
+
+# ---------------------------------------------------------------------------
+# 16. String#wrapped_string — Page#check_link_name calls it; neither the 2009
+#     tree nor this port defines it (its origin gem is lost) and the intended
+#     behaviour is the plain slug.
+# ---------------------------------------------------------------------------
+class String
+  unless method_defined?(:wrapped_string)
+    def wrapped_string
+      self
+    end
+  end
+end
+
+# ---------------------------------------------------------------------------
+# 17. Mailer deliver_* — ActionMailer's Rails-2 API (UserMailer.deliver_welcome,
+#     Blaster.deliver_newsletter, ...). Maps to the modern action + deliver_now.
+# ---------------------------------------------------------------------------
+module LegacyMailerDeliver
+  def method_missing(name, *args, &block)
+    if name.to_s.start_with?("deliver_")
+      public_send(name.to_s.sub(/\Adeliver_/, ""), *args, &block).deliver_now
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(name, include_private = false)
+    name.to_s.start_with?("deliver_") || super
+  end
+end
+
+Rails.application.config.to_prepare do
+  ActionMailer::Base.singleton_class.prepend(LegacyMailerDeliver) unless ActionMailer::Base.singleton_class.include?(LegacyMailerDeliver)
+end
+
+# ---------------------------------------------------------------------------
+# 18. render :action => "controller/action" — Rails 2 resolved such names
+#     relative to the running controller (e.g. profiles#new rendering
+#     "profiles/edit"); Rails 8 looks for a nested template instead.
+# ---------------------------------------------------------------------------
+module LegacyRenderActionPath
+  def render(*args, &block)
+    first = args.first
+    if first.is_a?(Hash) && first[:action].is_a?(String) && first[:action].include?('/')
+      args[0] = first.merge(:action => first[:action].split('/').last)
+    end
+    super(*args, &block)
+  end
+end
+
+unless ActionController::Base.ancestors.include?(LegacyRenderActionPath)
+  ActionController::Base.prepend(LegacyRenderActionPath)
 end

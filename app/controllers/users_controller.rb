@@ -270,7 +270,7 @@ class UsersController < ApplicationController
     unless @valid
       respond_to do |format|
         format.js
-        format.html { render plain: "error", status: :internal_server_error }
+        format.html { render :action => 'new' }
       end
       return
     end
@@ -294,7 +294,7 @@ class UsersController < ApplicationController
   
     respond_to do |format|
       format.js
-      format.html { render plain: "error", status: :internal_server_error }
+      format.html { redirect_to(@send_to_url || '/') }
     end
   end
 

@@ -60,7 +60,7 @@ class RevisionsController < ApplicationController
       if @revision.save
         @revision.publish!
         # this is all to add a comment with their note
-        if params[:comment][:content] and params[:comment][:content].length > 0
+        if params[:comment] and params[:comment][:content] and params[:comment][:content].length > 0
           activities = Activity.find(:all, :conditions => ["user_id = ? and type like 'ActivityPointRevision%' and created_at > '#{Time.now-5.minutes}'",current_user.id], :order => "created_at desc")
           if activities.any?
             activity = activities[0]
@@ -90,7 +90,7 @@ class RevisionsController < ApplicationController
     respond_to do |format|
       if @revision.update_attributes(params[:revision])
         flash[:notice] = t('points.revision.new.success', :point_name => @point.name)
-        format.html { redirect_to(@revision) }
+        format.html { redirect_to([@point, @revision]) }
       else
         format.html { render :action => "edit" }
       end

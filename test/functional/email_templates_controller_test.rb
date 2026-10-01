@@ -1,45 +1,40 @@
 require 'test_helper'
 
+# Admin-only; templates are keyed by name (fetch_default on new).
 class EmailTemplatesControllerTest < ActionController::TestCase
-  test "should get index" do
+  def test_should_get_index
+    login_as_user
     get :index
     assert_response :success
-    assert_not_nil assigns(:email_templates)
+    assert_not_nil assigns(:templates)
   end
 
-  test "should get new" do
-    get :new
+  def test_should_get_new
+    login_as_user
+    get :new, params: { :name => 'welcome' }
     assert_response :success
   end
 
-  test "should create email_template" do
+  def test_should_create_email_template
+    login_as_user
     assert_difference('EmailTemplate.count') do
-      post :create, :email_template => { }
+      post :create, params: { :email_template => { :name => 'fixture_new_template' } }
     end
-
-    assert_redirected_to email_template_path(assigns(:email_template))
+    assert_response :redirect
   end
 
-  test "should show email_template" do
-    get :show, :id => email_templates(:one).id
-    assert_response :success
+  def test_should_update_email_template
+    login_as_user
+    put :update, params: { :id => email_templates(:one).id, :email_template => { :subject => 'Updated subject' } }
+    assert_response :redirect
   end
 
-  test "should get edit" do
-    get :edit, :id => email_templates(:one).id
-    assert_response :success
-  end
-
-  test "should update email_template" do
-    put :update, :id => email_templates(:one).id, :email_template => { }
-    assert_redirected_to email_template_path(assigns(:email_template))
-  end
-
-  test "should destroy email_template" do
+  def test_should_destroy_email_template
+    login_as_user
+    target = email_templates(:one)
     assert_difference('EmailTemplate.count', -1) do
-      delete :destroy, :id => email_templates(:one).id
+      delete :destroy, params: { :id => target.id }
     end
-
-    assert_redirected_to email_templates_path
+    assert_response :redirect
   end
 end

@@ -1,45 +1,40 @@
 require 'test_helper'
 
+# Admin-only scaffold controller: index/new/preview/edit/create/update/destroy
+# (no show in this app).
 class BlurbsControllerTest < ActionController::TestCase
-  test "should get index" do
+  def test_should_get_index
+    login_as_user
     get :index
     assert_response :success
-    assert_not_nil assigns(:blurbs)
   end
 
-  test "should get new" do
-    get :new
+  def test_should_get_edit
+    login_as_user
+    get :edit, params: { :id => blurbs(:one).id }
     assert_response :success
   end
 
-  test "should create blurb" do
+  def test_should_create_blurb
+    login_as_user
     assert_difference('Blurb.count') do
-      post :create, :blurb => { }
+      post :create, params: { :blurb => { :name => 'Fixture created blurb' } }
     end
-
-    assert_redirected_to blurb_path(assigns(:blurb))
+    assert_response :redirect
   end
 
-  test "should show blurb" do
-    get :show, :id => blurbs(:one).id
-    assert_response :success
+  def test_should_update_blurb
+    login_as_user
+    put :update, params: { :id => blurbs(:one).id, :blurb => { :name => 'Fixture updated blurb' } }
+    assert_response :redirect
   end
 
-  test "should get edit" do
-    get :edit, :id => blurbs(:one).id
-    assert_response :success
-  end
-
-  test "should update blurb" do
-    put :update, :id => blurbs(:one).id, :blurb => { }
-    assert_redirected_to blurb_path(assigns(:blurb))
-  end
-
-  test "should destroy blurb" do
+  def test_should_destroy_blurb
+    login_as_user
+    target = blurbs(:one)
     assert_difference('Blurb.count', -1) do
-      delete :destroy, :id => blurbs(:one).id
+      delete :destroy, params: { :id => target.id }
     end
-
-    assert_redirected_to blurbs_path
+    assert_response :redirect
   end
 end

@@ -1,13 +1,9 @@
-<%= form_for(@revision) do |f| %>
+<%= form_for([@point, @revision]) do |f| %>
   <%= f.error_messages %>
 
   <p>
     <%= f.label :point_id %><br />
     <%= f.text_field :point_id %>
-  </p>
-  <p>
-    <%= f.label :priority_id %><br />
-    <%= f.text_field :priority_id %>
   </p>
   <p>
     <%= f.label :other_priority_id %><br />

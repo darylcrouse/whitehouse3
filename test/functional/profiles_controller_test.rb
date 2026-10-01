@@ -1,45 +1,56 @@
 require 'test_helper'
 
+# Singleton resource: /users/:user_id/profile (no index).
 class ProfilesControllerTest < ActionController::TestCase
-  test "should get index" do
-    get :index
-    assert_response :success
-    assert_not_nil assigns(:profiles)
+  def user_params(extra = {})
+    { :user_id => LegacyTestData.admin.id }.merge(extra)
   end
 
-  test "should get new" do
-    get :new
+  def ensure_profile
+    Profile.find_by_user_id(LegacyTestData.admin.id) || Profile.create!(:user_id => LegacyTestData.admin.id)
+  end
+
+  def test_should_get_new
+    login_as_user
+    get :new, params: user_params
     assert_response :success
   end
 
-  test "should create profile" do
+  def test_should_create_profile
+    login_as_user
     assert_difference('Profile.count') do
-      post :create, :profile => { }
+      post :create, params: user_params(:profile => { :bio => 'Fixture bio.' })
     end
-
-    assert_redirected_to profile_path(assigns(:profile))
+    assert_response :redirect
   end
 
-  test "should show profile" do
-    get :show, :id => profiles(:one).id
+  def test_should_show_profile
+    login_as_user
+    ensure_profile
+    get :show, params: user_params
+    assert_redirected_to user_path(LegacyTestData.admin)
+  end
+
+  def test_should_get_edit
+    login_as_user
+    ensure_profile
+    get :edit, params: user_params
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, :id => profiles(:one).id
-    assert_response :success
+  def test_should_update_profile
+    login_as_user
+    ensure_profile
+    put :update, params: user_params(:profile => { :bio => 'Updated fixture bio.' })
+    assert_response :redirect
   end
 
-  test "should update profile" do
-    put :update, :id => profiles(:one).id, :profile => { }
-    assert_redirected_to profile_path(assigns(:profile))
-  end
-
-  test "should destroy profile" do
+  def test_should_destroy_profile
+    login_as_user
+    ensure_profile
     assert_difference('Profile.count', -1) do
-      delete :destroy, :id => profiles(:one).id
+      delete :destroy, params: user_params
     end
-
-    assert_redirected_to profiles_path
+    assert_response :redirect
   end
 end

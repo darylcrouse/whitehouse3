@@ -1,45 +1,31 @@
 require 'test_helper'
 
+# Endorsements have no create/show/new; index redirects to your priorities;
+# edit/update/destroy are JS (rjs) endpoints.
 class EndorsementsControllerTest < ActionController::TestCase
   def test_should_get_index
     get :index
-    assert_response :success
-    assert_not_nil assigns(:endorsements)
-  end
-
-  def test_should_get_new
-    get :new
-    assert_response :success
-  end
-
-  def test_should_create_endorsement
-    assert_difference('Endorsement.count') do
-      post :create, :endorsement => { }
-    end
-
-    assert_redirected_to endorsement_path(assigns(:endorsement))
-  end
-
-  def test_should_show_endorsement
-    get :show, :id => endorsements(:one).id
-    assert_response :success
+    assert_redirected_to yours_priorities_url
   end
 
   def test_should_get_edit
-    get :edit, :id => endorsements(:one).id
+    login_as_user
+    get :edit, params: { :id => endorsements(:one).id, :region => 'yours', :format => :js }, xhr: true
     assert_response :success
   end
 
   def test_should_update_endorsement
-    put :update, :id => endorsements(:one).id, :endorsement => { }
-    assert_redirected_to endorsement_path(assigns(:endorsement))
+    login_as_user
+    put :update, params: { :id => endorsements(:one).id, :region => 'yours', :endorsement => { :position => 1 }, :format => :js }
+    assert_response :success
   end
 
   def test_should_destroy_endorsement
+    login_as_user
+    target = endorsements(:one)
     assert_difference('Endorsement.count', -1) do
-      delete :destroy, :id => endorsements(:one).id
+      delete :destroy, params: { :id => target.id, :format => :js }
     end
-
-    assert_redirected_to endorsements_path
+    assert_response :success
   end
 end

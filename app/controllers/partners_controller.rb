@@ -62,7 +62,7 @@ class PartnersController < ApplicationController
         @partner.activate!
         flash[:notice] = t('partners.new.success')
         session[:goal] = 'partner'
-        format.html { redirect_to 'http://' + @partner.short_name + '.' + current_government.base_url + picture_partner_path(@partner)}
+        format.html { redirect_to 'http://' + @partner.short_name + '.' + current_government.base_url + picture_partner_path(@partner), :allow_other_host => true }
       else
         format.html { render :action => "new" }
       end

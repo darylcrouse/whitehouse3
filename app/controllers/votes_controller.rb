@@ -6,7 +6,7 @@ class VotesController < ApplicationController
   
   def get_priority
     @priority = Priority.find(params[:priority_id])
-    @change = @priority.change.find(params[:change_id])
+    @change = @priority.changes_with_deleted.find(params[:change_id])
   end  
   
   # GET /priorities/1/changes/3/votes
@@ -83,5 +83,14 @@ class VotesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(@change) }
     end
+  end
+
+  private
+
+  # Legacy dead-end: the 2009 tree calls this where a redirect belongs (its
+  # name matches the priority_change_vote route helper). Restored as the
+  # redirect the call site clearly intends.
+  def priority_change_vote(priority, change, vote)
+    redirect_to priority_change_vote_path(priority, change, vote)
   end
 end

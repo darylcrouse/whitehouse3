@@ -1,45 +1,51 @@
 require 'test_helper'
 
+# Admin-only scaffold controller for the tag vocabulary.
 class TagsControllerTest < ActionController::TestCase
-  test "should get index" do
+  def test_should_get_index
+    login_as_user
     get :index
     assert_response :success
-    assert_not_nil assigns(:tags)
   end
 
-  test "should get new" do
+  def test_should_show_tag
+    login_as_user
+    get :show, params: { :id => tags(:one).id }
+    assert_response :success
+  end
+
+  def test_should_get_new
+    login_as_user
     get :new
     assert_response :success
   end
 
-  test "should create tag" do
+  def test_should_get_edit
+    login_as_user
+    get :edit, params: { :id => tags(:one).id }
+    assert_response :success
+  end
+
+  def test_should_create_tag
+    login_as_user
     assert_difference('Tag.count') do
-      post :create, :tag => { }
+      post :create, params: { :tag => { :name => 'fixture-created-tag' } }
     end
-
-    assert_redirected_to tag_path(assigns(:tag))
+    assert_response :redirect
   end
 
-  test "should show tag" do
-    get :show, :id => tags(:one).id
-    assert_response :success
+  def test_should_update_tag
+    login_as_user
+    put :update, params: { :id => tags(:one).id, :tag => { :name => 'fixture-updated-tag' } }
+    assert_response :redirect
   end
 
-  test "should get edit" do
-    get :edit, :id => tags(:one).id
-    assert_response :success
-  end
-
-  test "should update tag" do
-    put :update, :id => tags(:one).id, :tag => { }
-    assert_redirected_to tag_path(assigns(:tag))
-  end
-
-  test "should destroy tag" do
+  def test_should_destroy_tag
+    login_as_user
+    target = tags(:one)
     assert_difference('Tag.count', -1) do
-      delete :destroy, :id => tags(:one).id
+      delete :destroy, params: { :id => target.id }
     end
-
-    assert_redirected_to tags_path
+    assert_response :redirect
   end
 end

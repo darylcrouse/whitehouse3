@@ -113,8 +113,8 @@ class User < ActiveRecord::Base
   
   liquid_methods :first_name, :last_name, :id, :name, :login, :activation_code, :email, :root_url, :profile_url, :unsubscribe_url
   
-  # validates_presence_of     :login, :message => I18n.t('users.new.validation.login')
-  # validates_length_of       :login, :within => 3..40
+  validates_presence_of     :login, :message => I18n.t('users.new.validation.login')
+  validates_length_of       :login, :within => 3..40
   # validates_uniqueness_of   :login, :case_sensitive => false    
   
   validates_presence_of     :email, :unless => [:has_facebook?, :has_twitter?]
@@ -135,17 +135,17 @@ class User < ActiveRecord::Base
   # after_create :check_contacts
   after_create :give_partner_credit
   after_create :give_user_credit
-  # after_create :new_user_signedup
+  after_create :new_user_signedup
   
   # attr_protected :remember_token, :remember_token_expired_at, :activation_code, :salt, :crypted_password, :twitter_token, :twitter_secret
   
   # Virtual attribute for the unencrypted password
   attr_accessor :password, :partner_ids  
   
-  # def new_user_signedup
-  #   ActivityUserNew.create(:user => self, :partner => partner)    
-  #   resend_activation if self.has_email? and self.is_pending?
-  # end
+  def new_user_signedup
+    ActivityUserNew.create(:user => self, :partner => partner)
+    resend_activation if self.has_email? and self.is_pending?
+  end
   
   def check_branch
     return if has_branch? or not Government.current.is_branches?
@@ -547,7 +547,7 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(email, password)
-    u = find :first, :conditions => ["email = ? and status in ('active','pending')", email] # need to get the salt
+    u = find :first, :conditions => ["(email = ? or login = ?) and status in ('active','pending')", email, email] # need to get the salt
     if u && u.authenticated?(password) 
       #u.update_attribute(:loggedin_at,Time.now)
       return u

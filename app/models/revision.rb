@@ -43,6 +43,7 @@ class Revision < ActiveRecord::Base
   
   before_save :truncate_user_agent
   def truncate_user_agent
+    return if self.user_agent.nil?
     self.user_agent = self.user_agent[0..149] # some user agents are longer than 150 chars!
   end
   

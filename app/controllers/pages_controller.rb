@@ -32,6 +32,11 @@ class PagesController < ApplicationController
     @page_title = t('pages.edit.title')
   end
 
+  # GET /pages/:id (public page, looked up by short_name then id)
+  def show
+    @page = Page.find_by_short_name(params[:id]) || Page.find_by_id(params[:id])
+  end
+
   # POST /pages
   # POST /pages.xml
   def create

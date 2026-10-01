@@ -13,21 +13,22 @@ class Blurb < ActiveRecord::Base
   end
 
   def Blurb.fetch_liquid(name)
-    liquid_blurb = Rails.cache.read("blurb-" + name)
-    if not liquid_blurb
+    # Cache the template *source*: Liquid::Template instances contain anonymous
+    # classes and cannot be serialized (which the cache layer does even on
+    # NullStore in Rails 8, and file stores in production).
+    source = Rails.cache.read("blurb-" + name)
+    if source.nil?
       blurb = Blurb.find_by_name(name)
-      if blurb
-        liquid_blurb = Liquid::Template.parse(blurb.content)
-      # else
-      #   liquid_blurb = Liquid::Template.parse(Blurb.fetch_default(name))
-      end
-      Rails.cache.write("blurb-" + name,liquid_blurb)
+      source = blurb ? blurb.content : Blurb.fetch_default(name)
+      Rails.cache.write("blurb-" + name, source.to_s)
     end
-    return liquid_blurb
+    return Liquid::Template.parse(source.to_s)
   end
 
-  # def Blurb.fetch_default(name)
-  #   File.open(RAILS_ROOT + "/app/views/blurbs/defaults/" + name + ".html.liquid", "r").read    
-  # end
+  def Blurb.fetch_default(name)
+    path = Rails.root.join("app/views/blurbs/defaults", "#{name}.html.liquid")
+    return '' unless File.exist?(path)
+    File.read(path)
+  end
 
 end

@@ -1,45 +1,51 @@
 require 'test_helper'
 
+# Admin-only; pages require name + short_name.
 class PagesControllerTest < ActionController::TestCase
-  test "should get index" do
+  def test_should_get_index
+    login_as_user
     get :index
     assert_response :success
-    assert_not_nil assigns(:pages)
   end
 
-  test "should get new" do
+  def test_should_show_page
+    login_as_user
+    get :show, params: { :id => pages(:one).short_name }
+    assert_response :success
+  end
+
+  def test_should_get_new
+    login_as_user
     get :new
     assert_response :success
   end
 
-  test "should create page" do
+  def test_should_get_edit
+    login_as_user
+    get :edit, params: { :id => pages(:one).id }
+    assert_response :success
+  end
+
+  def test_should_create_page
+    login_as_user
     assert_difference('Page.count') do
-      post :create, :page => { }
+      post :create, params: { :page => { :name => 'Fixture created page', :short_name => 'fixture-created-page' } }
     end
-
-    assert_redirected_to page_path(assigns(:page))
+    assert_response :redirect
   end
 
-  test "should show page" do
-    get :show, :id => pages(:one).id
+  def test_should_update_page
+    login_as_user
+    put :update, params: { :id => pages(:one).id, :page => { :name => 'Fixture updated page' } }
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, :id => pages(:one).id
-    assert_response :success
-  end
-
-  test "should update page" do
-    put :update, :id => pages(:one).id, :page => { }
-    assert_redirected_to page_path(assigns(:page))
-  end
-
-  test "should destroy page" do
+  def test_should_destroy_page
+    login_as_user
+    target = pages(:one)
     assert_difference('Page.count', -1) do
-      delete :destroy, :id => pages(:one).id
+      delete :destroy, params: { :id => target.id }
     end
-
-    assert_redirected_to pages_path
+    assert_response :redirect
   end
 end

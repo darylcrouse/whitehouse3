@@ -37,4 +37,7 @@ end
 
 group :test do
   gem "capybara"
+  # Legacy controller tests use `assigns` / `assert_template`, extracted from
+  # Rails core in Rails 5.
+  gem "rails-controller-testing"
 end

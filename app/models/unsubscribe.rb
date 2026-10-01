@@ -21,6 +21,7 @@ class Unsubscribe < ActiveRecord::Base
   
   def update_user
     user = User.find_by_email(email)
+    return if user.nil?
     user.is_comments_subscribed = self.is_comments_subscribed
     user.is_finished_subscribed = self.is_finished_subscribed    
     user.is_votes_subscribed = self.is_votes_subscribed
