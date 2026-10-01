@@ -3,7 +3,12 @@ class User < ActiveRecord::Base
   include AASM
 
   extend ActiveSupport::Concern
-  require 'paperclip'
+  begin
+    require 'paperclip'
+  rescue LoadError
+    # paperclip retired (Rails 2-era attachment library); attachment support
+    # is commented out in this model — see modernization notes.
+  end
     
   scope :active, -> { where("users.status in ('pending','active')") }
   scope :at_least_one_endorsement, -> { where("users.endorsements_count > 0") }
@@ -144,9 +149,9 @@ class User < ActiveRecord::Base
   # end
   
   def check_branch
-    return if has_branch?
-    self.branch = Government.current
-    Government.current 
+    return if has_branch? or not Government.current.is_branches?
+    self.branch = Government.current.default_branch
+    Government.current.default_branch.increment!(:users_count)
     Branch.expire_cache
   end
   
@@ -210,7 +215,9 @@ class User < ActiveRecord::Base
   end
   
   # docs: http://www.vaporbase.com/postings/stateful_authentication
-  aasm column: :status, no_direct_assignment: true do
+  # NOTE: no_direct_assignment intentionally not enabled — the legacy code
+  # assigns the status column directly in many places.
+  aasm column: :status do
     state :passive
     state :pending, initial: true, before_enter: :do_pending
     state :active, before_enter: :do_activate

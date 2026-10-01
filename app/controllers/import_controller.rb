@@ -5,37 +5,18 @@ class ImportController < ApplicationController
   protect_from_forgery :except => :windows
   
   def google
-    if not current_user.attribute_present?("google_token") and not params[:token]
-      redirect_to Contacts::Google.authentication_url(url_for(:only_path => false, :controller => "import", :action => "google"), :session => true)
-      return
-    elsif params[:token]
-      token = Contacts::Google.session_token(params[:token])      
-      current_user.update_attribute(:google_token,token)
-    end 
-    @user = User.find(current_user.id)
-    @user.is_importing_contacts = true
-    @user.imported_contacts_count = 0
-    @user.save_with_validation(false)
-    Delayed::Job.enqueue LoadGoogleContacts.new(@user.id), 5
-    redirect_to :action => "status"
+    # Google Contacts shut its API down and the legacy `contacts` gem is
+    # retired; this import flow cannot authenticate anymore.
+    import_unavailable
   end
   
   def yahoo
-    if not request.request_uri.include?('token')
-      redirect_to Contacts::Yahoo.new.get_authentication_url
-      return
-    end
-    @user = User.find(current_user.id)
-    @user.is_importing_contacts = true
-    @user.imported_contacts_count = 0
-    @user.save_with_validation(false)
-    Delayed::Job.enqueue LoadYahooContacts.new(@user.id,request.request_uri), 5
-    redirect_to :action => "status"
+    import_unavailable
   end  
 
   def windows
     if not request.post?
-      redirect_to Contacts::WindowsLive.new.get_authentication_url 
+      import_unavailable
       return
     end
     @user = User.find(current_user.id)
@@ -44,6 +25,13 @@ class ImportController < ApplicationController
     @user.save_with_validation(false)
     Delayed::Job.enqueue LoadWindowsContacts.new(@user.id,request.raw_post), 5
     redirect_to :action => "status"    
+  end
+
+  private
+
+  def import_unavailable
+    flash[:error] = t('import.unavailable', default: 'Importing contacts from this provider is no longer available.')
+    redirect_to action: 'status'
   end
 
   def status

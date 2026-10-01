@@ -6,7 +6,7 @@ class AdminController < ApplicationController
     if User.adapter == 'postgresql'
       users = User.find(:all, :conditions => "status = 'active'", :order => "RANDOM()", :limit => 1)
     else
-      users = User.find(:all, :conditions => "status = 'active'", :order => "rand()", :limit => 1)
+      users = User.find(:all, :conditions => "status = 'active'", :order => "RANDOM()", :limit => 1)
     end
     self.current_user = users[0]
     flash[:notice] = t('admin.impersonate', :user_name => users[0].name)

@@ -6,7 +6,7 @@
 	<%= image_tag @partner.logo.url(:medium), :border => 0 %>
 <% end %>
 
-<% form_for(:partner, :url => {:action => "picture_save" }, :html => {:multipart => true}) do |f| %>
+<%= form_for(:partner, :url => {:action => "picture_save" }, :html => {:multipart => true}) do |f| %>
 <%= f.error_messages %>
 
 <%= f.file_field :logo %><br/>

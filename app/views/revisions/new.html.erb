@@ -7,7 +7,7 @@
 			<p>
 			<%= blurb("point_revision_new")%>
 			<p>
-			<% form_for :revision, :url => point_revisions_path(@point)  do |f| %>
+			<%= form_for :revision, :url => point_revisions_path(@point)  do |f| %>
 			  <%= f.error_messages :header_message => t('points.new.errors.header_message'), :message => t('points.new.errors.message') %>
 			<p>
 		    <%= t('points.new.name.label')%><br />
@@ -34,7 +34,7 @@
 			
 			<p>
 			<%= t('points.new.comment.label') %><br/>
-			<% fields_for :comment do |c| %>
+			<%= fields_for :comment do |c| %>
 				<%= c.text_field :content, :size => 50 %>	
 			<% end %>
 			</p>

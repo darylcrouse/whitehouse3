@@ -104,7 +104,7 @@ class RevisionsController < ApplicationController
     @revision.destroy
 
     respond_to do |format|
-      format.html { redirect_to(revisions_url) }
+      format.html { redirect_to(@point) }
       format.xml  { head :ok }
     end
   end

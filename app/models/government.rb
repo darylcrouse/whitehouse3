@@ -1,7 +1,12 @@
 class Government < ActiveRecord::Base
   include LiquidDroppableHelper
   extend ActiveSupport::Concern
-  require 'paperclip'
+  begin
+    require 'paperclip'
+  rescue LoadError
+    # paperclip retired (Rails 2-era attachment library); attachment support
+    # is commented out in this model — see modernization notes.
+  end
   
   scope :active, -> { where(status: 'active') }
   scope :pending, -> { where(status: 'pending') }
@@ -88,7 +93,9 @@ class Government < ActiveRecord::Base
   end
   
   def self.current  
-    Thread.current[:government]  
+    # Legacy code sets this per request/thread; fall back to the (normally
+    # single) government record so console, runner, rake tasks and jobs work.
+    Thread.current[:government] ||= Government.order(:id).first
   end  
   
   def self.current=(government)  
@@ -106,7 +113,7 @@ class Government < ActiveRecord::Base
   end
 
   def base_url
-    return ENV['DOMAIN']
+    ENV['DOMAIN'].presence || 'localhost:3000'
   end
   
   def homepage_url

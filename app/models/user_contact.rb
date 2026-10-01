@@ -37,7 +37,7 @@ class UserContact < ActiveRecord::Base
       transitions from: :unsent, to: :tosend
     end
     
-    event :send_event, :send do
+    event :send_event do
       transitions from: :tosend, to: :sent
     end
     

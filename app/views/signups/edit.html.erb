@@ -1,6 +1,6 @@
 <h1>Editing signup</h1>
 
-<% form_for(@signup) do |f| %>
+<%= form_for(@signup) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -21,4 +21,4 @@
 <% end %>
 
 <%= link_to 'Show', @signup %> |
-<%= link_to 'Back', signups_path %>
+<%= link_to 'Back', signup_records_path %>

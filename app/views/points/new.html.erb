@@ -3,7 +3,7 @@
 <p>
 <%= blurb('point_new')%>
 		
-<% form_for :point, :url => priority_points_path(@priority)  do |f| %>
+<%= form_for :point, :url => priority_points_path(@priority)  do |f| %>
 
   <%= f.error_messages :header_message => t('points.new.errors.header_message'), :message => t('points.new.errors.message') %>
 

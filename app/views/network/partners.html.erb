@@ -10,10 +10,12 @@
 		<% for partner in row_partners %>
 			<td valign="middle" align="center">
 			<div class="partner_logo">
-				<% if partner.has_website? and partner.has_picture? %>
-					<a href="<%= partner.website_link %>"><%= image_tag partner.logo.url(:icon_140), :border => 0 %></a>		
-				<% elsif partner.has_picture? and not partner.has_website? %>
-					<%= image_tag partner.logo.url(:icon_140), :border => 0 %>
+				<% if partner.logo.attached? %>
+					<% if partner.has_website? %>
+						<a href="<%= partner.website_link %>"><%= image_tag url_for(partner.logo), :border => 0 %></a>
+					<% else %>
+						<%= image_tag url_for(partner.logo), :border => 0 %>
+					<% end %>
 				<% end %>
 			</div>
 			</td>

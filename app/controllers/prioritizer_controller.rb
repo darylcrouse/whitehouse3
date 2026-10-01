@@ -114,8 +114,8 @@ class PrioritizerController < ApplicationController
         @endorsement1 = current_user.endorsements.active.find(:all, :conditions => "position > 5", :order => "RANDOM()", :limit => 1)[0]
         @endorsement2 = current_user.endorsements.active.find(:all, :conditions => "position between #{(@endorsement1.position/1.5).to_i-2} and #{(@endorsement1.position/1.5).to_i+2} and id <> #{@endorsement1.id.to_s}", :order => "RANDOM()", :limit => 1)[0]
       else
-        @endorsement1 = current_user.endorsements.active.find(:all, :conditions => "position > 5", :order => "rand()", :limit => 1)[0]
-        @endorsement2 = current_user.endorsements.active.find(:all, :conditions => "position between #{(@endorsement1.position/1.5).to_i-2} and #{(@endorsement1.position/1.5).to_i+2} and id <> #{@endorsement1.id.to_s}", :order => "rand()", :limit => 1)[0]
+        @endorsement1 = current_user.endorsements.active.find(:all, :conditions => "position > 5", :order => "RANDOM()", :limit => 1)[0]
+        @endorsement2 = current_user.endorsements.active.find(:all, :conditions => "position between #{(@endorsement1.position/1.5).to_i-2} and #{(@endorsement1.position/1.5).to_i+2} and id <> #{@endorsement1.id.to_s}", :order => "RANDOM()", :limit => 1)[0]
       end
     end
     
@@ -128,9 +128,9 @@ class PrioritizerController < ApplicationController
         end
       else
         if current_user.endorsements_count > 3
-          @priority = Priority.published.find(:all, :conditions => ["id not in (?)",current_priority_ids], :order => "rand()", :limit => 1)[0]
+          @priority = Priority.published.find(:all, :conditions => ["id not in (?)",current_priority_ids], :order => "RANDOM()", :limit => 1)[0]
         else
-          @priority = Priority.published.find(:all, :conditions => ["position <= ?",Endorsement.max_position], :order => "rand()", :limit => 1)[0]
+          @priority = Priority.published.find(:all, :conditions => ["position <= ?",Endorsement.max_position], :order => "RANDOM()", :limit => 1)[0]
         end
       end
     end

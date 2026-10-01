@@ -13,7 +13,7 @@
     <td><%=h signup.user_id %></td>
     <td><%=h signup.is_optin %></td>
     <td><%= link_to 'Show', signup %></td>
-    <td><%= link_to 'Edit', edit_signup_path(signup) %></td>
+    <td><%= link_to 'Edit', edit_signup_record_path(signup) %></td>
     <td><%= link_to 'Destroy', signup, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
@@ -21,4 +21,4 @@
 
 <br />
 
-<%= link_to 'New signup', new_signup_path %>
+<%= link_to 'New signup', new_signup_record_path %>

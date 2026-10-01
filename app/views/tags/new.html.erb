@@ -7,7 +7,7 @@
 		</td>
 		<td valign="top" style="padding-left: 20px;">
 		
-			<% form_for(@tag) do |f| %>
+			<%= form_for(@tag) do |f| %>
 
 			  <%= f.error_messages :header_message => t('tags.errors.header_message', :tags_name => current_government.tags_name.downcase) %>
 

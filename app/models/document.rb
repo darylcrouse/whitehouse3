@@ -23,9 +23,9 @@ class Document < ActiveRecord::Base
 
   has_many :author_users, -> { distinct }, through: :revisions, source: :user, class_name: "User"
 
-  has_many :qualities, class_name: "DocumentQuality", -> { order(created_at: :desc) }, dependent: :destroy
-  has_many :helpfuls, class_name: "DocumentQuality", -> { where(value: 1).order(created_at: :desc) }
-  has_many :unhelpfuls, class_name: "DocumentQuality", -> { where(value: 0).order(created_at: :desc) }
+  has_many :qualities, -> { order(created_at: :desc) }, class_name: "DocumentQuality", dependent: :destroy
+  has_many :helpfuls, -> { where(value: 1).order(created_at: :desc) }, class_name: "DocumentQuality"
+  has_many :unhelpfuls, -> { where(value: 0).order(created_at: :desc) }, class_name: "DocumentQuality"
 
   has_many :capitals, as: :capitalizable, dependent: :nullify
   

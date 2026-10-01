@@ -18,7 +18,7 @@
 		<%= t('bulletins.new.name') %>
 		<% end %>
 	</div>
-	<% form_for comment, :url => bulletins_url, remote: true, :loading=>"Form.Element.disable('bulletin-form-submit')" do |f| %>		
+	<%= form_for comment, :url => bulletins_url, remote: true, :loading=>"Form.Element.disable('bulletin-form-submit')" do |f| %>		
 		<%= render 'shared/error_messages', model: comment %>
 		<%= f.text_area :content, :size => "70x2", :id => "bulletin_content" %><br/>
 		<div style="padding-top: 3px;">
@@ -29,14 +29,14 @@
 							<div id="bulletin_error" class="comment_error"></div>
 						</td>
 					<td valign="top" style="padding-left: 3px;" align="right">
-						<% fields_for Activity.new do |a| %>						
+						<%= fields_for Activity.new do |a| %>						
 							<% if @priority %>
 								<input type="hidden" name="activity[priority_id]" value="<%= @priority.id %>">
 							<% elsif @tag %>
-								<%= a.select("priority_id", Priority.tagged_with(@tag_names, :on => :issues).published.top_rank.find(:all, :select => "priorities.id, priorities.name").collect {|p| [ p.name[0..40], p.id]})%>
+								<%= a.select("priority_id", Priority.tagged_with(@tag_names, :on => :issues).published.top_rank.collect {|p| [ p.name[0..40], p.id]})%>
 							<% else %>
 								<% if not @user or @user == current_user %>
-									<%= a.select("priority_id", current_user.endorsements.by_position.active.find(:all, :select => "endorsements.priority_id, priorities.name", :include => :priority).collect {|p| [ p.priority_name[0..40], p.priority_id ] }, {:include_blank => t('bulletins.new.priority_dropdown')}) %>
+									<%= a.select("priority_id", current_user.endorsements.by_position.active.includes(:priority).collect { |e| [ e.priority_name.to_s[0..40], e.priority_id ] }, {:include_blank => t('bulletins.new.priority_dropdown')}) %>
 								<% end %>
 							<% end %>
 							<% if @point %>

@@ -1,4 +1,5 @@
 class Point < ActiveRecord::Base
+  include AASM
 
   scope :published, -> { where(status: 'published') }
   scope :by_helpfulness, -> { order(score: :desc) }

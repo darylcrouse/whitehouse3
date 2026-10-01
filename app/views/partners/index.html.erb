@@ -2,7 +2,7 @@
 <table border="0" cellspacing="0" cellpadding="0">
 	<tr><td valign="top" width="270">
 
-		<% form_for(@partner) do |f| %>
+		<%= form_for(@partner) do |f| %>
 		  <%= f.error_messages %>
 			<%= render :partial => "partners/form", :locals => {:f => f}%>
 		  <p>

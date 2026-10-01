@@ -3,7 +3,7 @@
 <p>
 <%= blurb('ad_new')%>
 <p>
-<% form_for(@ad, :url => priority_ads_path(@priority)) do |f| %>
+<%= form_for(@ad, :url => priority_ads_path(@priority)) do |f| %>
 
 	<%= f.error_messages :header_message => t('ads.new.errors.header_message') %>
 

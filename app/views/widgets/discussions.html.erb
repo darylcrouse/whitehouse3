@@ -1,6 +1,6 @@
 <div id="hp_intro"><%= @page_title %></div>
 
-<% form_for(@widget) do |f| %>
+<%= form_for(@widget) do |f| %>
 	<%= f.hidden_field :controller_name %>
 	<table border="0" cellspacing="0" cellpadding="0">
 		<tr>
@@ -25,5 +25,5 @@
 <%= observe_form(:new_widget, :url => {:action => :preview}, :update => :widget_preview)%>
 
 <div id="widget_preview">
-<%= render :file => "widgets/preview.html.erb" %>
+<%= render :template => "widgets/preview" %>
 </div>

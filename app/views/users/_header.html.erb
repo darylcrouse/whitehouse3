@@ -7,7 +7,9 @@
 <% elsif logged_in? and @user.id == current_user.id %>
 	<%= link_to image_tag("upload_pic.gif", :size => "96x96", :border => 0), picture_settings_url %>
 <% else %>
-	<%= image_tag current_government.buddy_icon.url(:icon_96), :size => "96x96", :border => 0 %>
+	<% if current_government.buddy_icon.attached? %>
+		<%= image_tag current_government.buddy_icon.url(:icon_96), :size => "96x96", :border => 0 %>
+	<% end %>
 <% end %>
 </div>
 

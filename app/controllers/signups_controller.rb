@@ -74,7 +74,7 @@ class SignupsController < ApplicationController
     @signup.destroy
 
     respond_to do |format|
-      format.html { redirect_to(signups_url) }
+      format.html { redirect_to(signup_records_url) }
     end
   end
 end

@@ -11,7 +11,7 @@ class DocumentRevision < ActiveRecord::Base
   has_many :notifications, :as => :notifiable, :dependent => :destroy
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  enum status: { draft: 0, archived: 1, published: 2, deleted: 3 }
+  enum :status, { draft: 0, archived: 1, published: 2, deleted: 3 }
 
   aasm column: :status, enum: true do
     state :draft

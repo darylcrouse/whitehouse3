@@ -19,7 +19,7 @@ class LoadYahooContacts
     yahoo = Contacts::Yahoo.new
     ycontacts = yahoo.contacts(@path)
     if ycontacts.empty?
-      break 
+      return
     end
     for c in ycontacts
       begin

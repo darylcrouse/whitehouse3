@@ -24,7 +24,7 @@
 
 			<div id="new_user_form">
 
-				<% form_for :user, :url => { :controller => "install", :action => "create_admin_user"} do |f| -%>
+				<%= form_for :user, :url => { :controller => "install", :action => "create_admin_user"} do |f| -%>
 				<%= error_messages_for :user, :header_message => t('users.new.error_message') %>
 	
 				<div class="field">

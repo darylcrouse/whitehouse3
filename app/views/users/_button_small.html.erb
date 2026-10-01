@@ -15,11 +15,11 @@
 	
 <% else %>
 	<span class="priority_add" id="user_add_<%= user.id.to_s %>">
-		<%= link_tot('follow.capitalize'), { :url => follow_user_path(user, :region => "user_left", :value => 1), :loading=>"update('#{t('follow.ing')}...')" }, :class => "priority_add_link", :title => t('follow.title') %>	
+		<%= link_to t('follow.capitalize'), { :url => follow_user_path(user, :region => "user_left", :value => 1), :loading=>"update('#{t('follow.ing')}...')" }, :class => "priority_add_link", :title => t('follow.title') %>	
 	</span>
 	<span class="endorse_or"><%= t('or')%></span>
 	<span class="priority_add" id="user_add_<%= user.id.to_s %>">
-		<%= link_tot('ignore.capitalize'), { :url => follow_user_path(user, :region => "user_left", :value => -1), :loading=>"update('#{t('ignore.ing')}...')" }, :class => "priority_add_link", :title => t('ignore.title') %>	
+		<%= link_to t('ignore.capitalize'), { :url => follow_user_path(user, :region => "user_left", :value => -1), :loading=>"update('#{t('ignore.ing')}...')" }, :class => "priority_add_link", :title => t('ignore.title') %>	
 	</span>	
 <% end %>
 </span>

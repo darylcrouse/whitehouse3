@@ -3,5 +3,5 @@
 <% elsif Facebooker.api_key and user.has_facebook? and not request.xhr? %>
 	<a href="<%= url_for user %>"><fb:profile-pic uid="<%= user.facebook_uid %>" width="24px" border="0" linked="false" /></fb:profile-pic></a>
 <% else %>
-	<a href="<% if logged_in? and current_user.id == user.id %><%= url_for picture_settings_url %><% else %><%= url_for user %><% end %>"><%= image_tag current_government.buddy_icon.url(:icon_24), :border => 0 %></a>
+	<a href="<% if logged_in? and current_user.id == user.id %><%= url_for picture_settings_url %><% else %><%= url_for user %><% end %>"><% if current_government.buddy_icon.attached? %><%= image_tag current_government.buddy_icon.url(:icon_24), :border => 0 %><% end %></a>
 <% end %>

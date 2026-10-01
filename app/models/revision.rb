@@ -17,7 +17,7 @@ class Revision < ActiveRecord::Base
   liquid_methods :id, :user, :url, :text
   
   # docs: http://www.practicalecommerce.com/blogs/post/122-Rails-Acts-As-State-Machine-Plugin
-  aasm column: :status, no_direct_assignment: true do
+  aasm column: :status do
     state :draft, initial: true
     state :archived, enter: :do_archive
     state :published, enter: :do_publish

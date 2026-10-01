@@ -2,7 +2,7 @@
 
 <%= image_tag @user.buddy_icon.url(:icon_96), :border => 0 %>
 
-<% form_for(User.new, :url => {:action => "picture_save" }, :html => {:multipart => true}) do |f| %>
+<%= form_for(User.new, :url => {:action => "picture_save" }, :html => {:multipart => true}) do |f| %>
 <%= f.error_messages %>
 
 <p><label for="picture"><%= t('settings.picture.upload')%></label>

@@ -81,7 +81,7 @@ class VotesController < ApplicationController
     @vote.destroy
 
     respond_to do |format|
-      format.html { redirect_to(votes_url) }
+      format.html { redirect_to(@change) }
     end
   end
 end

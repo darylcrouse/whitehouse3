@@ -4,7 +4,7 @@
 
 <% if @contacts.any? %>
 	<p><%= t('contacts.members.intro', :contacts_count => @contacts.size, :government_name => current_government.name)%>
-	<% form_remote_tag :loading => "Element.show('status');", :url => multiple_user_followings_path(current_user), :method => :put, :html => {:id => "multiple_contacts_form"} do %>
+	<%= form_remote_tag :loading => "Element.show('status');", :url => multiple_user_followings_path(current_user), :method => :put, :html => {:id => "multiple_contacts_form"} do %>
 	
 	<% if @contacts.size > 1 %>
 		<%= link_to_function(t('check_uncheck'),"toggleAll('select');return false;") %>

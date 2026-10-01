@@ -6,6 +6,7 @@
 
 <% cache("user_priority_chart-#{user.id.to_s}-#{user.endorsements_count.to_s}") do %> 
 <% cu = user.index_chart_hash %>
+<% if cu[:charts].any? %>
 <div class="priority_chart">
 <table border="0" cellspacing="0" cellpadding="0">
 	<tr>
@@ -41,4 +42,5 @@
 	</tr>	
 </table>
 </div>
+<% end %>
 <% end %>

@@ -1,6 +1,6 @@
 class Picture < ActiveRecord::Base
   
-  require 'RMagick'
+  require 'rmagick'
   
   has_one :owner, :class_name => "User", :foreign_key => "picture_id"
   

@@ -147,36 +147,42 @@ class Endorsement < ActiveRecord::Base
   end  
   
   # This has the effect of moving all the higher items up one.
-  def decrement_positions_on_higher_items(position)
+  def decrement_positions_on_higher_items(position = nil)
+    position = send(position_column).to_i if position.nil?
     Endorsement.update_all(
       "#{position_column} = (#{position_column} - 1), score = score + value*#{user.score}", "#{scope_condition} AND #{position_column} <= #{position}"
     )
   end
 
   # This has the effect of moving all the lower items up one.
-  def decrement_positions_on_lower_items
+  def decrement_positions_on_lower_items(position = nil)
     return unless in_list?
+    position = send(position_column).to_i if position.nil?
     Endorsement.update_all(
-      "#{position_column} = (#{position_column} - 1), score = score + value*#{user.score}", "#{scope_condition} AND #{position_column} > #{send(position_column).to_i}"
+      "#{position_column} = (#{position_column} - 1), score = score + value*#{user.score}", "#{scope_condition} AND #{position_column} > #{position}"
     )
   end
 
   # This has the effect of moving all the higher items down one.
-  def increment_positions_on_higher_items
+  def increment_positions_on_higher_items(position = nil)
     return unless in_list?
+    position = send(position_column).to_i if position.nil?
     Endorsement.update_all(
-      "#{position_column} = (#{position_column} + 1), score = score - value*#{user.score}", "#{scope_condition} AND #{position_column} < #{send(position_column).to_i}")
+      "#{position_column} = (#{position_column} + 1), score = score - value*#{user.score}", "#{scope_condition} AND #{position_column} < #{position}")
   end
 
   # This has the effect of moving all the lower items down one.
-  def increment_positions_on_lower_items(position)
+  def increment_positions_on_lower_items(position = nil, avoid_id = nil)
+    position = send(position_column).to_i if position.nil?
+    conditions = "#{scope_condition} AND #{position_column} >= #{position}"
+    conditions += " AND #{Endorsement.table_name}.id != #{avoid_id.to_i}" if avoid_id
     Endorsement.update_all(
-      "#{position_column} = (#{position_column} + 1), score = score - value*#{user.score}", "#{scope_condition} AND #{position_column} >= #{position}"
+      "#{position_column} = (#{position_column} + 1), score = score - value*#{user.score}", conditions
    )
   end
 
   # Increments position (<tt>position_column</tt>) of all items in the list.
-  def increment_positions_on_all_items
+  def increment_positions_on_all_items(position = nil)
     Endorsement.update_all(
       "#{position_column} = (#{position_column} + 1), score = score - value*#{user.score}",  "#{scope_condition}"
     )

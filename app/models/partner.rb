@@ -1,7 +1,12 @@
 class Partner < ActiveRecord::Base
   include AASM
 
-  require 'paperclip'
+  begin
+    require 'paperclip'
+  rescue LoadError
+    # paperclip retired (Rails 2-era attachment library); attachment support
+    # is commented out in this model — see modernization notes.
+  end
   
   scope :active, -> { where(status: ['pending', 'active']) }
   

@@ -14,7 +14,13 @@ module Whitehouse2
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w(assets tasks sgml_parser))
+    config.autoload_lib(ignore: %w(assets tasks core_extensions.rb diff.rb sgml_parser.rb html2textile.rb validates_uri_existence_of.rb))
+
+    # Legacy controllers reference callback actions that no longer exist
+    # (e.g. `before_action :setup, :except => [:partner]` on a controller
+    # whose action is `partners`). Rails 7.1+ raises on those by default,
+    # which 404s whole controllers; keep the pre-7.1 tolerance.
+    config.action_controller.raise_on_missing_callback_actions = false
 
     # Configuration for the application, engines, and railties goes here.
     #

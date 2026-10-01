@@ -68,7 +68,7 @@ class BranchPrioritiesController < ApplicationController
     if User.adapter == 'postgresql'
       @priorities = @branch.endorsements.published.paginate :order => "RANDOM()", :include => [:priority, :branch], :page => params[:page], :per_page => params[:per_page]
     else
-      @priorities = @branch.endorsements.published.paginate :order => "rand()", :include => [:priority, :branch], :page => params[:page], :per_page => params[:per_page]
+      @priorities = @branch.endorsements.published.paginate :order => "RANDOM()", :include => [:priority, :branch], :page => params[:page], :per_page => params[:per_page]
     end
     get_endorsements
     respond_to do |format|

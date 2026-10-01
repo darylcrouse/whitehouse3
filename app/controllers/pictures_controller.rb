@@ -4,7 +4,7 @@ class PicturesController < ApplicationController
   
   before_action :get_picture
 
-  require 'RMagick'
+  require 'rmagick'
 
   def get # just returns the entire image, same as it was added to the database
     response.headers['Cache-Control'] = 'public'

@@ -1,7 +1,7 @@
 class String
 
 	def last
-	  self[self.length-1].chr
+	  self[self.length-1]
 	end
 
 	def possessive
@@ -59,7 +59,7 @@ class Time
   
 end
 
-require 'rss/2.0'
+require 'rss'
 require 'open-uri'
 
 class RssReader
@@ -67,7 +67,7 @@ class RssReader
   def self.posts_for(feed_url, length=2, perform_validation=false)
     posts = []
     begin
-      open(feed_url) do |rss|
+      URI.open(feed_url) do |rss|
         posts = RSS::Parser.parse(rss, perform_validation).items
       end
     rescue

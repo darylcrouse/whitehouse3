@@ -7,7 +7,7 @@
 		</td>
 		<td valign="top">
 			
-			<% form_for(@email_template) do |f| %>
+			<%= form_for(@email_template) do |f| %>
 			<%= f.error_messages %>
 				<input type="hidden" name="email_template[name]" value="<%= h(params[:name]) %>">
 				<div class="field">

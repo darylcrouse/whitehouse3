@@ -5,7 +5,7 @@
 <p>	
 <%= image_tag current_government.fav_icon.url(:icon_16), :border => 0 %>
 
-<% form_for(current_government, :url => {:action => "fav_icon_save" }, :html => {:multipart => true}) do |f| %>
+<%= form_for(current_government, :url => {:action => "fav_icon_save" }, :html => {:multipart => true}) do |f| %>
 <%= f.error_messages %>
 
 <%= f.file_field :fav_icon %><br/>

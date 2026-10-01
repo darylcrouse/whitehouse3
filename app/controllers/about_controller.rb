@@ -22,8 +22,33 @@ class AboutController < ApplicationController
       return
     else
       @page = Page.find_by_short_name(params[:id])
-      @page_title = @page.name
+      if @page
+        @page_title = @page.name
+      elsif params[:id] == 'press'
+        redirect_to action: :faq
+      else
+        redirect_to action: :index
+      end
     end
   end
-  
+
+  # The menu links target these as actions; /about/<name> is also serviced by
+  # #show via the resources route above.
+  def faq
+    @page_title = t('about.faq', :government_name => current_government.name)
+  end
+
+  def privacy
+    @page_title = t('about.privacy', :government_name => current_government.name)
+  end
+
+  def rules
+    @page_title = t('about.rules', :government_name => current_government.name)
+  end
+
+  # No press page carries over from the original; send readers to the FAQ.
+  def press
+    redirect_to action: :faq
+  end
+
 end

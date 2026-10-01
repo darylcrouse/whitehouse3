@@ -11,8 +11,12 @@ Rails.application.routes.draw do
     resource :password
     resource :profile
     resources :messages
-    resources :followings, only: [:index, :show, :update], collection: { multiple: :put }
-    resources :contacts, controller: :user_contacts, path: 'contacts', as: 'contacts', only: [:index] do
+    resources :followings, only: [:index, :new, :edit, :show, :update] do
+      collection do
+        put :multiple
+      end
+    end
+    resources :contacts, controller: :user_contacts, path: 'contacts', as: 'contacts', only: [:index, :new, :create] do
       collection do
         get 'following'
         get 'members'
@@ -25,11 +29,6 @@ Rails.application.routes.draw do
     collection do
       get 'endorsements'
       post 'order'
-      get 'ads'
-      get 'priorities'
-      get 'signups'
-      get 'legislators'
-      post 'legislators_save'
     end
 
     member do
@@ -53,6 +52,11 @@ Rails.application.routes.draw do
       post 'endorse'
       get 'reset_password'
       get 'resend_activation'
+      get 'ads'
+      get 'priorities'
+      get 'signups'
+      get 'legislators'
+      post 'legislators_save'
     end
   end
 
@@ -152,7 +156,7 @@ Rails.application.routes.draw do
     get :unhide
   end
   resources :followings, controller: :following_discussions, as: "followings"
-  resources :comments, only: [] do
+  resources :comments do
     collection do
       get :more
     end
@@ -164,6 +168,14 @@ Rails.application.routes.draw do
     end
   end
 end
+
+  # Flat versions of nested resources — the original app resolved these
+  # through Rails 2's default routes (e.g. /comments/:id).
+  resources :comments
+  resources :changes
+  resources :ads
+  resources :messages
+  resources :followings
 
   resources :points do
     member do
@@ -271,7 +283,7 @@ end
         get :finished
       end
     end
-    resources :users, controller: :branch_users, as: "users", only: [] do
+    resources :users, controller: :branch_users, as: "users" do
       collection do
         get :talkative
         get :twitterers
@@ -281,14 +293,15 @@ end
     end
   end
 
-  resources :searches, only: [] do
+  resources :searches do
     collection do
       get :points
       get :documents
     end
   end
 
-  resources :signups, :endorsements, :passwords, :unsubscribes, :notifications, :pages, :about, :tags
+  resources :signups, as: "signup_records"
+  resources :endorsements, :passwords, :unsubscribes, :notifications, :pages, :about, :tags
 
   resource :session
 
@@ -304,11 +317,128 @@ end
 
   # restful_authentication routes
   get "/activate/:activation_code", to: "users#activate", as: "activate", activation_code: nil
-  get "/signup", to: "users#new", as: "signup_page"
+  get "/signup", to: "users#new", as: "signup"
   get "/login", to: "sessions#new", as: "login"
   delete "/logout", to: "sessions#destroy", as: "logout"
   get "/unsubscribe", to: "unsubscribes#new", as: "unsubscribe_page"
   get '/network', to: 'network#index'
+  scope '/network', controller: 'network' do
+    get :talkative
+    get :ambassadors
+    get :twitterers
+    get :unverified
+    get :warnings
+    get :suspended
+    get :probation
+    get :deleted
+    get :newest
+    get :find
+    get :search
+    get :partners
+  end
+
+  # Legacy non-RESTful controllers: Rails 2's default routes
+  # (map.connect ':controller/:action/:id') made every action reachable at
+  # /<controller>/<action>. Modern Rails removed that catch-all, so the
+  # actions referenced from the views are listed explicitly here.
+  scope '/about', controller: 'about' do
+    get :faq
+    get :privacy
+    get :rules
+    get :press
+  end
+
+  scope '/admin', controller: 'admin' do
+    get :buddy_icon
+    get :fav_icon
+    get :picture
+  end
+
+  scope '/briefing', controller: 'briefing' do
+    get :contributors
+    get :documents
+    get :points
+  end
+
+  scope '/charts', controller: 'charts' do
+    get :gainers_24hr
+    get :gainers_7days
+    get :gainers_30days
+    get :issues
+    get :losers_24hr
+    get :losers_7days
+    get :losers_30days
+  end
+
+  scope '/facebook', controller: 'facebook' do
+    get :invite
+    get :multiple
+  end
+
+  scope '/import', controller: 'import' do
+    get :google
+    get :windows
+    get :yahoo
+  end
+
+  scope '/inbox', controller: 'inbox' do
+    get :notifications
+    get :sent
+  end
+
+  scope '/install', controller: 'install' do
+    get :create
+    get :create_admin_user
+  end
+
+  scope '/news', controller: 'news' do
+    get :activities
+    get :capital
+    get :changes
+    get :changes_activity
+    get :changes_voting
+    get :discussions
+    get :obama
+    get :points
+    get :your_activities
+    get :your_capital
+    get :your_changes
+    get :your_discussions
+    get :your_followers_activities
+    get :your_followers_capital
+    get :your_followers_discussions
+    get :your_followers_points
+    get :your_network_activities
+    get :your_network_capital
+    get :your_network_discussions
+    get :your_network_points
+    get :your_points
+    get :your_priorities_created_activities
+    get :your_priorities_created_changes
+    get :your_priorities_created_discussions
+    get :your_priorities_created_obama
+    get :your_priorities_created_points
+    get :your_priority_activities
+    get :your_priority_changes_activity
+    get :your_priority_discussions
+    get :your_priority_obama
+    get :your_priority_points
+  end
+
+  scope '/prioritizer', controller: 'prioritizer' do
+    get :same
+    get :winner1
+    get :winner2
+  end
+
+  scope '/twitter', controller: 'twitter' do
+    get :create
+  end
+
+  scope '/vote', controller: 'vote' do
+    get :no
+    get :yes
+  end
 
   # non restful routes
   get "/yours", to: "priorities#yours", as: "yours"
@@ -327,4 +457,13 @@ end
       get ":action/(:id)", action: /\w+/
     end
   end
+
+  # Rails 2-style default routes. The original app routed :controller/:action/:id
+  # for everything, so any legacy action pair was reachable. Restored here as
+  # the lowest-priority catch-all (every explicit route above wins). The action
+  # constraint keeps hyphenated slugs (ids) from being mistaken for actions, so
+  # genuinely unknown paths still 404 as before.
+  match ":controller(/:action(/:id))(.:format)",
+        via: %i[get post],
+        constraints: { controller: /[a-z_]+/, action: /[a-z_0-9]+/i }
 end

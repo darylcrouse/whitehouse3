@@ -1,11 +1,3 @@
-module Enumerable
-  def reduce(init)
-    result = init
-    each { |item| result = yield(result, item) }
-    result
-  end
-end
-
 class Object
   def nil_or_empty?
     nil? or empty?
@@ -339,7 +331,7 @@ module Diff
 
     def count_leading(line, ch)
       count, size = 0, line.size
-      count += 1 while count < size and line[count].chr == ch
+      count += 1 while count < size and line[count] == ch
       count
     end
   end

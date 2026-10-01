@@ -9,7 +9,7 @@
 		
 <% else %>
 	<span class="priority_add" id="activity_add_<%= activity.id.to_s %>">
-		<%= link_tot('follow.capitalize'), { :url => activity_followings_path(activity, :region => "activity_show"), :method => :post, :loading=>"update('#{t('follow.ing')}...')" }, :class => "priority_add_link", :title => t('follow.title') %>	
+		<%= link_to t('follow.capitalize'), { :url => activity_followings_path(activity, :region => "activity_show"), :method => :post, :loading=>"update('#{t('follow.ing')}...')" }, :class => "priority_add_link", :title => t('follow.title') %>	
 	</span>
 <% end %>
 <%= t('following_discussions.new.name')%>

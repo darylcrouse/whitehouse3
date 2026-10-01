@@ -15,11 +15,11 @@
 	
 <% else %>
 	<span class="priority_add" id="priority_add_<%= priority.id.to_s %>">
-		<%= link_tot('endorse.name'), { :url => endorse_priority_path(priority, :referral_id => (@user || nil), :region => region, :value => 1, :branch_id => branch_endorsement.branch_id), :loading=>"update('#{t('endorse.ing')}...')" }, :class => "priority_add_link", :title =>  t('endorse.title') %>		
+		<%= link_to t('endorse.name'), { :url => endorse_priority_path(priority, :referral_id => (@user || nil), :region => region, :value => 1, :branch_id => branch_endorsement.branch_id), :loading=>"update('#{t('endorse.ing')}...')" }, :class => "priority_add_link", :title =>  t('endorse.title') %>		
 	</span>
 	<span class="endorse_or"><%= t('or') %></span>
 	<span class="priority_add" id="priority_add_<%= priority.id.to_s %>">
-		<%= link_tot('oppose.name'), { :url => endorse_priority_path(priority, :referral_id => (@user || nil), :region => region, :value => -1, :branch_id => branch_endorsement.branch_id), :loading=>"update('#{t('oppose.ing')}...')" }, :class => "priority_add_link", :title =>  t('oppose.title') %>
+		<%= link_to t('oppose.name'), { :url => endorse_priority_path(priority, :referral_id => (@user || nil), :region => region, :value => -1, :branch_id => branch_endorsement.branch_id), :loading=>"update('#{t('oppose.ing')}...')" }, :class => "priority_add_link", :title =>  t('oppose.title') %>
 	</span>	
 <% end %>
 </span>

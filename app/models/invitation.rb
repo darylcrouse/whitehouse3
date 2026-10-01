@@ -1,7 +1,7 @@
 class Invitation < ActiveRecord::Base
   include AASM
 
-  scope :has_sender, :conditions => "sender_id is not null"
+  scope :has_sender, -> { where("sender_id is not null") }
   
   belongs_to :user
   belongs_to :sender, :class_name => "User", :foreign_key => "sender_id"
@@ -30,7 +30,7 @@ class Invitation < ActiveRecord::Base
   #validates_presence_of    :to_name
   validates_length_of       :from_name,    :minimum => 3
   validates_length_of       :to_email,    :minimum => 3
-  validates_format_of       :to_email, :with => /^[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+$/x
+  validates_format_of       :to_email, :with => /\A[-^!$#%&'*+\/=3D?`{|}~.\w]+@[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])*)+\z/x
   
   def has_facebook?
     attribute_present?("facebook_uid")

@@ -11,7 +11,7 @@
 	</table>
 <% end %>
 
-<% form_for(current_government, :url => {:action => "buddy_icon_save" }, :html => {:multipart => true}) do |f| %>
+<%= form_for(current_government, :url => {:action => "buddy_icon_save" }, :html => {:multipart => true}) do |f| %>
 <%= f.error_messages %>
 
 <p>
