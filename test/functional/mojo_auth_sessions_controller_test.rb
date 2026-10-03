@@ -69,4 +69,28 @@ class MojoAuthSessionsControllerTest < ActionController::TestCase
     assert_response :forbidden
     assert_nil session[:user_id]
   end
+
+  def test_honors_internal_return_to
+    @request.session[:return_to] = "/priorities/2"
+
+    with_verified_identifier(users(:quentin).email) do
+      post :create, params: { :access_token => 'good-token' }
+    end
+
+    body = JSON.parse(@response.body)
+    assert body['ok']
+    assert_equal "/priorities/2", body['redirect']
+  end
+
+  def test_ignores_external_return_to
+    @request.session[:return_to] = "https://evil.example.com/phish"
+
+    with_verified_identifier(users(:quentin).email) do
+      post :create, params: { :access_token => 'good-token' }
+    end
+
+    body = JSON.parse(@response.body)
+    assert body['ok']
+    assert_equal "/", body['redirect']
+  end
 end

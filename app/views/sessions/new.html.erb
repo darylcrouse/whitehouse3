@@ -1,47 +1,14 @@
+<%# Sign in / join — passwordless via MojoAuth. First-time emails are
+    provisioned automatically server-side, so /signup (users#new) redirects
+    here. The legacy password forms render only when MojoAuth is not
+    configured (graceful degradation); their routes and tests remain. %>
 <% if MojoAuthService.enabled? %>
-<div id="mojoauth-login">
-	<h2><%= t('sessions.new.mojoauth', default: 'Passwordless sign in / sign up') %></h2>
-	<div id="mojoauth-passwordless-form"></div>
-	<div id="mojoauth-login-error" style="color: #c00; display: none;"></div>
+<div id="mojoauth_page">
+	<h2><%= t('sessions.new.passwordless.heading') %></h2>
+	<p class="small" style="margin-bottom: 10px;"><%= t('sessions.new.passwordless.note') %></p>
+	<%= render :partial => "shared/mojoauth" %>
 </div>
-<script src="https://cdn.mojoauth.com/js/mojoauth.min.js" type="text/javascript" charset="UTF-8"></script>
-<script type="text/javascript">
-// <![CDATA[
-(function () {
-	var target = document.getElementById('mojoauth-passwordless-form');
-	if (!target || typeof MojoAuth === 'undefined') return;
-
-	var mojoauth = new MojoAuth(<%= raw MojoAuthService.api_key.to_json %>, {
-		source: [{ type: "email", feature: "otp" }]
-	});
-
-	function showError(message) {
-		var el = document.getElementById('mojoauth-login-error');
-		if (!el) return;
-		el.innerHTML = message || "Sign-in failed \u2014 please try again.";
-		el.style.display = 'block';
-	}
-
-	mojoauth.signIn().then(function (response) {
-		var token = response && response.oauth && response.oauth.access_token;
-		if (!token) { showError(); return; }
-		fetch(<%= raw mojoauth_session_path.to_json %>, {
-			method: "POST",
-			headers: { "Content-Type": "application/json", "Accept": "application/json" },
-			body: JSON.stringify({ access_token: token })
-		}).then(function (r) { return r.json(); }).then(function (data) {
-			if (data && data.ok) {
-				window.location.href = data.redirect || "/";
-			} else {
-				showError(data && data.error);
-			}
-		}).catch(function () { showError(); });
-	}).catch(function () {});
-})();
-// ]]>
-</script>
-<p>
-<% end %>
+<% else %>
 <table border="0" cellspacing="0" cellpadding="0">
 	<tr><td valign="top">
 		<%= blurb('signup_quick')%>
@@ -53,26 +20,21 @@
 		<%= render :partial => "sessions/form" %>
 		<p>
 		<%= link_to t('sessions.new.forgot'), new_password_path %>
-
-		<% if current_government.has_facebook_enabled? or current_government.has_twitter_enabled? %>
-			<p>
-			<%= t('sessions.new.login.options')%>
-			<p>
-
-			<% if current_government.has_facebook_enabled? %>
-			<a href="#" onclick="FB.Connect.requireSession(function(){window.location.href=window.location.href=window.location.href;}); return false;"><%= image_tag("facebook_signin.png", :border => 0)%></a>
-			<p>
-			<% end %>
-			<% if current_government.has_twitter_enabled? %>
-			<%= link_to image_tag("twitter_signin.png", :border => 0), :controller => "twitter", :action => "create" %>
-			<% end %>	
-
-		<% end %>
-
-
-	</td>
-	
-	</tr>
-	
+	</td></tr>
 </table>
 <p>
+<% end %>
+
+<% if current_government.has_facebook_enabled? or current_government.has_twitter_enabled? %>
+	<p>
+	<%= t('sessions.new.login.options')%>
+	<p>
+
+	<% if current_government.has_facebook_enabled? %>
+	<a href="#" onclick="FB.Connect.requireSession(function(){window.location.href=window.location.href=window.location.href;}); return false;"><%= image_tag("facebook_signin.png", :border => 0)%></a>
+	<p>
+	<% end %>
+	<% if current_government.has_twitter_enabled? %>
+	<%= link_to image_tag("twitter_signin.png", :border => 0), :controller => "twitter", :action => "create" %>
+	<% end %>
+<% end %>

@@ -1,25 +1,32 @@
 <div id="login">
-
-	<%= t('sessions.new.intro', :signup_url => signup_url, :government_name => current_government.name)%>
-	<div id="login_form">
-		<p>
-	<%= form_for :session, :url => session_path(:region => "inline") do |f| -%>
-		<table border="0" cellspacing="0" cellpadding="0">
-			<tr><td><%= t('sessions.new.email.label')%></td><td style="padding-left: 4px;"><%= t('sessions.new.password.label')%></td><td></td></tr>
-			<tr><td valign="top">
-				<input type="text" name="email" size="15" id="login_email">
-			</td><td valign="top" style="padding-left: 2px;">
-				<input type="password" name="password" size="8" id="login_password">
-			</td>
-			<td valign="top" style="padding-left: 2px;">
-				<%= submit_tag t('sessions.new.submit'), :class => "yellow_button" %>
-			</td>
-			</tr>
-		</table>
-		<div id="login_message"></div>
-		<%= link_to t('sessions.new.forgot'), new_password_path %>	
-	<% end -%>
-	</div>
+	<%# Sidebar sign-in block (every page, anonymous visitors). MojoAuth's SDK
+	    renders into fixed container ids and allows one widget per page, so the
+	    sidebar links to the /login page instead of embedding a second widget. %>
+	<% if MojoAuthService.enabled? %>
+		<b><%= link_to t('sessions.new.passwordless.sidebar'), login_path %></b>
+		<div class="small"><%= t('sessions.new.passwordless.sidebar_note') %></div>
+	<% else %>
+		<%= t('sessions.new.intro', :signup_url => signup_url, :government_name => current_government.name)%>
+		<div id="login_form">
+			<p>
+		<%= form_for :session, :url => session_path(:region => "inline") do |f| -%>
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr><td><%= t('sessions.new.email.label')%></td><td style="padding-left: 4px;"><%= t('sessions.new.password.label')%></td><td></td></tr>
+				<tr><td valign="top">
+					<input type="text" name="email" size="15" id="login_email">
+				</td><td valign="top" style="padding-left: 2px;">
+					<input type="password" name="password" size="8" id="login_password">
+				</td>
+				<td valign="top" style="padding-left: 2px;">
+					<%= submit_tag t('sessions.new.submit'), :class => "yellow_button" %>
+				</td>
+				</tr>
+			</table>
+			<div id="login_message"></div>
+			<%= link_to t('sessions.new.forgot'), new_password_path %>	
+		<% end -%>
+		</div>
+	<% end %>
 
 	<% if current_government.has_facebook_enabled? or current_government.has_twitter_enabled? %>
 	<p>

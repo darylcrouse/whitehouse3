@@ -1521,6 +1521,11 @@ de:
             intro_with: "<b><a href='%{signup_url}'>Sign up</a></b> oder einloggen mit:"
             intro: "<b><a href='%{signup_url}'>Sign up</a></b> oder <a href='#' id='login_link'>log dich in deinen Account ein</a>."
             forgot: "Ich habe mein Passwort vergessen"
+            passwordless:
+                heading: "Anmelden oder registrieren"
+                note: "Kein Passwort nötig — gib deine E-Mail-Adresse ein und wir senden dir einen einmaligen Anmeldecode. Zum ersten Mal hier? Dein Konto wird automatisch erstellt."
+                sidebar: "Anmelden oder registrieren"
+                sidebar_note: "Nur E-Mail — kein Passwort nötig."
             email:
                 label: "Email Addresse"
             password:

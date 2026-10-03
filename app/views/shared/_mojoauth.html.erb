@@ -1,0 +1,48 @@
+<%#
+  Shared MojoAuth passwordless widget.
+  The SDK renders its card into the fixed container id "mojoauth-passwordless-form"
+  (one widget instance per page). Callers must gate on MojoAuthService.enabled?.
+  On success the browser POSTs the access token to /auth/mojoauth, which
+  verifies it server-side, establishes the session, and returns the redirect
+  target (honoring a safe session[:return_to]).
+%>
+<div id="mojoauth-login">
+	<div id="mojoauth-passwordless-form"></div>
+	<div id="mojoauth-login-error" style="color: #c00; display: none;"></div>
+</div>
+<script src="https://cdn.mojoauth.com/js/mojoauth.min.js" type="text/javascript" charset="UTF-8"></script>
+<script type="text/javascript">
+// <![CDATA[
+(function () {
+	var target = document.getElementById('mojoauth-passwordless-form');
+	if (!target || typeof MojoAuth === 'undefined') return;
+
+	var mojoauth = new MojoAuth(<%= raw MojoAuthService.api_key.to_json %>, {
+		source: [{ type: "email", feature: "otp" }]
+	});
+
+	function showError(message) {
+		var el = document.getElementById('mojoauth-login-error');
+		if (!el) return;
+		el.innerHTML = message || "Sign-in failed \u2014 please try again.";
+		el.style.display = 'block';
+	}
+
+	mojoauth.signIn().then(function (response) {
+		var token = response && response.oauth && response.oauth.access_token;
+		if (!token) { showError(); return; }
+		fetch(<%= raw mojoauth_session_path.to_json %>, {
+			method: "POST",
+			headers: { "Content-Type": "application/json", "Accept": "application/json" },
+			body: JSON.stringify({ access_token: token })
+		}).then(function (r) { return r.json(); }).then(function (data) {
+			if (data && data.ok) {
+				window.location.href = data.redirect || "/";
+			} else {
+				showError(data && data.error);
+			}
+		}).catch(function () { showError(); });
+	}).catch(function () {});
+})();
+// ]]>
+</script>

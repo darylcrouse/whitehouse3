@@ -43,7 +43,8 @@ class MojoAuthSessionsController < ApplicationController
     cookies[:auth_token] = { value: current_user.remember_token,
                              expires: current_user.remember_token_expires_at }
 
-    render json: { ok: true, redirect: "/" }
+    flash[:notice] = t("sessions.create.success", user_name: current_user.name)
+    render json: { ok: true, redirect: safe_return_to }
   rescue StandardError => e
     Rails.logger.error("[mojoauth] login failed: #{e.class}: #{e.message}")
     render json: { ok: false, error: t("sessions.create.failed") },
@@ -51,6 +52,28 @@ class MojoAuthSessionsController < ApplicationController
   end
 
   private
+
+  # Where to send the browser after a successful sign-in. Honors the location
+  # legacy store_location / store_previous_location saved (so deferred
+  # endorsements and deep links survive the OTP round-trip), but only ever a
+  # same-site path — never an external target.
+  def safe_return_to
+    location = session[:return_to]
+    session[:return_to] = nil
+    return "/" unless location.is_a?(String) && location.present?
+
+    if location.start_with?("/")
+      return "/" if location.start_with?("//")
+      return location
+    end
+
+    begin
+      uri = URI.parse(location)
+      return uri.request_uri if uri.host.present? && uri.host == request.host
+    rescue URI::InvalidURIError
+    end
+    "/"
+  end
 
   # First MojoAuth login: provision a legacy user record. The account has no
   # usable password (random throwaway) — email possession is the credential.

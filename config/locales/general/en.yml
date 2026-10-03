@@ -1531,6 +1531,11 @@ en:
                 options: "or <b>sign in instantly</b> with:"
             intro: "<b><a href='%{signup_url}'>Sign up</a></b> or <a href='#' id='login_link'>Sign in with %{government_name}</a>."
             forgot: "I forgot my password"
+            passwordless:
+                heading: "Sign in or join"
+                note: "No password needed — enter your email and we'll send a one-time sign-in code. First time here? Your account is created automatically."
+                sidebar: "Sign in or join"
+                sidebar_note: "Email only — no password needed."
             email:
                 label: "Email address"
             password:

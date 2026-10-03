@@ -28,6 +28,13 @@ class UsersController < ApplicationController
       redirect_to "/"
       return
     end
+    if MojoAuthService.enabled?
+      # Passwordless flow: hand sign-ups to the MojoAuth sign-in page — the
+      # first OTP login for an email provisions the account automatically.
+      store_previous_location
+      redirect_to login_path
+      return
+    end
     store_previous_location
     respond_to do |format|
       format.html
