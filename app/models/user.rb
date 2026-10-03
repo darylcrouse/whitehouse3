@@ -1054,9 +1054,9 @@ class User < ActiveRecord::Base
     private
 
     def buddy_icon_file_size_valid?
-      if logo.attached? && logo.blob.byte_size > 10.megabytes
-        errors.add(:logo, 'File size too large')
-        logo.purge # delete the uploaded file
+      if buddy_icon.attached? && buddy_icon.blob.byte_size > 10.megabytes
+        errors.add(:buddy_icon, 'File size too large')
+        buddy_icon.purge # delete the uploaded file
       end
     end
 end

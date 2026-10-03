@@ -4,7 +4,7 @@ class ColorScheme < ActiveRecord::Base
 
   after_save :clear_cache
   
-  has_one_attached :background
+  has_one_attached :background_image
   validate :background_image_type, :background_image_size
   
   def clear_cache
@@ -31,14 +31,14 @@ class ColorScheme < ActiveRecord::Base
   private
 
   def background_image_type
-    if background.attached? && !background.content_type.in?(%w(image/jpeg image/png image/gif))
-      errors.add(:background, 'must be a JPEG PNG or GIF')
+    if background_image.attached? && !background_image.content_type.in?(%w(image/jpeg image/png image/gif))
+      errors.add(:background_image, 'must be a JPEG PNG or GIF')
     end
   end
 
   def background_image_size
-    if background.attached? && background.blob.byte_size > 5.megabytes
-      errors.add(:background, 'size must be less than 10MB')
+    if background_image.attached? && background_image.blob.byte_size > 5.megabytes
+      errors.add(:background_image, 'size must be less than 10MB')
     end
   end
 end

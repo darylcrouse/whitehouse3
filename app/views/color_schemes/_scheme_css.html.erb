@@ -4,7 +4,7 @@ body {
 	background-color: #<%= scheme.footer %>; /* fff */
 	color: #<%= scheme.heading %>; /* 000 */
 	font-family: <%= scheme.fonts %>;
-	<% if scheme.attribute_present?("background_image_file_name") %>
+	<% if scheme.background_image.attached? %>
 		background-image: url(<%= scheme.background_image.url %>);
 	<% end %>
 	<% if scheme.background_tiled? %>
@@ -13,7 +13,7 @@ body {
 }
 #backgroundwrap {
 	background-color: #<%= scheme.background %>;
-	<% if scheme.attribute_present?("background_image_file_name") %>
+	<% if scheme.background_image.attached? %>
 		background-image: url(<%= scheme.background_image.url %>);
 	<% end %>
 	<% if scheme.background_tiled? %>
