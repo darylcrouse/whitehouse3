@@ -23,6 +23,10 @@
 <div id="nav">
 <div id="nav<%= nav %>">	
 
+	<div id="wh3_brand">
+		<a href="/"><%= h(current_government.name) %></a>
+	</div>
+
 	<% if current_government.has_fav_icon? %>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr><td valign="middle" style="padding: 0px 0px 0px 10px;" align="left">
@@ -424,7 +428,16 @@
 			</div>
 		</li>
 	</ul>
-	
+
+	<div id="wh3_nav_action">
+		<% if logged_in? %>
+			<%= link_to h(current_user.name), user_path(current_user), :class => "wh3-nav-profile" %>
+			<%= link_to t('menu.logout'), logout_path, :class => "wh3-nav-action-link" %>
+		<% else %>
+			<%= link_to t('sessions.new.passwordless.sidebar'), login_path, :class => "wh3-nav-action-link" %>
+		<% end %>
+	</div>
+
 	<% if current_government.has_fav_icon? %>
 		</td>
 		</tr>

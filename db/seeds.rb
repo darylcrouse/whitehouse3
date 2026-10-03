@@ -60,6 +60,13 @@ end
 Government.current = gov
 Thread.current[:government] = gov
 
+# Apply the WhiteHouse 3 palette to the demo color scheme (see
+# app/models/wh3_theme.rb + docs/wh3-concept/). Idempotent.
+if gov && gov.color_scheme
+  Wh3Theme.apply!(gov.color_scheme)
+  puts "  ok: WH3 palette applied to color scheme ##{gov.color_scheme_id}"
+end
+
 # ---------------------------------------------------------------------------
 # Users  (all demo accounts use password: password123)
 # ---------------------------------------------------------------------------

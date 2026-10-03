@@ -2,16 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title><%= @page_title || current_government.name_with_tagline %></title>
 <%= render :partial => "shared/description" %>
 <%= render :partial => "shared/head" %>
 <%= render :partial => "shared/javascripts" %>
 <%= render :partial => "shared/css" %>
 <%= render :partial => "color_schemes/css", :locals => {:id => current_government.color_scheme_id } %>
+<%= stylesheet_link_tag "wh3" %>
 </head>
-<body>
+<body class="c-<%= params[:controller].to_s.downcase.gsub(/[^a-z0-9]+/, '-') %> a-<%= params[:action].to_s.downcase.gsub(/[^a-z0-9]+/, '-') %>">
 
 <%= blurb("header") %>
+
+<%= render :partial => "shared/menu" %>
 
 <div id="backgroundwrap" align="center">
 
@@ -23,8 +27,6 @@
 <td valign="top" align="left">
 	
 	<%= flash_div :warning, :notice, :error %>
-
-	<%= render :partial => "shared/menu" %>
 
 	<%= render :partial => "ads/pick" %>
 			
