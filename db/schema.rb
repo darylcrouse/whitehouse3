@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_01_000002) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_02_000001) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -1012,7 +1012,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_01_000002) do
     t.string "remember_token", limit: 60
     t.datetime "remember_token_expires_at"
     t.integer "picture_id"
-    t.string "status", limit: 30, default: "passive"
+    t.string "status", limit: 30
     t.integer "partner_id"
     t.datetime "deleted_at"
     t.string "ip_address", limit: 16

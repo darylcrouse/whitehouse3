@@ -34,6 +34,12 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  # Capture outbound mail (activation / password reset / notifications) as
+  # files under tmp/mails so signup and forgot-password flows are fully
+  # usable in development; inspect with: ls tmp/mails
+  config.action_mailer.delivery_method = :file
+  config.action_mailer.file_settings = { location: Rails.root.join('tmp', 'mails') }
+
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
@@ -72,4 +78,5 @@ Rails.application.configure do
   # Allow requests from tunnel hostnames for development
   config.hosts << "rails-update-app-tunnel-4t1xmwuw.devinapps.com"
   config.hosts << "rails-update-app-tunnel-m1zxza73.devinapps.com"
+  config.hosts << "spark-080c"
 end

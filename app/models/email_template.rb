@@ -8,8 +8,8 @@ class EmailTemplate < ActiveRecord::Base
   after_save :clear_cache
   
   def clear_cache
-    Rails.cache.delete("email_template-" + name)
-    Rails.cache.delete("email_template_subject-" + name)    
+    Rails.cache.delete("email_template_source-" + name)
+    Rails.cache.delete("email_template_subject_source-" + name)
     return true
   end
 
