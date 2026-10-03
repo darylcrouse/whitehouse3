@@ -28,6 +28,7 @@ unless gov
     domain_name: 'localhost',
     layout: 'wh2',
     tagline: 'Together we decide what the government should do.',
+    target: 'the government',
     email: 'info@example.gov',
     is_public: true,
     is_tags: true,
