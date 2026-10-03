@@ -70,12 +70,14 @@ What it changes vs. the former direction:
 Two tracks, in order:
 
 **Track 1 — reskin on existing mechanics** (every page presentable; no schema changes)
-1. **Design tokens + overlay stylesheet** — fonts, palette, type scale, buttons, links, forms, focus states; header band + footer per the shared exports.
-2. **Home (agenda)** — WH3 hero + ranked list with ENDORSE/OPPOSE, counts, momentum (already computed in the DB), admin stance (relabeled), briefing room (existing talking points), civic credit (existing capitals).
-3. **Auth/join** — style MojoAuth flow into the "Verify and join" visual language.
-4. **Priority page** — restyle to the WH3 priority layout with existing data; new modules (response clock, opinion map, bills) land later per feature map.
-5. **Lists / profile / misc** — consistency sweep.
-6. **Mobile + accessibility pass** — breakpoints, targets, contrast, alt text, captions-first for future video.
+1. ✅ **Design tokens + overlay stylesheet** — `wh3.css` + `Wh3Theme.apply!` (commit `1dbc44b`): fonts self-hosted, palette via ColorScheme, header band + footer, buttons/links/forms/focus states.
+2. ✅ **Home (agenda)** — WH3 hero panel, ranked rows with endorse/oppose split, momentum counts; admin stance/credits land as labels on existing data.
+3. ✅ **Auth/join** — MojoAuth flow styled in the WH3 visual language (`/login`, sidebar card).
+4. ✅ **Priority page** — tab strip, vote-button states, share/rank polish (commit `1dbc44b`).
+5. ✅ **Lists / profile / misc** — consistency sweep done across `/priorities/*`, `/users`, `/about`.
+6. ⬜ **Mobile + accessibility pass** — basic responsiveness verified (390px no-overflow); dedicated a11y pass (contrast audit, targets, alt text) still open.
+
+Verified for Track 1: `rails test` 247/394 0F 0E; zeitwerk OK; 14 pages 200; zero horizontal overflow at 1440 + 390; sub-nav active states correct on all listing pages. Screenshots in `docs/wh3-concept/live/`. Remaining nits: hero input placeholder clips at 390px; "ADMIN AGENDA" label alignment on first home group.
 
 **Track 2 — new mechanics** (per `feature-map.md`, small → flagship → rest)
 1. Common-ground score (computed) + scope filters (state first) + propose-with-duplicate-check.
