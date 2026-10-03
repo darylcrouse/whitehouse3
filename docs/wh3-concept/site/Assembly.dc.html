@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Citizens' assembly</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#6f5a36}a:hover{color:#1b3c5a}
+button:focus-visible,a:focus-visible{outline:2px solid #a88f61;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: #1b3c5a; background: #ffffff; font-size: 16px; line-height: 26px">
+<dc-import name="SiteHeader" active="assembly" hint-size="100%,110px"></dc-import>
+
+<section style="background: #0f2a45; color: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 64px 24px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center">
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">Citizens' assembly</div>
+<h1 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 60px; line-height: 62px; font-weight: 600; color: #ffffff">48 members. One week. One question.</h1>
+<p style="margin: 0; font-size: 17px; line-height: 28px; color: #d9d3c6; max-width: 640px">Each month we draw a balanced panel of verified members at random. They hear from experts on both sides, deliberate with a trained moderator, and publish what they recommend. It's a check on whoever shouts loudest.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="Join.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 2px; background: #c6af8a; color: #0f2a45; text-decoration: none; font-size: 14px; font-weight: 700; letter-spacing: 0.08em">Enter the next draw</a>
+<a href="#past" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 2px; border: 1px solid #c6af8a; color: #f1f0ee; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.08em">Past recommendations</a>
+</div>
+</div>
+<div style="flex: 1 1 340px; min-width: 0; background: #ffffff; color: #1b3c5a; border-radius: 6px; padding: 28px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap">
+<span style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Assembly No. 4</span>
+<span style="padding: 3px 8px; background: #1b3c5a; color: #ffffff; border-radius: 2px; font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.06em">In session · Day 3 of 7</span>
+</div>
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 26px; line-height: 30px; font-weight: 600">Should members of Congress be barred from trading stocks, and if so, how?</div>
+<a href="Priority.dc.html" style="font-size: 13px; line-height: 18px; font-weight: 600">From priority No. 2 on the agenda</a>
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: #5f727d">Sample assembly for this concept.</p>
+</div>
+</div>
+</section>
+
+<section style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px; display: flex; flex-direction: column; gap: 24px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 40px; font-weight: 600">The week, day by day</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+<li style="flex: 1 1 150px; min-width: 0; padding: 16px; border-radius: 2px; background: {{d.bg}}; color: {{d.fg}}; border: 1px solid {{d.border}}; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: {{d.eyebrow}}">{{d.day}}</span>
+<span style="font-size: 15px; line-height: 22px; font-weight: 600">{{d.title}}</span>
+<span style="font-size: 13px; line-height: 19px; opacity: 0.85">{{d.desc}}</span>
+</li>
+</sc-for>
+</ol>
+</div>
+</section>
+
+<section style="background: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<div style="flex: 999 1 520px; min-width: 0; background: #ffffff; border-radius: 6px; padding: 28px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 30px; line-height: 36px; font-weight: 600">Who's on this panel</h2>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">The draw is weighted so the panel mirrors the country by region and age, and the membership by opinion group.</p>
+</div>
+<sc-for list="{{mix}}" as="m" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 13px; line-height: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5f727d">{{m.label}}</div>
+<div style="display: flex; height: 28px; border-radius: 2px; overflow: hidden">
+<sc-for list="{{m.parts}}" as="p" hint-placeholder-count="4">
+<div style="width: {{p.pct}}%; background: {{p.bg}}; color: {{p.fg}}; font-size: 11px; line-height: 28px; font-weight: 700; text-align: center; white-space: nowrap; overflow: hidden">{{p.pct}}%</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; line-height: 16px; color: #5f727d">
+<sc-for list="{{m.parts}}" as="p" hint-placeholder-count="4">
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: {{p.bg}}"></span>{{p.name}}</span>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 14px; line-height: 20px; font-weight: 700">How the draw works</div>
+<ul style="margin: 0; padding-left: 18px; font-size: 14px; line-height: 22px; color: #5f727d">
+<li>Opt in from your profile. Only verified members qualify.</li>
+<li>We draw at random, then balance by region, age and opinion group.</li>
+<li>Panelists get a stipend of [AMOUNT] and childcare support.</li>
+<li>Sessions are online, captioned, and ASL interpreted on request.</li>
+</ul>
+</div>
+<div style="background: #ffffff; border-radius: 6px; border-top: 4px solid #a88f61; padding: 24px; display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 14px; line-height: 20px; font-weight: 700">Proven elsewhere</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Ireland's Citizens' Assembly (2016 to 2018) brought together 99 randomly chosen citizens to deliberate on national questions, including the one that led to the country's 2018 referendum.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="past" style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 72px; display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 40px; font-weight: 600">Past recommendations</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<sc-for list="{{past}}" as="p" hint-placeholder-count="3">
+<article style="flex: 1 1 320px; min-width: 0; border: 1px solid #d9d3c6; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6f5a36">{{p.no}}</span>
+<span style="font-size: 17px; line-height: 25px; font-weight: 600">{{p.q}}</span>
+<span style="font-size: 14px; line-height: 22px; color: #5f727d">{{p.rec}}</span>
+<span style="display: flex; flex-direction: column; gap: 6px; margin-top: auto">
+<span style="display: flex; justify-content: space-between; font-size: 13px; line-height: 18px"><span>Panel support</span><span style="font-weight: 700">{{p.support}}%</span></span>
+<span style="display: block; height: 8px; background: #f1f0ee; border-radius: 2px"><span style="display: block; height: 8px; width: {{p.support}}%; background: #2c4e6d; border-radius: 2px"></span></span>
+</span>
+<a href="#past" style="font-size: 13px; line-height: 18px; font-weight: 600">Read the full report</a>
+</article>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: #5f727d">Sample recommendations for this concept.</p>
+</div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var today = 3;
+    var defs = [
+      ['Learn', 'Briefing packet and a primer on how the issue works today'],
+      ['Hear the case for', 'Video testimony from experts who support it'],
+      ['Hear the case against', 'Video testimony from experts who oppose it'],
+      ['Question both sides', 'Live Q and A with the experts'],
+      ['Deliberate', 'Small groups with a trained moderator'],
+      ['Vote', 'Secret ballot on each draft recommendation'],
+      ['Publish', 'Report goes to members, officials and the press']
+    ];
+    var days = defs.map(function (d, i) {
+      var n = i + 1;
+      var now = n === today;
+      var done = n < today;
+      return {
+        day: 'Day ' + n + (now ? ' · Today' : ''),
+        title: d[0],
+        desc: d[1],
+        bg: now ? '#1b3c5a' : (done ? '#f1f0ee' : '#ffffff'),
+        fg: now ? '#ffffff' : '#1b3c5a',
+        border: now ? '#1b3c5a' : '#d9d3c6',
+        eyebrow: now ? '#c6af8a' : (done ? '#5f727d' : '#6f5a36')
+      };
+    });
+    return {
+      days: days,
+      mix: [
+        { label: 'Region', parts: [
+          { name: 'Northeast', pct: 17, bg: '#1b3c5a', fg: '#ffffff' },
+          { name: 'Midwest', pct: 21, bg: '#2c4e6d', fg: '#ffffff' },
+          { name: 'South', pct: 38, bg: '#a88f61', fg: '#0f2a45' },
+          { name: 'West', pct: 24, bg: '#c6af8a', fg: '#0f2a45' } ] },
+        { label: 'Age', parts: [
+          { name: '18 to 34', pct: 29, bg: '#1b3c5a', fg: '#ffffff' },
+          { name: '35 to 54', pct: 33, bg: '#2c4e6d', fg: '#ffffff' },
+          { name: '55 and older', pct: 38, bg: '#a88f61', fg: '#0f2a45' } ] },
+        { label: 'Opinion group', parts: [
+          { name: 'Group A', pct: 41, bg: '#2c4e6d', fg: '#ffffff' },
+          { name: 'Group B', pct: 35, bg: '#c6af8a', fg: '#0f2a45' },
+          { name: 'Group C', pct: 24, bg: '#5f727d', fg: '#ffffff' } ] }
+      ],
+      past: [
+        { no: 'Assembly No. 3', q: 'How should states back up their election results?', rec: 'Keep a paper record of every ballot and run a random hand count after each federal election.', support: 87 },
+        { no: 'Assembly No. 2', q: 'Should Congress have term limits?', rec: 'Twelve-year limits for both chambers, phased in so no sitting member is removed early.', support: 71 },
+        { no: 'Assembly No. 1', q: 'How should the country pay for insulin?', rec: 'Cap out-of-pocket costs and require price reporting from manufacturers and middlemen.', support: 79 }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

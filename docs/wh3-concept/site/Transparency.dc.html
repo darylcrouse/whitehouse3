@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How it's ranked</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#6f5a36}a:hover{color:#1b3c5a}
+button:focus-visible,a:focus-visible{outline:2px solid #a88f61;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: #1b3c5a; background: #ffffff; font-size: 16px; line-height: 26px">
+<dc-import name="SiteHeader" active="transparency" hint-size="100%,110px"></dc-import>
+
+<section style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 40px; display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Trust and transparency</div>
+<h1 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 56px; line-height: 60px; font-weight: 600; max-width: 900px">If the ranking carries weight, you should be able to check it.</h1>
+<p style="margin: 0; font-size: 17px; line-height: 28px; color: #5f727d; max-width: 700px">Here's exactly how the list is sorted, every change we've made to that, and what we caught trying to game it.</p>
+</div>
+</section>
+
+<section style="background: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 48px 24px; display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 40px; font-weight: 600">The three numbers that move the list</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<div style="flex: 1 1 300px; min-width: 0; background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; line-height: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #2c4e6d">Net support</div>
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 24px; line-height: 30px; font-weight: 600">Endorse minus oppose</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Simple and familiar. It sorts the Top tab. Delegated votes count once, and your own vote always overrides a delegate's.</p>
+</div>
+<div style="flex: 1 1 300px; min-width: 0; background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 10px; border-top: 4px solid #a88f61">
+<div style="font-size: 13px; line-height: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6f5a36">Common ground</div>
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 24px; line-height: 30px; font-weight: 600">Only as strong as the weakest group</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">We group members by how they vote, never by party. A priority's score is its support in the group that likes it least, on a 0 to 100 scale. One side alone can't push it up.</p>
+</div>
+<div style="flex: 1 1 300px; min-width: 0; background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; line-height: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #2c4e6d">Momentum</div>
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 24px; line-height: 30px; font-weight: 600">Places gained this week</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Sorts the Rising tab. Sudden spikes from new or linked accounts are held for review before they count.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 48px 24px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 40px; font-weight: 600">Integrity report</h2>
+<span style="font-size: 13px; line-height: 18px; color: #5f727d">[MONTH YEAR] · Sample figures</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+<div style="flex: 1 1 200px; min-width: 0; border: 1px solid #d9d3c6; border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 44px; line-height: 46px; font-weight: 700">{{s.n}}</span>
+<span style="font-size: 14px; line-height: 20px; font-weight: 600">{{s.label}}</span>
+<span style="font-size: 12px; line-height: 18px; color: #5f727d">{{s.note}}</span>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 20px; color: #5f727d">An outside auditor, [AUDITOR], reviews the ranking code and this report each quarter.</p>
+</div>
+
+<aside style="flex: 1 1 340px; min-width: 0; background: #0f2a45; color: #f1f0ee; border-radius: 6px; padding: 28px; display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">Open data</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #d9d3c6">Everything that moves the list is public. Votes are tied to anonymous IDs, never to names.</p>
+<sc-for list="{{downloads}}" as="d" hint-placeholder-count="3">
+<a href="Transparency.dc.html" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; padding: 0 16px; border: 1px solid #34506c; border-radius: 2px; color: #f1f0ee; text-decoration: none; font-size: 14px; font-weight: 600"><span>{{d.label}}</span><span style="font-size: 12px; color: #c6af8a">{{d.fmt}}</span></a>
+</sc-for>
+</aside>
+</div>
+</section>
+
+<section style="background: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 48px 24px 64px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 40px; font-weight: 600">Change log</h2>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d; max-width: 700px">Every change to how the list is sorted gets posted here before it goes live. Sample entries shown.</p>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; background: #ffffff; border-radius: 6px">
+<sc-for list="{{log}}" as="l" hint-placeholder-count="4">
+<li style="display: flex; flex-wrap: wrap; gap: 6px 24px; padding: 18px 24px; border-bottom: 1px solid #d9d3c6">
+<span style="flex: 0 0 140px; font-size: 13px; line-height: 22px; font-weight: 700; color: #6f5a36">{{l.ver}}</span>
+<span style="flex: 1 1 400px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; line-height: 22px; font-weight: 600">{{l.what}}</span><span style="font-size: 13px; line-height: 20px; color: #5f727d">{{l.why}}</span></span>
+</li>
+</sc-for>
+</ol>
+</div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,300px"></dc-import>
+<p style="margin: 0; position: absolute; left: 1161px; top: 364px">Verify and join</p></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      stats: [
+        { n: '1,842', label: 'Duplicate accounts removed', note: 'Same person, second account' },
+        { n: '6', label: 'Coordinated campaigns caught', note: 'Votes held, then discounted' },
+        { n: '41', label: 'Summaries corrected', note: 'After members flagged a misstated side' },
+        { n: '0', label: 'Paid boosts', note: 'There is no way to buy placement' }
+      ],
+      downloads: [
+        { label: 'Weekly agenda snapshot', fmt: 'CSV' },
+        { label: 'All votes, anonymized', fmt: 'JSON' },
+        { label: 'Ranking code', fmt: 'GitHub' },
+        { label: 'Public API docs', fmt: 'Web' }
+      ],
+      log: [
+        { ver: 'v3.4 · [DATE]', what: 'Response line now rises with membership', why: 'A fixed number would get too easy to hit as the site grows.' },
+        { ver: 'v3.3 · [DATE]', what: 'Delegated votes capped at one hop', why: 'Chains of delegation were concentrating power in a few accounts.' },
+        { ver: 'v3.2 · [DATE]', what: 'Spike review added to the Rising tab', why: 'Two campaigns used brand-new accounts to jump priorities overnight.' },
+        { ver: 'v3.0 · [DATE]', what: 'Common-ground score launched', why: 'Raw totals rewarded whichever side organized fastest.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

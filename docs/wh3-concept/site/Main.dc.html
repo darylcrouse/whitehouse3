@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WhiteHouse3 home</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#6f5a36}a:hover{color:#1b3c5a}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #a88f61;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: #1b3c5a; background: #ffffff; font-size: 16px; line-height: 26px">
+
+<dc-import name="SiteHeader" active="agenda" hint-size="100%,110px"></dc-import>
+
+<section id="top" style="background: #0f2a45; color: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 72px 24px 80px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+<div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">The people's agenda, version three</div>
+<h1 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 64px; line-height: 66px; font-weight: 600; color: #ffffff; max-width: 760px">What if the country set its own priorities, in public?</h1>
+<p style="margin: 0; font-size: 18px; line-height: 30px; color: #d9d3c6; max-width: 620px">Propose a priority in 60 characters. Endorse it or oppose it. Watch the list move as people weigh in. WhiteHouse3 picks up the 2008 White House 2 experiment and rebuilds it for verified members, ranking that rewards agreement across divides, and open data anyone can audit.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="#compose" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 2px; background: #c6af8a; color: #0f2a45; text-decoration: none; font-size: 14px; font-weight: 700; letter-spacing: 0.08em">Add a priority</a>
+<a href="#how" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 2px; border: 1px solid #c6af8a; color: #f1f0ee; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.08em">How ranking works</a>
+</div>
+<ul style="list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px 28px; font-size: 14px; line-height: 20px; color: #f1f0ee">
+<li style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c6af8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg>One verified person, one account</li>
+<li style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c6af8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h6"></path><path d="M14 12h6"></path><circle cx="12" cy="12" r="2"></circle><path d="M12 4v4"></path><path d="M12 16v4"></path></svg>Ranked by common ground</li>
+<li style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c6af8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h10"></path></svg>Every vote exportable as open data</li>
+</ul>
+</div>
+<div style="flex: 1 1 340px; min-width: 0">
+<div style="background: #ffffff; color: #1b3c5a; padding: 32px; border-radius: 6px 120px 6px 6px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 24px 48px rgba(0,0,0,0.25)">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-right: 48px">
+<span style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Common ground No. 1</span>
+</div>
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 30px; line-height: 34px; font-weight: 600">{{hero.title}}</div>
+<div style="display: flex; align-items: baseline; gap: 12px">
+<span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 72px; line-height: 72px; font-weight: 700; color: #1b3c5a">{{hero.bridge}}</span>
+<span style="font-size: 14px; line-height: 20px; color: #5f727d">common-ground score out of 100</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; font-size: 13px; line-height: 18px"><span>Members who lean left</span><span style="font-weight: 600">{{hero.left}}%</span></div>
+<div style="height: 8px; background: #f1f0ee; border-radius: 2px"><div style="height: 8px; width: {{hero.left}}%; background: #2c4e6d; border-radius: 2px"></div></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; font-size: 13px; line-height: 18px"><span>Members who lean right</span><span style="font-weight: 600">{{hero.right}}%</span></div>
+<div style="height: 8px; background: #f1f0ee; border-radius: 2px"><div style="height: 8px; width: {{hero.right}}%; background: #a88f61; border-radius: 2px"></div></div>
+</div>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 20px; color: #5f727d">Sample figures for this concept. A priority climbs when people who usually disagree both endorse it.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="agenda" style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 64px 24px; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start">
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">The agenda</div>
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 40px; line-height: 46px; font-weight: 600">What members want done</h2>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<label for="scope" style="font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #5f727d">Show priorities for</label>
+<select id="scope" style="min-height: 44px; padding: 0 12px; border: 1px solid #d9d3c6; border-radius: 2px; background: #ffffff; color: #1b3c5a; font-family: inherit; font-size: 14px">
+<option>The whole country</option>
+<option>My state</option>
+<option>My congressional district</option>
+</select>
+</div>
+</div>
+
+<div role="tablist" aria-label="Sort the agenda" style="display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #d9d3c6; padding-bottom: 12px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+<button role="tab" aria-selected="{{t.selected}}" onClick="{{t.pick}}" style="min-height: 44px; padding: 0 16px; border-radius: 2px; border: 1px solid {{t.border}}; background: {{t.bg}}; color: {{t.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer">{{t.label}}</button>
+</sc-for>
+</div>
+
+<div style="display: flex; gap: 12px; align-items: flex-start; background: #f1f0ee; padding: 12px 16px; border-radius: 2px; font-size: 13px; line-height: 20px; color: #5f727d">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5f727d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16h.01"></path></svg>
+<span>{{tabNote}} Sample data. Counts and stances are placeholders for this concept.</span>
+</div>
+
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{rows}}" as="item" hint-placeholder-count="6">
+<li style="display: grid; grid-template-columns: 48px minmax(0, 1fr); column-gap: 16px; padding: 20px; border: 1px solid {{item.border}}; border-radius: 6px; background: #ffffff">
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 34px; font-weight: 700; color: #1b3c5a; text-align: center">{{item.rank}}</div>
+<div style="display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-start">
+<h3 style="margin: 0; flex: 1 1 280px; font-size: 17px; line-height: 24px; font-weight: 600; color: #1b3c5a"><a href="Priority.dc.html" style="color: #1b3c5a; text-decoration: none">{{item.title}}</a></h3>
+<div style="display: flex; gap: 8px; flex: none">
+<button aria-pressed="{{item.upPressed}}" aria-label="Endorse: {{item.title}}" onClick="{{item.onUp}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 1px solid #1b3c5a; border-radius: 2px; background: {{item.upBg}}; color: {{item.upFg}}; font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>Endorse</button>
+<button aria-pressed="{{item.downPressed}}" aria-label="Oppose: {{item.title}}" onClick="{{item.onDown}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 1px solid #6f5a36; border-radius: 2px; background: {{item.downBg}}; color: {{item.downFg}}; font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>Oppose</button>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12px; line-height: 16px">
+<span style="padding: 4px 8px; background: #f1f0ee; border-radius: 2px; font-weight: 600; color: #1b3c5a">{{item.issue}}</span>
+<span style="padding: 4px 8px; border: 1px solid #d9d3c6; border-radius: 2px; color: #5f727d">Admin stance: {{item.admin}}</span>
+<span style="font-weight: 600; color: {{item.moveColor}}">{{item.move}}</span>
+<a href="#video" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid #c6af8a; border-radius: 2px; color: #6f5a36; font-weight: 600; text-decoration: none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="M16 10l5-3v10l-5-3"></path></svg>{{item.videos}} video takes</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; height: 8px; border-radius: 2px; overflow: hidden; background: #c6af8a" aria-hidden="true"><div style="width: {{item.pct}}%; background: #2c4e6d"></div></div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 13px; line-height: 18px; color: #5f727d">
+<span><strong style="color: #1b3c5a">{{item.upLabel}}</strong> endorse</span>
+<span>Common ground <strong style="color: #1b3c5a">{{item.bridge}}</strong></span>
+<span><strong style="color: #6f5a36">{{item.downLabel}}</strong> oppose</span>
+</div>
+</div>
+<div>
+<button onClick="{{item.onSelect}}" style="min-height: 44px; padding: 0; border: 0; background: transparent; color: #6f5a36; font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-decoration: underline; text-underline-offset: 3px; cursor: pointer">{{item.debateLabel}}</button>
+</div>
+</div>
+</li>
+</sc-for>
+</ol>
+</div>
+
+<aside id="briefing" style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<div style="border: 1px solid #d9d3c6; border-radius: 6px; overflow: hidden">
+<div style="background: #1b3c5a; color: #ffffff; padding: 20px 24px; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">Briefing room</div>
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 26px; line-height: 30px; font-weight: 600">{{sel.title}}</div>
+</div>
+<div style="padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #2c4e6d"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>Strongest case for</div>
+<p style="margin: 0; font-size: 15px; line-height: 24px">{{sel.pro}}</p>
+</div>
+<div style="height: 1px; background: #d9d3c6"></div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6f5a36"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>Strongest case against</div>
+<p style="margin: 0; font-size: 15px; line-height: 24px">{{sel.con}}</p>
+</div>
+<p style="margin: 0; padding: 12px 14px; background: #f1f0ee; border-radius: 2px; font-size: 12px; line-height: 18px; color: #5f727d">Summaries are drafted from member talking points and must cite a source for every claim. Members flag anything that misstates a side.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<a href="Priority.dc.html" style="flex: 1 1 140px; display: inline-flex; justify-content: center; align-items: center; min-height: 44px; border: 1px solid #1b3c5a; border-radius: 2px; color: #1b3c5a; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.08em">Add a talking point</a>
+<a href="#video" style="flex: 1 1 140px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 44px; border-radius: 2px; background: #1b3c5a; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.08em"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="M16 10l5-3v10l-5-3"></path></svg>Record a video take</a>
+</div>
+</div>
+</div>
+
+<div id="compose" style="border: 1px solid #d9d3c6; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 14px; background: #ffffff">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Propose a priority</div>
+<label for="draft" style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 24px; line-height: 28px; font-weight: 600">Say it in 60 characters</label>
+<input id="draft" type="text" value="{{draft}}" onChange="{{onDraft}}" placeholder="Example: Fix the potholes on every federal highway" style="min-height: 48px; padding: 0 14px; border: 1px solid #5f727d; border-radius: 2px; font-family: inherit; font-size: 15px; color: #1b3c5a; box-sizing: border-box; width: 100%">
+<div style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; line-height: 18px; color: #5f727d">
+<span>We check for duplicates before it posts.</span>
+<span style="font-weight: 600; color: {{countColor}}">{{remaining}} left</span>
+</div>
+<button style="min-height: 48px; border: 0; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-family: inherit; font-size: 14px; font-weight: 600; letter-spacing: 0.08em; cursor: pointer">Post priority</button>
+</div>
+
+<div id="join" style="background: #f1f0ee; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Civic credit</div>
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 24px; line-height: 28px; font-weight: 600">Earned, never bought</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px">Credit grows when people on different sides rate your talking points helpful. It unlocks the right to feature a priority, not a louder vote.</p>
+<ul style="margin: 0; padding-left: 18px; font-size: 14px; line-height: 22px; color: #5f727d">
+<li>Write a talking point rated helpful across viewpoints</li>
+<li>Flag a summary that misstates a side, and get it fixed</li>
+<li>Show up at a town hall you RSVP'd to</li>
+</ul>
+</div>
+</aside>
+</div>
+</section>
+
+<section id="video" style="background: #0f2a45; color: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 36px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 720px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">Video takes</div>
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 40px; line-height: 46px; font-weight: 600; color: #ffffff">Make your case on camera in 90 seconds</h2>
+<p style="margin: 0; font-size: 16px; line-height: 26px; color: #a9b6c2">Record a short take for or against any priority. Every take gets captions and a searchable transcript, and the transcript masks profanity before it posts.</p>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: #a9b6c2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c6af8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="M16 10l5-3v10l-5-3"></path></svg>Recording and playback powered by Ziggeo</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+
+<div style="flex: 1 1 420px; min-width: 0; background: #ffffff; color: #1b3c5a; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5f727d">Recording on</div>
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 22px; line-height: 26px; font-weight: 600">{{sel.title}}</div>
+</div>
+<div role="radiogroup" aria-label="Your side" style="display: flex; gap: 8px">
+<button role="radio" aria-checked="true" style="flex: 1 1 0; min-height: 44px; border: 1px solid #1b3c5a; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer">I'm for it</button>
+<button role="radio" aria-checked="false" style="flex: 1 1 0; min-height: 44px; border: 1px solid #6f5a36; border-radius: 2px; background: #ffffff; color: #6f5a36; font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer">I'm against it</button>
+</div>
+<div style="position: relative; aspect-ratio: 16 / 9; background: #0b1f33; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center">
+<svg width="160" height="140" viewBox="0 0 160 140" fill="none" aria-hidden="true"><circle cx="80" cy="52" r="28" stroke="#34506c" stroke-width="3"></circle><path d="M24 140c4-34 28-52 56-52s52 18 56 52" stroke="#34506c" stroke-width="3"></path></svg>
+<div style="position: absolute; top: 14px; left: 14px; display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(11,31,51,0.85); border-radius: 2px; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.08em; color: #f1f0ee"><span style="width: 8px; height: 8px; border-radius: 50%; background: #c6af8a"></span>CAMERA READY</div>
+<div style="position: absolute; top: 14px; right: 14px; padding: 4px 10px; background: rgba(11,31,51,0.85); border-radius: 2px; font-size: 12px; line-height: 16px; font-weight: 600; color: #f1f0ee">0:00 / 1:30</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center">
+<button aria-label="Start recording" style="width: 64px; height: 64px; border-radius: 50%; border: 3px solid #f1f0ee; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0"><span style="width: 44px; height: 44px; border-radius: 50%; background: #c6af8a"></span></button>
+</div>
+</div>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; line-height: 18px; color: #5f727d">
+<li style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a88f61" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Captions added automatically</li>
+<li style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a88f61" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Review before you post</li>
+<li style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a88f61" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Re-record as often as you like</li>
+</ul>
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: #5f727d">Your take shows your verified state and your display name. Your legal name stays private.</p>
+</div>
+
+<div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<div style="font-size: 14px; line-height: 20px; font-weight: 600; color: #ffffff">Takes on this priority <span style="font-weight: 400; color: #a9b6c2">(sample)</span></div>
+<div style="display: flex; gap: 6px">
+<button style="min-height: 36px; padding: 0 14px; border-radius: 2px; border: 1px solid #c6af8a; background: #c6af8a; color: #0f2a45; font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer">All</button>
+<button style="min-height: 36px; padding: 0 14px; border-radius: 2px; border: 1px solid #34506c; background: transparent; color: #f1f0ee; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer">For</button>
+<button style="min-height: 36px; padding: 0 14px; border-radius: 2px; border: 1px solid #34506c; background: transparent; color: #f1f0ee; font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer">Against</button>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<sc-for list="{{takes}}" as="tk" hint-placeholder-count="4">
+<article style="flex: 1 1 260px; min-width: 0; background: #ffffff; color: #1b3c5a; border-radius: 6px; overflow: hidden; display: flex; flex-direction: column">
+<div style="position: relative; aspect-ratio: 16 / 9; background: {{tk.thumb}}; display: flex; align-items: center; justify-content: center">
+<svg width="84" height="74" viewBox="0 0 160 140" fill="none" aria-hidden="true" style="position: absolute; bottom: 0; opacity: 0.6"><circle cx="80" cy="52" r="28" stroke="#5f727d" stroke-width="4"></circle><path d="M24 140c4-34 28-52 56-52s52 18 56 52" stroke="#5f727d" stroke-width="4"></path></svg>
+<button aria-label="Play take by {{tk.who}}" style="position: relative; width: 52px; height: 52px; border-radius: 50%; border: 0; background: rgba(255,255,255,0.92); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1b3c5a" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></button>
+<span style="position: absolute; left: 10px; bottom: 10px; padding: 2px 6px; background: rgba(11,31,51,0.85); border-radius: 2px; font-size: 11px; line-height: 14px; font-weight: 700; letter-spacing: 0.08em; color: #ffffff">CC</span>
+<span style="position: absolute; right: 10px; bottom: 10px; padding: 2px 6px; background: rgba(11,31,51,0.85); border-radius: 2px; font-size: 12px; line-height: 14px; font-weight: 600; color: #ffffff">{{tk.dur}}</span>
+</div>
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; line-height: 16px">
+<span style="padding: 3px 8px; border-radius: 2px; background: {{tk.sideBg}}; color: #ffffff; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase">{{tk.side}}</span>
+<span style="color: #5f727d">{{tk.who}}</span>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 21px; flex: 1 1 auto">"{{tk.quote}}"</p>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; border-top: 1px solid #d9d3c6; padding-top: 10px">
+<button style="display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border: 1px solid #d9d3c6; border-radius: 2px; background: #ffffff; color: #1b3c5a; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v9H4v-9z"></path><path d="M7 11l4-7c1.5 0 2.5 1 2.2 2.6L12.6 10H19a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 17.8 20H7"></path></svg>Helpful {{tk.helpful}}</button>
+<a href="#video" style="font-size: 12px; font-weight: 600; color: #6f5a36">Read transcript</a>
+</div>
+</div>
+</article>
+</sc-for>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<section id="how" style="background: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 720px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">How it works</div>
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 40px; line-height: 46px; font-weight: 600">Four steps from idea to agenda</h2>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<div style="flex: 1 1 240px; background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 10px; border-top: 3px solid #a88f61">
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 40px; line-height: 40px; font-weight: 700; color: #a88f61">1</div>
+<div style="font-size: 17px; line-height: 24px; font-weight: 600">Verify once</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Confirm you are one real U.S. resident. Your name stays private unless you choose to show it.</p>
+</div>
+<div style="flex: 1 1 240px; background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 10px; border-top: 3px solid #a88f61">
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 40px; line-height: 40px; font-weight: 700; color: #a88f61">2</div>
+<div style="font-size: 17px; line-height: 24px; font-weight: 600">Endorse or oppose</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Back the priorities you want and push against the ones you don't. Change your mind any time.</p>
+</div>
+<div style="flex: 1 1 240px; background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 10px; border-top: 3px solid #a88f61">
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 40px; line-height: 40px; font-weight: 700; color: #a88f61">3</div>
+<div style="font-size: 17px; line-height: 24px; font-weight: 600">Find common ground</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Raw volume can be gamed. The common-ground score rewards priorities that people who usually disagree both support.</p>
+</div>
+<div style="flex: 1 1 240px; background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 10px; border-top: 3px solid #a88f61">
+<div style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 40px; line-height: 40px; font-weight: 700; color: #a88f61">4</div>
+<div style="font-size: 17px; line-height: 24px; font-weight: 600">Hand it to officials</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Each week the top of the list goes out as an open snapshot. Compare it with where your officials stand.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="then-now" style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 64px 24px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 760px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">From 2008 to now</div>
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 40px; line-height: 46px; font-weight: 600">What White House 2 got right, and what we changed</h2>
+<p style="margin: 0; font-size: 16px; line-height: 26px; color: #5f727d">In 2008 Jim Gilliam built White House 2 to imagine a White House run by thousands of people online. The core idea holds up. The tools around it needed an update.</p>
+</div>
+<div style="overflow-x: auto; border: 1px solid #d9d3c6; border-radius: 6px">
+<table style="width: 100%; min-width: 720px; border-collapse: collapse; font-size: 14px; line-height: 22px">
+<thead>
+<tr style="background: #1b3c5a; color: #ffffff; text-align: left">
+<th scope="col" style="padding: 14px 20px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; width: 18%">Feature</th>
+<th scope="col" style="padding: 14px 20px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; width: 38%">White House 2 (2008)</th>
+<th scope="col" style="padding: 14px 20px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: #c6af8a">WhiteHouse3</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #d9d3c6"><th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Who can join</th><td style="padding: 16px 20px; color: #5f727d">U.S. citizens, one account each, on the honor system</td><td style="padding: 16px 20px">Verified once, private by default, public profile can stay pseudonymous</td></tr>
+<tr style="border-top: 1px solid #d9d3c6; background: #f1f0ee"><th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Ranking</th><td style="padding: 16px 20px; color: #5f727d">Endorsements and oppositions from members</td><td style="padding: 16px 20px">Common-ground score lifts priorities backed across divides</td></tr>
+<tr style="border-top: 1px solid #d9d3c6"><th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Influence</th><td style="padding: 16px 20px; color: #5f727d">Political capital earned by activity and recruiting, spendable on ads for a priority</td><td style="padding: 16px 20px">Civic credit earned only when people on different sides rate your work helpful</td></tr>
+<tr style="border-top: 1px solid #d9d3c6; background: #f1f0ee"><th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Compare</th><td style="padding: 16px 20px; color: #5f727d">Your positions next to President Obama's</td><td style="padding: 16px 20px">Your positions next to the administration, your senators and your representative</td></tr>
+<tr style="border-top: 1px solid #d9d3c6"><th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Briefing room</th><td style="padding: 16px 20px; color: #5f727d">Member-written talking points and debate</td><td style="padding: 16px 20px">Talking points plus sourced summaries of both sides, open to correction</td></tr>
+<tr style="border-top: 1px solid #d9d3c6; background: #f1f0ee"><th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Video</th><td style="padding: 16px 20px; color: #5f727d">Text debate only</td><td style="padding: 16px 20px">90-second video takes for or against, with captions and transcripts, recorded through Ziggeo</td></tr>
+<tr style="border-top: 1px solid #d9d3c6"><th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Network</th><td style="padding: 16px 20px; color: #5f727d">Allies, opponents and Twitter follows</td><td style="padding: 16px 20px">Allies and opponents, local chapters, town-hall RSVPs</td></tr>
+<tr style="border-top: 1px solid #d9d3c6; background: #f1f0ee"><th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Openness</th><td style="padding: 16px 20px; color: #5f727d">Open-source Rails code, MIT license</td><td style="padding: 16px 20px">Open-source code plus a public API and a weekly agenda snapshot</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,300px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'top', votes: {}, sel: 'stocks', draft: '' };
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var data = [
+      { id: 'insulin', title: 'Cap insulin at $35 a month for every American', issue: 'Health care', up: 18420, down: 2210, delta: 2, bridge: 81, left: 89, right: 74, admin: 'Supports', age: 40,
+        pro: 'People ration insulin when prices jump. A cap keeps a life-saving drug in reach for every patient, insured or not.',
+        con: 'A cap moves the cost into premiums and taxes unless list prices fall too. Fix pricing upstream instead.' },
+      { id: 'stocks', title: 'Ban members of Congress from trading individual stocks', issue: 'Government reform', up: 21050, down: 1980, delta: 0, bridge: 88, left: 86, right: 90, admin: 'No stance', age: 60,
+        pro: 'Lawmakers see market-moving information before the public does. Trading on it, or looking like it, erodes trust.',
+        con: 'Strict disclosure rules and blind trusts could stop abuse without forcing members to sell everything they own.' },
+      { id: 'ballots', title: 'Require a paper ballot backup in every state', issue: 'Elections', up: 14900, down: 2600, delta: 3, bridge: 79, left: 81, right: 77, admin: 'No stance', age: 15,
+        pro: 'A paper record lets any result be counted again by hand. That settles disputes with evidence instead of claims.',
+        con: 'States run elections. A federal mandate adds cost and shifts control away from local officials.' },
+      { id: 'term', title: 'Set term limits for members of Congress', issue: 'Government reform', up: 13300, down: 3400, delta: 4, bridge: 74, left: 68, right: 82, admin: 'No stance', age: 3,
+        pro: 'New members bring fresh ideas and weaker ties to the people who fund long careers.',
+        con: 'Limits push out experience and hand more power to staff and lobbyists who never leave.' },
+      { id: 'budget', title: 'Pass a plan to balance the federal budget in 10 years', issue: 'Economy', up: 12600, down: 6100, delta: 5, bridge: 57, left: 41, right: 84, admin: 'Opposes', age: 30,
+        pro: 'Interest on the debt now crowds out other spending. A deadline forces hard choices before a crisis does.',
+        con: 'Fast cuts could hit Social Security, defense or a slowing economy. Growth may do more than a fixed date.' },
+      { id: 'nuclear', title: 'Speed permits for new nuclear power plants', issue: 'Energy', up: 9700, down: 4300, delta: 7, bridge: 62, left: 52, right: 79, admin: 'Supports', age: 8,
+        pro: 'Nuclear runs day and night with almost no carbon. Permits that take a decade keep it off the grid.',
+        con: 'Projects often run over budget, and the country still lacks a permanent plan for the waste.' },
+      { id: 'childcare', title: 'Make the expanded child tax credit permanent', issue: 'Families', up: 10400, down: 5200, delta: 1, bridge: 55, left: 88, right: 39, admin: 'No stance', age: 20,
+        pro: 'Monthly support helps families cover food, rent and childcare when budgets are tightest.',
+        con: 'It is expensive, and critics want it tied to work so it does not discourage employment.' },
+      { id: 'border', title: 'Fund more border agents and detection technology', issue: 'Immigration', up: 11800, down: 8900, delta: -1, bridge: 44, left: 28, right: 91, admin: 'Supports', age: 50,
+        pro: 'More agents and sensors slow smuggling and give the system time to process claims in order.',
+        con: 'Enforcement alone does not clear court backlogs or create the legal pathways employers say they need.' },
+      { id: 'rail', title: 'Build high-speed rail between major metro areas', issue: 'Transportation', up: 8100, down: 6900, delta: -3, bridge: 38, left: 76, right: 22, admin: 'Opposes', age: 45,
+        pro: 'Fast trains link cities without new airports or wider highways, and they cut short-haul flights.',
+        con: 'Recent projects ran years late and billions over budget. Prove one line works before funding more.' }
+    ];
+    var tabDefs = [
+      { id: 'top', label: 'Top', note: 'Sorted by endorsements minus oppositions.' },
+      { id: 'common', label: 'Common ground', note: 'Sorted by support from people who usually disagree.' },
+      { id: 'rising', label: 'Rising', note: 'Sorted by movement this week.' },
+      { id: 'controversial', label: 'Controversial', note: 'Sorted by how evenly members split.' },
+      { id: 'new', label: 'New', note: 'Newest priorities first.' }
+    ];
+    var fmt = function (n) { return n.toLocaleString('en-US'); };
+    var rows = data.map(function (p) {
+      var v = st.votes[p.id] || null;
+      var up = p.up + (v === 'up' ? 1 : 0);
+      var down = p.down + (v === 'down' ? 1 : 0);
+      return Object.assign({}, p, { up: up, down: down, vote: v });
+    });
+    var sorters = {
+      top: function (a, b) { return (b.up - b.down) - (a.up - a.down); },
+      common: function (a, b) { return b.bridge - a.bridge; },
+      rising: function (a, b) { return b.delta - a.delta; },
+      controversial: function (a, b) { return (Math.min(b.up, b.down) / Math.max(b.up, b.down)) - (Math.min(a.up, a.down) / Math.max(a.up, a.down)); },
+      'new': function (a, b) { return a.age - b.age; }
+    };
+    rows.sort(sorters[st.tab]);
+    var vote = function (id, dir) {
+      var votes = Object.assign({}, self.state.votes);
+      votes[id] = votes[id] === dir ? null : dir;
+      self.setState({ votes: votes });
+    };
+    var out = rows.map(function (p, i) {
+      var isUp = p.vote === 'up';
+      var isDown = p.vote === 'down';
+      var isSel = st.sel === p.id;
+      return {
+        rank: i + 1,
+        title: p.title,
+        issue: p.issue,
+        admin: p.admin,
+        bridge: p.bridge,
+        videos: ({ insulin: 34, stocks: 52, ballots: 27, term: 19, budget: 41, nuclear: 16, childcare: 22, border: 63, rail: 18 })[p.id] || 0,
+        upLabel: fmt(p.up),
+        downLabel: fmt(p.down),
+        pct: Math.round((p.up / (p.up + p.down)) * 100),
+        move: p.delta > 0 ? 'Up ' + p.delta + ' this week' : (p.delta < 0 ? 'Down ' + Math.abs(p.delta) + ' this week' : 'Steady this week'),
+        moveColor: p.delta > 0 ? '#2c4e6d' : (p.delta < 0 ? '#6f5a36' : '#5f727d'),
+        border: isSel ? '#a88f61' : '#d9d3c6',
+        upPressed: isUp ? 'true' : 'false',
+        downPressed: isDown ? 'true' : 'false',
+        upBg: isUp ? '#1b3c5a' : '#ffffff',
+        upFg: isUp ? '#ffffff' : '#1b3c5a',
+        downBg: isDown ? '#6f5a36' : '#ffffff',
+        downFg: isDown ? '#ffffff' : '#6f5a36',
+        debateLabel: isSel ? 'Showing in the briefing room' : 'Read both sides',
+        onUp: function () { vote(p.id, 'up'); },
+        onDown: function () { vote(p.id, 'down'); },
+        onSelect: function () { self.setState({ sel: p.id }); }
+      };
+    });
+    var tabs = tabDefs.map(function (t) {
+      var on = st.tab === t.id;
+      return {
+        label: t.label,
+        selected: on ? 'true' : 'false',
+        bg: on ? '#1b3c5a' : '#ffffff',
+        fg: on ? '#ffffff' : '#1b3c5a',
+        border: on ? '#1b3c5a' : '#d9d3c6',
+        pick: function () { self.setState({ tab: t.id }); }
+      };
+    });
+    var note = tabDefs.filter(function (t) { return t.id === st.tab; })[0].note;
+    var hero = data.slice().sort(sorters.common)[0];
+    var sel = data.filter(function (p) { return p.id === st.sel; })[0] || data[1];
+    var remaining = 60 - st.draft.length;
+    var split = function (s) { return s.split('. ').map(function (x) { return x.replace(/\.$/, '') + '.'; }); };
+    var pros = split(sel.pro);
+    var cons = split(sel.con);
+    var takes = [
+      { side: 'For', sideBg: '#1b3c5a', thumb: '#2c4e6d', who: 'Verified member, Ohio', dur: '1:12', helpful: 214, quote: pros[0] },
+      { side: 'Against', sideBg: '#6f5a36', thumb: '#243a52', who: 'Verified member, Texas', dur: '0:58', helpful: 187, quote: cons[0] },
+      { side: 'For', sideBg: '#1b3c5a', thumb: '#1b3c5a', who: 'Verified member, Georgia', dur: '1:29', helpful: 96, quote: pros[1] || pros[0] },
+      { side: 'Against', sideBg: '#6f5a36', thumb: '#34506c', who: 'Verified member, Arizona', dur: '1:05', helpful: 72, quote: cons[1] || cons[0] }
+    ];
+    return {
+      tabs: tabs,
+      tabNote: note,
+      rows: out,
+      hero: { title: hero.title, bridge: hero.bridge, left: hero.left, right: hero.right },
+      sel: { title: sel.title, pro: sel.pro, con: sel.con },
+      takes: takes,
+      draft: st.draft,
+      remaining: remaining,
+      countColor: remaining <= 10 ? '#6f5a36' : '#5f727d',
+      onDraft: function (e) { self.setState({ draft: String(e.target.value || '').slice(0, 60) }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

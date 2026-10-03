@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WhiteHouse3 site header</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: #1b3c5a; background: #ffffff; width: 100%">
+<div style="background: #0f2a45; color: #f1f0ee; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; padding: 10px 24px; text-align: center">An independent civic concept. Not affiliated with the White House or any government agency.</div>
+<header style="border-bottom: 1px solid #d9d3c6; background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px">
+<a href="Main.dc.html" style="text-decoration: none; display: flex; align-items: baseline; gap: 4px; color: #1b3c5a">
+<span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 32px; line-height: 36px; font-weight: 700; letter-spacing: 0.02em">WhiteHouse</span>
+<span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 36px; line-height: 36px; font-weight: 700; color: #a88f61">3</span>
+</a>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 0 22px; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase">
+<sc-for list="{{links}}" as="l" hint-placeholder-count="5">
+<a href="{{l.href}}" aria-current="{{l.current}}" style="color: #1b3c5a; text-decoration: none; padding: 12px 0 9px; border-bottom: 3px solid {{l.rule}}">{{l.label}}</a>
+</sc-for>
+</nav>
+<div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+<a href="Profile.dc.html" aria-label="My profile" style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid {{profileRule}}; border-radius: 2px; color: #1b3c5a"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4 4-6 8-6s7 2 8 6"></path></svg></a>
+<a href="Join.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 2px; background: #1b3c5a; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.08em">Verify and join</a>
+</div>
+</div>
+</header>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["agenda","accountability","assembly","budget","transparency","profile","none"],"default":"agenda"},"$preview":{"width":1440,"height":110}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var active = this.props.active ?? 'agenda';
+    var defs = [
+      { id: 'agenda', label: 'Agenda', href: 'Main.dc.html' },
+      { id: 'accountability', label: 'Accountability', href: 'Accountability.dc.html' },
+      { id: 'assembly', label: 'Assembly', href: 'Assembly.dc.html' },
+      { id: 'budget', label: 'Budget sandbox', href: 'Budget.dc.html' },
+      { id: 'transparency', label: 'How it’s ranked', href: 'Transparency.dc.html' }
+    ];
+    return {
+      links: defs.map(function (d) {
+        var on = d.id === active;
+        return { label: d.label, href: d.href, current: on ? 'page' : 'false', rule: on ? '#a88f61' : 'transparent' };
+      }),
+      profileRule: active === 'profile' ? '#a88f61' : '#d9d3c6'
+    };
+  }
+}
+</script>
+</body>
+</html>

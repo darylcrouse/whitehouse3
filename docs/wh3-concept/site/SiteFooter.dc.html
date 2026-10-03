@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WhiteHouse3 site footer</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<footer style="font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: #0f2a45; color: #d9d3c6; width: 100%">
+<div style="max-width: 1240px; margin: 0 auto; padding: 48px 24px; display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between">
+<div style="flex: 1 1 360px; display: flex; flex-direction: column; gap: 12px; max-width: 480px">
+<div style="display: flex; align-items: baseline; gap: 4px; color: #ffffff">
+<span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 28px; line-height: 32px; font-weight: 700">WhiteHouse</span>
+<span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 32px; line-height: 32px; font-weight: 700; color: #c6af8a">3</span>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 20px">WhiteHouse3 is an independent civic concept. It is not affiliated with, endorsed by or run by the White House or any government agency.</p>
+<p style="margin: 0; font-size: 13px; line-height: 20px">Inspired by White House 2 (2008), created by Jim Gilliam. Code lineage on <a href="https://github.com/darylcrouse/whitehouse3" style="color: #c6af8a">GitHub</a>.</p>
+</div>
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">Explore</div>
+<nav aria-label="Footer" style="display: flex; flex-direction: column; font-size: 13px; line-height: 20px">
+<a href="Main.dc.html" style="color: #f1f0ee; text-decoration: none; padding: 4px 0">The agenda</a>
+<a href="Accountability.dc.html" style="color: #f1f0ee; text-decoration: none; padding: 4px 0">Accountability tracker</a>
+<a href="Assembly.dc.html" style="color: #f1f0ee; text-decoration: none; padding: 4px 0">Citizens' assembly</a>
+<a href="Budget.dc.html" style="color: #f1f0ee; text-decoration: none; padding: 4px 0">Budget sandbox</a>
+<a href="Transparency.dc.html" style="color: #f1f0ee; text-decoration: none; padding: 4px 0">How it's ranked</a>
+</nav>
+</div>
+<div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">House rules</div>
+<ul style="margin: 0; padding-left: 18px; font-size: 13px; line-height: 22px">
+<li>One verified person, one account</li>
+<li>Argue the idea, never the person</li>
+<li>Every claim needs a source</li>
+<li>All vote totals are public data</li>
+</ul>
+</div>
+</div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":300}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

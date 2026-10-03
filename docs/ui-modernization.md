@@ -1,7 +1,8 @@
 # The White House 2 — UI Modernization Plan
 
-**Status:** draft v0.3 · 2026-10-03 · for Daryl's review
+**Status:** draft v0.4 · 2026-10-03 · for Daryl's review
 **Repo:** `darylcrouse/whitehouse3` @ `rails8-modernization` (engine: Rails 8.0.5.1 / Ruby 3.3)
+**Design direction:** the **WhiteHouse 3 concept** in `wh3-concept/` (Daryl's exports) — supersedes the blue home-concept in §6. See `wh3-concept/README.md` (design system + how to browse) and `wh3-concept/feature-map.md` (every concept feature → codebase asset → gap).
 
 ---
 
@@ -26,10 +27,10 @@ The UI itself is still **the authentic 2009 White House 2 look** — the port de
 
 - The question *"What should the government do better?"* — the product IS this question.
 - The **ENDORSE / OPPOSE** rhythm — the repeating unit of the whole site.
-- **Top / Controversial / Rising** as the ranking system (with the charts).
+- **Top / Controversial / Rising** as the ranking system (with the charts) — WH3 adds Common ground alongside them.
 - The voice — *"The word is out:"*, *"the more clout we have to make our agenda happen"*.
-- The section grouping: Economy, Health Care, Energy, …
-- The site's own deep blue (**#13499b**) — keep it as the brand accent; it's personal to this app.
+- The section grouping: Economy, Health Care, Energy, … (WH3 reuses it as priority categories).
+- The site's deep blue heritage — carried into WH3's navy family (`#0f2a45`/`#1b3c5a`), so the brand still feels like this app, one register deeper and with a gold accent.
 
 ## 4. Current-state audit
 
@@ -53,26 +54,33 @@ Cross-cutting offenders: tiny type & low-contrast grays; blue underlined links f
 
 **Recommendation: A now, then B for four journeys (home, auth, priority show, lists), then re-assess.** A alone removes ~80% of the "it looks old" feeling and makes every demo presentable, with near-zero risk to the just-stabilized app.
 
-## 6. Design direction (see the concept)
+## 6. Design direction — the WhiteHouse 3 concept
 
-The concept file `ui/home-concept.html` shows one interpretation you can open in a browser (or ask me to preview it in chat). The moves it makes:
+The **WhiteHouse 3 concept** (`wh3-concept/`) is the adopted direction, superseding the earlier blue home-concept (kept at `ui/home-concept.html` only as an alternative — it is no longer the target). The concept arrives as 8 complete page designs + shared header/footer, all browsable (see `wh3-concept/README.md`).
 
-- **Type scale**: 16px base body (up from ~11px), one serif display voice for the wordmark + the big question, sans for UI.
-- **Header**: a real brand band — wordmark left, one-row nav, "Sign in" action right; the second nav row becomes filter chips.
-- **The question becomes the CTA**: the dark search bar turns into the page's hero — type a priority, submit.
-- **Priority rows as cards**: title + ranking chip (Top/Rising/Controversial) + a single segmented **Endorse/Oppose** control with counts; scannable rhythm instead of loose lines.
-- **Sidebar rail**: sign-in box, about blurb, press block — collapses below content on mobile; scales with the viewport (300→400px) on large screens.
-- **Fluid shell**: fills the viewport width with size-scaled gutters (no fixed 1120px box); a 1760px cap keeps ultra-wide displays from stretching rows into dead space.
-- **Footer**: lightened from a dense one-liner into a quiet 2-row block.
-- **Palette**: white/off-white surface, ink #1a1d21, muted #5b6470, borders #e5e7eb, brand blue **#13499b**, endorse green, oppose red — one accent family, semantic colors only where the mechanic needs them.
+What it changes vs. the former direction:
 
-## 7. Page-by-page plan (if approved)
+- **A real brand system**: Cormorant SC display serif + Montserrat UI sans; navy `#0f2a45`/`#1b3c5a` + gold `#a88f61` on cream `#f1f0ee`. (The old blue `#13499b` retires with the old concept.)
+- **The product story is upgraded, not just restyled**: common-ground ranking, a response clock, opinion maps, civic credit, video takes, citizens' assemblies, a budget sandbox, a transparency page. Half of this maps onto machinery the legacy app already runs — `wh3-concept/feature-map.md` is the full mapping and is the implementation brief.
+- **The 2009 keep-list survives**: endorse/oppose rhythm, Top/Rising/Controversial, the section structure, the voice — all carried forward in WH3's own language.
+- **Fluid layout, mobile-aware**: 1240px container with wrapping flex rows; every control ≥44px.
 
-1. **Global overlay stylesheet** — header band, type scale, links, buttons, forms, footer, focus states, first responsive breakpoints. (Everything immediately looks 15 years younger; highest ROI, lowest risk.)
-2. **Auth pages** — style the legacy forms to sit with the MojoAuth card; consider demoting the legacy password forms visually (MojoAuth is the primary path now).
-3. **Home + priority detail** — the two screens people remember.
-4. **Lists / profile / about / misc** — consistency sweep.
-5. **Mobile + accessibility pass** — real breakpoints, 44px targets, contrast check, alt text.
+## 7. Page-by-page plan (revised to the WH3 concept)
+
+Two tracks, in order:
+
+**Track 1 — reskin on existing mechanics** (every page presentable; no schema changes)
+1. **Design tokens + overlay stylesheet** — fonts, palette, type scale, buttons, links, forms, focus states; header band + footer per the shared exports.
+2. **Home (agenda)** — WH3 hero + ranked list with ENDORSE/OPPOSE, counts, momentum (already computed in the DB), admin stance (relabeled), briefing room (existing talking points), civic credit (existing capitals).
+3. **Auth/join** — style MojoAuth flow into the "Verify and join" visual language.
+4. **Priority page** — restyle to the WH3 priority layout with existing data; new modules (response clock, opinion map, bills) land later per feature map.
+5. **Lists / profile / misc** — consistency sweep.
+6. **Mobile + accessibility pass** — breakpoints, targets, contrast, alt text, captions-first for future video.
+
+**Track 2 — new mechanics** (per `feature-map.md`, small → flagship → rest)
+1. Common-ground score (computed) + scope filters (state first) + propose-with-duplicate-check.
+2. Flagship choice: **response clock** (self-contained, most differentiating) vs **video takes** (requires Ziggeo) vs **opinion map**. Recommend response clock first.
+3. Assemblies, budget sandbox, Congress.gov bills, transparency/open-data page, local layer, verification.
 
 ## 8. How you contribute: video messages
 
@@ -93,7 +101,8 @@ Suggested clips (any subset, any order):
 1. End use: demo piece, public relaunch, or a base for something else?
 2. How important is phone-first for the audience you care about?
 3. Keep any 2009 "retro charm" on purpose, or modernize uniformly?
-4. Appetite: Option A now (days) — go? — and is Option B's four-journey scope the right next step?
+4. Appetite: **Track 1 slice-by-slice as time allows** — home first? And for Track 2, is the **response clock** the right flagship, or does **video takes** (Ziggeo) matter more to you?
+5. The concept is "WhiteHouse 3" branding — do we take that name/wordmark into the app (title, logo, copy), or keep "White House 2" until a public relaunch decision is made?
 
 ## 10. Recently fixed (context for the audit)
 

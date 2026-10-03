@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Member profile</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#6f5a36}a:hover{color:#1b3c5a}
+button:focus-visible,a:focus-visible{outline:2px solid #a88f61;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: #1b3c5a; background: #ffffff; font-size: 16px; line-height: 26px">
+<dc-import name="SiteHeader" active="profile" hint-size="100%,110px"></dc-import>
+
+<section style="background: #0f2a45; color: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 48px 24px; display: flex; flex-wrap: wrap; gap: 32px; align-items: center; justify-content: space-between">
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<div aria-hidden="true" style="width: 88px; height: 88px; border-radius: 50%; background: #c6af8a; color: #0f2a45; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 36px; font-weight: 700">RV</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 44px; line-height: 48px; font-weight: 600; color: #ffffff">Riverbend Voter</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; line-height: 20px; color: #a9b6c2">
+<span style="display: inline-flex; align-items: center; gap: 6px; color: #c6af8a; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg>Verified member</span>
+<span>Ohio</span><span>Member since 2026</span><span>Sample profile</span>
+</div>
+</div>
+</div>
+<div style="display: flex; gap: 32px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 48px; line-height: 48px; font-weight: 700; color: #ffffff">312</span><span style="font-size: 12px; line-height: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #c6af8a">Civic credit</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 48px; line-height: 48px; font-weight: 700; color: #ffffff">27</span><span style="font-size: 12px; line-height: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #c6af8a">Endorsements</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 48px; line-height: 48px; font-weight: 700; color: #ffffff">2</span><span style="font-size: 12px; line-height: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: #c6af8a">Video takes</span></div>
+</div>
+</div>
+</section>
+
+<section style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start">
+
+<div style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Me and my officials</div>
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 36px; line-height: 42px; font-weight: 600">Where we line up</h2>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Official stances come from votes, sponsorships and public statements, each linked to its source. Names fill in from your ZIP code.</p>
+</div>
+<div style="overflow-x: auto; border: 1px solid #d9d3c6; border-radius: 6px">
+<table style="width: 100%; min-width: 780px; border-collapse: collapse; font-size: 13px; line-height: 18px">
+<thead>
+<tr style="background: #1b3c5a; color: #ffffff; text-align: left">
+<th scope="col" style="padding: 12px 16px; font-weight: 600; width: 34%">Priority</th>
+<th scope="col" style="padding: 12px 10px; font-weight: 600; color: #c6af8a">You</th>
+<th scope="col" style="padding: 12px 10px; font-weight: 600">Administration</th>
+<th scope="col" style="padding: 12px 10px; font-weight: 600">[Senator 1]</th>
+<th scope="col" style="padding: 12px 10px; font-weight: 600">[Senator 2]</th>
+<th scope="col" style="padding: 12px 10px; font-weight: 600">[Representative]</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #d9d3c6">
+<th scope="row" style="padding: 14px 16px; text-align: left; font-weight: 600"><a href="Priority.dc.html" style="color: #1b3c5a; text-decoration: none">Ban members of Congress from trading individual stocks</a></th>
+<td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #f1f0ee; color: #5f727d; font-weight: 600; font-size: 12px">No stance</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td>
+</tr>
+<tr style="border-top: 1px solid #d9d3c6">
+<th scope="row" style="padding: 14px 16px; text-align: left; font-weight: 600"><a href="Priority.dc.html" style="color: #1b3c5a; text-decoration: none">Require a paper ballot backup in every state</a></th>
+<td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #f1f0ee; color: #5f727d; font-weight: 600; font-size: 12px">No stance</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #6f5a36; color: #ffffff; font-weight: 600; font-size: 12px">Oppose</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td>
+</tr>
+<tr style="border-top: 1px solid #d9d3c6">
+<th scope="row" style="padding: 14px 16px; text-align: left; font-weight: 600"><a href="Priority.dc.html" style="color: #1b3c5a; text-decoration: none">Cap insulin at $35 a month for every American</a></th>
+<td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #6f5a36; color: #ffffff; font-weight: 600; font-size: 12px">Oppose</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td>
+</tr>
+<tr style="border-top: 1px solid #d9d3c6">
+<th scope="row" style="padding: 14px 16px; text-align: left; font-weight: 600"><a href="Priority.dc.html" style="color: #1b3c5a; text-decoration: none">Speed permits for new nuclear power plants</a></th>
+<td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #6f5a36; color: #ffffff; font-weight: 600; font-size: 12px">Oppose</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #f1f0ee; color: #5f727d; font-weight: 600; font-size: 12px">No stance</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #f1f0ee; color: #5f727d; font-weight: 600; font-size: 12px">No stance</span></td>
+</tr>
+<tr style="border-top: 1px solid #d9d3c6">
+<th scope="row" style="padding: 14px 16px; text-align: left; font-weight: 600"><a href="Priority.dc.html" style="color: #1b3c5a; text-decoration: none">Build high-speed rail between major metro areas</a></th>
+<td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #6f5a36; color: #ffffff; font-weight: 600; font-size: 12px">Oppose</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #6f5a36; color: #ffffff; font-weight: 600; font-size: 12px">Oppose</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #f1f0ee; color: #5f727d; font-weight: 600; font-size: 12px">No stance</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #1b3c5a; color: #ffffff; font-weight: 600; font-size: 12px">Endorse</span></td><td style="padding: 14px 10px"><span style="display: inline-block; padding: 3px 8px; border-radius: 2px; background: #6f5a36; color: #ffffff; font-weight: 600; font-size: 12px">Oppose</span></td>
+</tr>
+<tr style="border-top: 2px solid #1b3c5a; background: #f1f0ee">
+<th scope="row" style="padding: 14px 16px; text-align: left; font-weight: 700">You agree with them on</th>
+<td style="padding: 14px 10px; color: #5f727d">n/a</td>
+<td style="padding: 14px 10px; font-weight: 700">3 of 5</td>
+<td style="padding: 14px 10px; font-weight: 700">3 of 5</td>
+<td style="padding: 14px 10px; font-weight: 700">1 of 5</td>
+<td style="padding: 14px 10px; font-weight: 700">4 of 5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: #5f727d">Sample stances for this concept.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 28px; line-height: 34px; font-weight: 600">Priorities I proposed</h2>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<a href="Priority.dc.html" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding: 18px 20px; border: 1px solid #d9d3c6; border-radius: 6px; text-decoration: none; color: #1b3c5a"><span style="font-size: 16px; line-height: 24px; font-weight: 600">Publish every federal contract over $1 million online</span><span style="font-size: 13px; line-height: 24px; color: #5f727d">No. 14 · 6,210 endorse · Common ground 72</span></a>
+<a href="Priority.dc.html" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding: 18px 20px; border: 1px solid #d9d3c6; border-radius: 6px; text-decoration: none; color: #1b3c5a"><span style="font-size: 16px; line-height: 24px; font-weight: 600">Fund broadband in every rural county by 2030</span><span style="font-size: 13px; line-height: 24px; color: #5f727d">No. 38 · 2,940 endorse · Common ground 61</span></a>
+</div>
+</div>
+</div>
+
+<aside style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div style="border: 1px solid #d9d3c6; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Civic credit history</div>
+<sc-for list="{{credit}}" as="c" hint-placeholder-count="4">
+<div style="display: flex; gap: 12px; align-items: flex-start; padding-bottom: 12px; border-bottom: 1px solid #d9d3c6">
+<span style="flex: none; min-width: 44px; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 22px; line-height: 24px; font-weight: 700; color: #2c4e6d">{{c.pts}}</span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px">{{c.what}}</span><span style="font-size: 12px; line-height: 16px; color: #5f727d">{{c.when}}</span></span>
+</div>
+</sc-for>
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: #5f727d">Credit can't be bought or transferred. It can't add weight to your votes.</p>
+</div>
+
+<div style="background: #f1f0ee; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Delegations</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px">You let someone you trust vote for you on one issue. You can take it back any time, and your own vote always overrides theirs.</p>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #ffffff; border-radius: 2px; padding: 12px 14px; font-size: 14px; line-height: 20px">
+<span><strong>Energy</strong> to Prairie Engineer</span>
+<button style="min-height: 36px; padding: 0 12px; border: 1px solid #6f5a36; border-radius: 2px; background: #ffffff; color: #6f5a36; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Take back</button>
+</div>
+<button style="min-height: 44px; border: 1px solid #1b3c5a; border-radius: 2px; background: transparent; color: #1b3c5a; font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer">Delegate another issue</button>
+</div>
+</aside>
+</div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      credit: [
+        { pts: '+12', what: 'Your talking point was rated helpful by members in all three opinion groups', when: '2 days ago' },
+        { pts: '+8', what: 'You flagged a summary that misstated a side, and it was corrected', when: '5 days ago' },
+        { pts: '+5', what: 'You attended a town hall you RSVP’d to', when: '2 weeks ago' },
+        { pts: '+3', what: 'Your video take was marked helpful', when: '3 weeks ago' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

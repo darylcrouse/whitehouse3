@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Verify and join</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#6f5a36}a:hover{color:#1b3c5a}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #a88f61;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: #1b3c5a; background: #ffffff; font-size: 16px; line-height: 26px">
+<dc-import name="SiteHeader" active="none" hint-size="100%,110px"></dc-import>
+
+<section style="background: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 72px; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start">
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Verify and join</div>
+<h1 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 48px; line-height: 52px; font-weight: 600">One real person. One account. Your name stays yours.</h1>
+</div>
+
+<ol aria-label="Sign-up steps" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<li style="flex: 1 1 180px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #1b3c5a; color: #ffffff; border-radius: 2px; font-size: 14px; line-height: 20px; font-weight: 600"><span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 24px; line-height: 24px; color: #c6af8a">1</span>Verify you</li>
+<li style="flex: 1 1 180px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #ffffff; border: 1px solid #d9d3c6; border-radius: 2px; font-size: 14px; line-height: 20px; font-weight: 600; color: #5f727d"><span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 24px; line-height: 24px; color: #a88f61">2</span>Pick a public name</li>
+<li style="flex: 1 1 180px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #ffffff; border: 1px solid #d9d3c6; border-radius: 2px; font-size: 14px; line-height: 20px; font-weight: 600; color: #5f727d"><span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 24px; line-height: 24px; color: #a88f61">3</span>Choose your issues</li>
+</ol>
+
+<form style="background: #ffffff; border-radius: 6px; padding: 32px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px">
+<label for="email" style="font-size: 13px; line-height: 18px; font-weight: 600">Email</label>
+<input id="email" type="email" placeholder="you@example.com" style="min-height: 48px; padding: 0 14px; border: 1px solid #5f727d; border-radius: 2px; font-family: inherit; font-size: 15px; color: #1b3c5a; box-sizing: border-box; width: 100%">
+</div>
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px">
+<label for="zip" style="font-size: 13px; line-height: 18px; font-weight: 600">ZIP code</label>
+<input id="zip" type="text" placeholder="90250" style="min-height: 48px; padding: 0 14px; border: 1px solid #5f727d; border-radius: 2px; font-family: inherit; font-size: 15px; color: #1b3c5a; box-sizing: border-box; width: 100%">
+<span style="font-size: 12px; line-height: 16px; color: #5f727d">Sets your state and district view</span>
+</div>
+</div>
+
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="font-size: 13px; line-height: 18px; font-weight: 600; margin-bottom: 10px; padding: 0">How do you want to verify?</legend>
+<label style="display: flex; gap: 14px; align-items: flex-start; padding: 16px; border: 2px solid #1b3c5a; border-radius: 2px; cursor: pointer">
+<input type="radio" name="method" aria-describedby="m1" style="margin-top: 4px; width: 18px; height: 18px; accent-color: #1b3c5a">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; line-height: 22px; font-weight: 600">Scan a state ID</span><span id="m1" style="font-size: 13px; line-height: 20px; color: #5f727d">Recommended. About two minutes on your phone. The image is deleted once the check passes.</span></span>
+</label>
+<label style="display: flex; gap: 14px; align-items: flex-start; padding: 16px; border: 1px solid #d9d3c6; border-radius: 2px; cursor: pointer">
+<input type="radio" name="method" style="margin-top: 4px; width: 18px; height: 18px; accent-color: #1b3c5a">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; line-height: 22px; font-weight: 600">Mail me a code</span><span style="font-size: 13px; line-height: 20px; color: #5f727d">A postcard to your home address. Takes about a week.</span></span>
+</label>
+<label style="display: flex; gap: 14px; align-items: flex-start; padding: 16px; border: 1px solid #d9d3c6; border-radius: 2px; cursor: pointer">
+<input type="radio" name="method" style="margin-top: 4px; width: 18px; height: 18px; accent-color: #1b3c5a">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; line-height: 22px; font-weight: 600">Verify in person</span><span style="font-size: 13px; line-height: 20px; color: #5f727d">At a partner library or community center. Good if you don't have a smartphone.</span></span>
+</label>
+</fieldset>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between">
+<span style="font-size: 13px; line-height: 20px; color: #5f727d">Already a member? <a href="Profile.dc.html">Sign in</a></span>
+<a href="Profile.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 28px; border-radius: 2px; background: #1b3c5a; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.08em">Continue</a>
+</div>
+</form>
+</div>
+
+<aside style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="background: #0f2a45; color: #f1f0ee; border-radius: 6px 120px 6px 6px; padding: 32px; display: flex; flex-direction: column; gap: 20px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">Our privacy promise</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 14px; line-height: 20px; font-weight: 700; color: #ffffff">What other members see</div>
+<ul style="margin: 0; padding-left: 18px; font-size: 14px; line-height: 22px">
+<li>The public name you pick</li>
+<li>Your state, and your district if you allow it</li>
+<li>Your endorsements, talking points and video takes</li>
+</ul>
+</div>
+<div style="height: 1px; background: #34506c"></div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 14px; line-height: 20px; font-weight: 700; color: #ffffff">What we never show or sell</div>
+<ul style="margin: 0; padding-left: 18px; font-size: 14px; line-height: 22px">
+<li>Your legal name or street address</li>
+<li>Your ID image, which we delete after the check</li>
+<li>Your email, to anyone, ever</li>
+</ul>
+</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #d9d3c6; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 14px; line-height: 20px; font-weight: 700">Who can join</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">Adults who live in the United States. One account per person. Duplicate accounts are removed, and the removals are counted on the <a href="Transparency.dc.html">transparency page</a>.</p>
+</div>
+</aside>
+</div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Accountability tracker</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&amp;family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#6f5a36}a:hover{color:#1b3c5a}
+button:focus-visible,a:focus-visible{outline:2px solid #a88f61;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: #1b3c5a; background: #ffffff; font-size: 16px; line-height: 26px">
+<dc-import name="SiteHeader" active="accountability" hint-size="100%,110px"></dc-import>
+
+<section style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 40px; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-end; justify-content: space-between">
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6f5a36">Accountability tracker</div>
+<h1 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 56px; line-height: 60px; font-weight: 600">Did anyone act?</h1>
+<p style="margin: 0; font-size: 17px; line-height: 28px; color: #5f727d; max-width: 640px">When a priority clears the response line, we send a formal request to the officials who can act on it. Then we start a public clock and post every reply in full.</p>
+</div>
+<div style="flex: 1 1 340px; min-width: 0; border: 1px solid #d9d3c6; border-top: 4px solid #a88f61; border-radius: 6px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 14px; line-height: 20px; font-weight: 700">The response line</div>
+<p style="margin: 0; font-size: 14px; line-height: 22px; color: #5f727d">20,000 verified endorsements and a common-ground score of 70 or higher. The number rises as membership grows. The Obama-era We the People petition site used 100,000 signatures in 30 days.</p>
+</div>
+</div>
+</section>
+
+<section style="background: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 48px 24px; display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 40px; font-weight: 600">Over the line now</h2>
+<div style="background: #ffffff; border-radius: 6px; padding: 28px; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+<div style="flex: 999 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<a href="Priority.dc.html" style="font-size: 22px; line-height: 30px; font-weight: 600; color: #1b3c5a; text-decoration: none">Ban members of Congress from trading individual stocks</a>
+<div style="font-size: 14px; line-height: 20px; color: #5f727d">21,051 endorse · Common ground 88 · Crossed the line 23 days ago</div>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #d9d3c6">
+<sc-for list="{{officials}}" as="o" hint-placeholder-count="4">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding: 14px 0; border-bottom: 1px solid #d9d3c6; font-size: 14px; line-height: 20px">
+<span style="font-weight: 600">{{o.who}}</span>
+<span style="display: inline-flex; align-items: center; gap: 8px; color: {{o.fg}}; font-weight: 600"><span style="width: 10px; height: 10px; border-radius: 50%; background: {{o.dot}}"></span>{{o.status}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="flex: 1 1 240px; min-width: 0; background: #0f2a45; color: #f1f0ee; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start">
+<span style="font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #c6af8a">White House clock</span>
+<span style="font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 80px; line-height: 80px; font-weight: 700; color: #ffffff">23</span>
+<span style="font-size: 14px; line-height: 20px; color: #a9b6c2">days with no reply</span>
+</div>
+</div>
+<p style="margin: 0; font-size: 12px; line-height: 18px; color: #5f727d">Sample data for this concept.</p>
+</div>
+</section>
+
+<section style="background: #ffffff">
+<div style="max-width: 1240px; margin: 0 auto; padding: 48px 24px; display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 40px; font-weight: 600">Getting close</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<sc-for list="{{close}}" as="c" hint-placeholder-count="3">
+<a href="Priority.dc.html" style="flex: 1 1 320px; min-width: 0; border: 1px solid #d9d3c6; border-radius: 6px; padding: 22px; display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: #1b3c5a">
+<span style="font-size: 16px; line-height: 24px; font-weight: 600">{{c.title}}</span>
+<span style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; line-height: 18px; color: #5f727d">
+<span style="display: flex; justify-content: space-between"><span>Endorsements</span><span style="font-weight: 600; color: #1b3c5a">{{c.upLabel}} of 20,000</span></span>
+<span style="display: block; height: 8px; background: #f1f0ee; border-radius: 2px"><span style="display: block; height: 8px; width: {{c.upPct}}%; background: #2c4e6d; border-radius: 2px"></span></span>
+</span>
+<span style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; line-height: 18px; color: #5f727d">
+<span style="display: flex; justify-content: space-between"><span>Common ground</span><span style="font-weight: 600; color: #1b3c5a">{{c.bridge}} of 70 needed</span></span>
+<span style="display: block; height: 8px; background: #f1f0ee; border-radius: 2px"><span style="display: block; height: 8px; width: {{c.bridgePct}}%; background: #a88f61; border-radius: 2px"></span></span>
+</span>
+</a>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section style="background: #f1f0ee">
+<div style="max-width: 1240px; margin: 0 auto; padding: 48px 24px 64px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 720px">
+<h2 style="margin: 0; font-family: 'Cormorant SC', 'Trajan Pro', Georgia, serif; font-size: 34px; line-height: 40px; font-weight: 600">Replies, posted in full</h2>
+<p style="margin: 0; font-size: 15px; line-height: 24px; color: #5f727d">Members rate whether each reply answered the question. Form letters get labeled as form letters.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<sc-for list="{{replies}}" as="r" hint-placeholder-count="3">
+<article style="flex: 1 1 320px; min-width: 0; background: #ffffff; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 12px; line-height: 16px">
+<span style="font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6f5a36">{{r.office}}</span>
+<span style="color: #5f727d">Replied in {{r.days}} days</span>
+</div>
+<div style="font-size: 16px; line-height: 24px; font-weight: 600">{{r.who}}</div>
+<p style="margin: 0; padding: 14px; background: #f1f0ee; border-radius: 2px; font-size: 14px; line-height: 22px; color: #5f727d">[The full reply appears here, with a link to the original letter.]</p>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; font-size: 13px; line-height: 18px"><span>Answered the question?</span><span style="font-weight: 700">{{r.yes}}% say yes</span></div>
+<div style="display: flex; height: 8px; border-radius: 2px; overflow: hidden; background: #c6af8a"><div style="width: {{r.yes}}%; background: #2c4e6d"></div></div>
+</div>
+<sc-if value="{{r.form}}" hint-placeholder-val="{{ false }}"><span style="align-self: flex-start; padding: 3px 8px; border: 1px solid #6f5a36; border-radius: 2px; font-size: 12px; line-height: 16px; font-weight: 600; color: #6f5a36">Form letter</span></sc-if>
+</article>
+</sc-for>
+</div>
+</div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var close = [
+      { title: 'Cap insulin at $35 a month for every American', up: 18420, bridge: 81 },
+      { title: 'Require a paper ballot backup in every state', up: 14900, bridge: 79 },
+      { title: 'Set term limits for members of Congress', up: 13300, bridge: 74 }
+    ].map(function (c) {
+      return {
+        title: c.title,
+        upLabel: c.up.toLocaleString('en-US'),
+        upPct: Math.min(100, Math.round(c.up / 200)),
+        bridge: c.bridge,
+        bridgePct: Math.min(100, Math.round((c.bridge / 70) * 100))
+      };
+    });
+    return {
+      officials: [
+        { who: 'The White House', status: 'No reply', dot: '#a88f61', fg: '#6f5a36' },
+        { who: 'Chair of the Senate committee with jurisdiction', status: 'No reply', dot: '#a88f61', fg: '#6f5a36' },
+        { who: 'House members with endorsing constituents (412)', status: '139 replied', dot: '#2c4e6d', fg: '#1b3c5a' },
+        { who: 'Senators with endorsing constituents (98)', status: '31 replied', dot: '#2c4e6d', fg: '#1b3c5a' }
+      ],
+      close: close,
+      replies: [
+        { office: 'U.S. House', who: '[Representative], [State]-[District]', days: 6, yes: 74, form: false },
+        { office: 'U.S. Senate', who: '[Senator], [State]', days: 11, yes: 58, form: false },
+        { office: 'U.S. House', who: '[Representative], [State]-[District]', days: 19, yes: 12, form: true }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
