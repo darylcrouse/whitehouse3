@@ -941,3 +941,33 @@ end
 unless ActionController::Base.ancestors.include?(LegacyRenderActionPath)
   ActionController::Base.prepend(LegacyRenderActionPath)
 end
+
+# ---------------------------------------------------------------------------
+# 19. Translation output escaping — Rails 2 output t() results raw; the port
+#     escapes them, so the ~100 locale strings containing markup (activities,
+#     menus, the home sidebar login box) render as visible source text.
+#     Treat translations as site-authored, trusted content (html_safe) while
+#     escaping non-html_safe STRING interpolations so data (names, etc.) can't
+#     inject markup. SafeBuffer arguments (e.g. link_to results) pass through.
+# ---------------------------------------------------------------------------
+module LegacyHtmlSafeTranslate
+  def translate(key = nil, **options)
+    if options.any?
+      options = options.dup
+      options.each do |k, v|
+        options[k] = ERB::Util.html_escape(v) if v.is_a?(String)
+      end
+    end
+    result = super(key, **options)
+    result.is_a?(String) && !result.html_safe? ? result.html_safe : result
+  end
+
+  def t(key = nil, **options)
+    translate(key, **options)
+  end
+end
+
+ActiveSupport.on_load(:action_view) do
+  ActionView::Helpers::TranslationHelper.prepend(LegacyHtmlSafeTranslate)
+end
+
