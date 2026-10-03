@@ -1,5 +1,9 @@
 class Activity < ActiveRecord::Base
   include AASM
+  # Include directly so `liquid_methods` works even when this file is loaded
+  # from an initializer (inherited_models_dependency.rb) before the
+  # ActiveRecord::Base-wide include from legacy_support's to_prepare runs.
+  include LiquidDroppableHelper
 
   scope :active, -> { where(status: 'active') }
   scope :deleted, -> { where(status: 'deleted').order(updated_at: :desc) }
@@ -56,6 +60,11 @@ class Activity < ActiveRecord::Base
   end
   
   
+  # Restored from the 2009 model (dropped in the port): Liquid templates
+  # render activity rows via {{ ... }} — without to_liquid (defined by
+  # liquid_methods) they raise "Liquid error: internal".
+  liquid_methods :name, :id, :first_comment, :last_comment
+
   # docs: http://www.vaporbase.com/postings/stateful_authentication
   aasm column: :status do
     state :active, initial: true

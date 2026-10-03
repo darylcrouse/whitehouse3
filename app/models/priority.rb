@@ -1,5 +1,9 @@
 class Priority < ActiveRecord::Base
   include AASM
+  # Include directly so `liquid_methods` works even when this file is loaded
+  # from an initializer (inherited_models_dependency.rb) before the
+  # ActiveRecord::Base-wide include from legacy_support's to_prepare runs.
+  include LiquidDroppableHelper
 
   scope :published, -> {
     if Government.current&.is_suppress_empty_priorities?
@@ -86,6 +90,10 @@ class Priority < ActiveRecord::Base
       value_name: value_name
     }
   end
+
+  # Restored from the 2009 model (dropped in the port): Liquid renders
+  # priority rows via {{ ... }} — to_liquid comes from liquid_methods.
+  liquid_methods :id, :name, :show_url, :value_name
 
   validates_length_of :name, :within => 3..60
   validates_uniqueness_of :name
