@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The White House 2 — home concept</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --ink: #1a1d21;
+    --muted: #5b6470;
+    --faint: #737d8a;
+    --border: #e2e5e9;
+    --blue: #13499b;
+    --blue-soft: #eef3fb;
+    --green: #0a7c42;
+    --green-soft: #eaf6ef;
+    --red: #b3261e;
+    --red-soft: #fbeeed;
+    --amber: #92600a;
+    --amber-soft: #faf3e3;
+    --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  /* concept badge */
+  .concept-strip {
+    background: #1a1d21; color: #f3f4f6; font-size: 12px; letter-spacing: .06em;
+    text-transform: uppercase; text-align: center; padding: 6px 12px;
+  }
+  .concept-strip b { color: #ffd54a; font-weight: 600; }
+
+  /* header */
+  header.site {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .site-bar {
+    display: flex; align-items: center; gap: 28px; padding: 16px 0;
+  }
+  .wordmark { font: 700 22px/1 var(--serif); color: var(--ink); white-space: nowrap; }
+  .wordmark span { color: var(--blue); }
+  nav.main { display: flex; gap: 4px; flex: 1; }
+  nav.main a {
+    color: var(--muted); font-size: 15px; font-weight: 500; padding: 7px 12px; border-radius: 999px;
+  }
+  nav.main a:hover { background: var(--blue-soft); color: var(--blue); text-decoration: none; }
+  nav.main a.here { background: var(--blue-soft); color: var(--blue); }
+  .signin {
+    color: var(--ink); font-size: 15px; font-weight: 600; border: 1px solid var(--border);
+    padding: 8px 16px; border-radius: 999px; white-space: nowrap;
+  }
+  .signin:hover { border-color: var(--blue); color: var(--blue); text-decoration: none; }
+
+  /* hero ask */
+  .ask { padding: 40px 0 8px; }
+  .ask h1 {
+    font: 700 clamp(30px, 4.6vw, 46px)/1.15 var(--serif);
+    margin: 0 0 6px; letter-spacing: -0.01em;
+  }
+  .ask .sub { color: var(--muted); margin: 0 0 22px; font-size: 17px; }
+  .ask form { display: flex; gap: 10px; max-width: 724px; }
+  .ask input[type="text"] {
+    flex: 1; font: 17px/1.2 var(--sans); padding: 14px 16px; color: var(--ink);
+    border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+  }
+  .ask input[type="text"]:focus { outline: 2px solid var(--blue); outline-offset: 1px; border-color: var(--blue); }
+  .ask button {
+    font: 600 16px/1 var(--sans); padding: 14px 22px; border: 0; border-radius: var(--radius);
+    background: var(--blue); color: #fff; cursor: pointer;
+  }
+  .ask button:hover { background: #0f3d82; }
+  .ask .hint { color: var(--muted); font-size: 13.5px; margin: 10px 0 0; }
+
+  /* layout */
+  .cols { display: grid; grid-template-columns: 1fr 320px; gap: 36px; padding: 26px 0 8px; }
+  main { min-width: 0; }
+  aside .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 18px; }
+  aside .card h3 { margin: 0 0 8px; font: 600 16px var(--sans); }
+  aside p { margin: 0 0 10px; color: var(--muted); font-size: 14.5px; }
+  aside .press { text-align: left; }
+  aside .press .h { font: 600 12px var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
+  .press-row { display: flex; flex-wrap: wrap; gap: 8px 14px; color: var(--faint); font-weight: 600; font-size: 13px; }
+
+  /* sections */
+  section.group { margin-bottom: 34px; }
+  .group-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 12px; }
+  .group-head h2 {
+    margin: 0; font: 600 13.5px var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+  .group-head .more { font-size: 13.5px; margin-left: auto; }
+
+  .row {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .row:hover { border-color: #c9d0d8; }
+  .row .title { font-weight: 600; font-size: 16.5px; flex: 1 1 240px; min-width: 0; }
+  .row .title a { color: var(--ink); }
+  .row .title a:hover { color: var(--blue); }
+  .chip {
+    font: 600 11px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase;
+    padding: 5px 8px; border-radius: 999px;
+    min-width: 112px; text-align: center; flex: 0 0 auto;
+  }
+  .chip.top { background: var(--blue-soft); color: var(--blue); }
+  .chip.rising { background: var(--green-soft); color: var(--green); }
+  .chip.controversial { background: var(--amber-soft); color: var(--amber); }
+
+  .vote { display: flex; align-items: center; gap: 8px; }
+  .vote a {
+    font: 600 13.5px var(--sans); padding: 9px 14px; border-radius: 999px; border: 1px solid var(--border);
+  }
+  .vote a.endorse { color: var(--green); background: var(--green-soft); border-color: #cbe6d6; }
+  .vote a.endorse:hover { background: var(--green); color: #fff; text-decoration: none; }
+  .vote a.oppose { color: var(--red); background: var(--red-soft); border-color: #f0d2cf; }
+  .vote a.oppose:hover { background: var(--red); color: #fff; text-decoration: none; }
+  .vote .meta { color: var(--faint); font-size: 13px; white-space: nowrap; }
+  .vote .meta b { color: var(--muted); font-weight: 600; }
+  .vote .meta a { color: var(--faint); }
+  .vote .meta a:hover { color: var(--blue); }
+
+  /* footer */
+  footer.site { border-top: 1px solid var(--border); margin-top: 26px; background: var(--surface); }
+  .foot { display: flex; flex-wrap: wrap; gap: 10px 26px; padding: 20px 0; color: var(--muted); font-size: 14px; }
+  .foot .links { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; }
+
+  @media (max-width: 1000px) {
+    .cols { grid-template-columns: 1fr; gap: 24px; }
+    .site-bar { flex-wrap: wrap; gap: 10px 16px; }
+    nav.main { order: 3; flex-basis: 100%; flex-wrap: wrap; }
+    .ask form { flex-direction: column; max-width: none; }
+    .row .title { flex-basis: 100%; }
+    .chip { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="concept-strip">UI concept · draft for review — not the live site</div>
+
+<header class="site">
+  <div class="wrap site-bar">
+    <a class="wordmark" href="#">The <span>White House</span> 2</a>
+    <nav class="main">
+      <a class="here" href="#">Issues</a>
+      <a href="#">Priorities</a>
+      <a href="#">Briefing</a>
+      <a href="#">Network</a>
+      <a href="#">About</a>
+    </nav>
+    <a class="signin" href="#">Sign in</a>
+  </div>
+</header>
+
+<div class="wrap ask">
+  <h1>What should the government do better?</h1>
+  <p class="sub">Together we decide what the government should do. Add your priority — the more people make it theirs, the higher it rises.</p>
+  <form onsubmit="return false">
+    <input type="text" placeholder="e.g. Create a national infrastructure bank">
+    <button>Set my priority</button>
+  </form>
+  <p class="hint">Join with an email — no password needed.</p>
+</div>
+
+<div class="wrap cols">
+  <main>
+
+    <section class="group">
+      <div class="group-head"><h2>Economy</h2><a class="more" href="#">All economy priorities →</a></div>
+
+      <div class="row">
+        <span class="chip top">Top</span>
+        <div class="title"><a href="#">Invest in high-speed rail</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>2</b> endorsed · <a href="#">1 discussion</a></span>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="chip rising">Rising</span>
+        <div class="title"><a href="#">Create a national infrastructure bank</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>0</b> endorsed</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="chip controversial">Controversial</span>
+        <div class="title"><a href="#">Simplify the tax code</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>0</b> endorsed</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-head"><h2>Health Care</h2><a class="more" href="#">All health care priorities →</a></div>
+
+      <div class="row">
+        <span class="chip top">Top</span>
+        <div class="title"><a href="#">Let Medicare negotiate drug prices</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>0</b> endorsed</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="chip rising">Rising</span>
+        <div class="title"><a href="#">Expand community health centers</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>0</b> endorsed</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="chip controversial">Controversial</span>
+        <div class="title"><a href="#">Fund rural telemedicine</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>0</b> endorsed</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-head"><h2>Energy</h2><a class="more" href="#">All energy priorities →</a></div>
+
+      <div class="row">
+        <span class="chip top">Top</span>
+        <div class="title"><a href="#">Build a modern electric grid</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>0</b> endorsed</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="chip rising">Rising</span>
+        <div class="title"><a href="#">Extend the clean energy tax credit</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>0</b> endorsed</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="chip controversial">Controversial</span>
+        <div class="title"><a href="#">Raise fuel economy standards</a></div>
+        <div class="vote">
+          <a class="endorse" href="#">Endorse</a><a class="oppose" href="#">Oppose</a>
+          <span class="meta"><b>0</b> endorsed</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <aside>
+    <div class="card">
+      <h3>Sign up or sign in</h3>
+      <p>Once a day, set a priority for the government the way you'd set a to-do. No password needed.</p>
+      <a href="#"><b>Join the network →</b></a>
+    </div>
+
+    <div class="card">
+      <h3>How it works</h3>
+      <p>Getting involved is easy. Join, set your priorities, and endorse others'. The more people who make your priority their own, the higher it <a href="#">rises in the charts</a>.</p>
+    </div>
+
+    <div class="card press">
+      <div class="h">The word is out:</div>
+      <div class="press-row">
+        <span>MSNBC</span><span>The Washington Post</span><span>FT.com</span><span>techPresident</span>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer class="site">
+  <div class="wrap foot">
+    <span>The White House 2 is managed by White House 2 Admin. Anyone can get involved and set priorities for the government.</span>
+    <span class="links">
+      <a href="#">About</a><a href="#">Rules</a><a href="#">Privacy</a><a href="#">Sign up</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
