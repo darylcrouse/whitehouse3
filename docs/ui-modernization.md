@@ -61,7 +61,8 @@ The concept file `ui/home-concept.html` shows one interpretation you can open in
 - **Header**: a real brand band — wordmark left, one-row nav, "Sign in" action right; the second nav row becomes filter chips.
 - **The question becomes the CTA**: the dark search bar turns into the page's hero — type a priority, submit.
 - **Priority rows as cards**: title + ranking chip (Top/Rising/Controversial) + a single segmented **Endorse/Oppose** control with counts; scannable rhythm instead of loose lines.
-- **Sidebar rail**: sign-in box, about blurb, press block — collapses below content on mobile.
+- **Sidebar rail**: sign-in box, about blurb, press block — collapses below content on mobile; scales with the viewport (300→400px) on large screens.
+- **Fluid shell**: fills the viewport width with size-scaled gutters (no fixed 1120px box); a 1760px cap keeps ultra-wide displays from stretching rows into dead space.
 - **Footer**: lightened from a dense one-liner into a quiet 2-row block.
 - **Palette**: white/off-white surface, ink #1a1d21, muted #5b6470, borders #e5e7eb, brand blue **#13499b**, endorse green, oppose red — one accent family, semantic colors only where the mechanic needs them.
 
