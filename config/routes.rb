@@ -319,6 +319,7 @@ end
   get "/activate/:activation_code", to: "users#activate", as: "activate", activation_code: nil
   get "/signup", to: "users#new", as: "signup"
   get "/login", to: "sessions#new", as: "login"
+  post "/auth/mojoauth", to: "mojo_auth_sessions#create", as: "mojoauth_session"
   delete "/logout", to: "sessions#destroy", as: "logout"
   # Legacy links used plain GET for logout (Rails 2 map.logout).
   get "/logout", to: "sessions#destroy"

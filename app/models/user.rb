@@ -140,11 +140,11 @@ class User < ActiveRecord::Base
   # attr_protected :remember_token, :remember_token_expired_at, :activation_code, :salt, :crypted_password, :twitter_token, :twitter_secret
   
   # Virtual attribute for the unencrypted password
-  attr_accessor :password, :partner_ids  
+  attr_accessor :password, :partner_ids, :skip_activation_mail  
   
   def new_user_signedup
     ActivityUserNew.create(:user => self, :partner => partner)
-    resend_activation if self.has_email? and self.is_pending?
+    resend_activation if self.has_email? and self.is_pending? and !self.skip_activation_mail
   end
   
   def check_branch

@@ -33,3 +33,6 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# MojoAuth credentials — never commit; env-overridable (MOJOAUTH_API_KEY/SECRET).
+/config/mojoauth.yml
