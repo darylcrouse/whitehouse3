@@ -80,7 +80,7 @@ Two tracks, in order:
 Verified for Track 1: `rails test` 247/394 0F 0E; zeitwerk OK; 14 pages 200; zero horizontal overflow at 1440 + 390; sub-nav active states correct on all listing pages. Screenshots in `docs/wh3-concept/live/`. Remaining nits: hero input placeholder clips at 390px; "ADMIN AGENDA" label alignment on first home group.
 
 **Track 2 — new mechanics** (per `feature-map.md`, small → flagship → rest)
-1. Common-ground score (computed) + scope filters (state first) + propose-with-duplicate-check.
+1. 🟡 Common-ground score — ✅ **done** (commit `45a4409`): voting-pattern opinion groups, cached score, tab + badge, designed demo spread, tests. Remaining in this item: scope filters (state first) + propose-with-duplicate-check.
 2. Flagship choice: **response clock** (self-contained, most differentiating) vs **video takes** (requires Ziggeo) vs **opinion map**. Recommend response clock first.
 3. Assemblies, budget sandbox, Congress.gov bills, transparency/open-data page, local layer, verification.
 
