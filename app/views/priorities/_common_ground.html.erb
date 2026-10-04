@@ -1,0 +1,5 @@
+<%# WH3 common-ground badge: "Common ground 88" — hidden until at least two
+    opinion groups have voted on the priority (see app/models/common_ground.rb). %>
+<% if priority.common_ground_score.to_i > 0 %>
+	&middot; <span class="cg_badge" title="<%= t('priorities.common_ground.only_as_strong') %>"><%= t('priorities.common_ground.badge') %> <b><%= priority.common_ground_score %></b></span>
+<% end %>

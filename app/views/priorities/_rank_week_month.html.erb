@@ -9,10 +9,11 @@
 		</div>
 	</td>		
 <% else %>
+	<% dn = defined?(display_position) && display_position ? display_position : nil %>
 	<td valign="top" align="right" width="30" style="padding-right: 5px;">
-		<% if priority.position != 0 %>
+		<% if dn || priority.position != 0 %>
 		<div class="priority_position" title="<%= t('priorities.position.title', :position => priority.position, :government_name => current_government.name) %>">
-			<%= priority.position %>
+			<%= dn || priority.position %>
 		</div>
 		<% end %>
 	</td>

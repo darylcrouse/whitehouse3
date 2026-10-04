@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_02_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_04_000001) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -798,6 +798,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_02_000001) do
     t.boolean "is_controversial", default: false
     t.integer "trending_score", default: 0
     t.integer "controversial_score", default: 0
+    t.integer "common_ground_score", default: 0, null: false
+    t.index ["common_ground_score"], name: "index_priorities_on_common_ground_score"
     t.index ["obama_status"], name: "index_priorities_on_obama_status"
     t.index ["obama_value"], name: "index_priorities_on_obama_value"
     t.index ["position"], name: "priorities_position_index"

@@ -1041,6 +1041,12 @@ en:
             name: "Top priorities"
             short: "Top:"
             title: "Top priorities for %{target}"
+        common_ground:
+            name: "Common ground priorities"
+            short: "Common ground:"
+            title: "Priorities with the most agreement across %{target}"
+            only_as_strong: "Only as strong as the weakest group"
+            badge: "Common ground"
         rising:
             name: "Rising priorities"
             short: "Rising:"

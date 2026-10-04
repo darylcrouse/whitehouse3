@@ -4,6 +4,8 @@
 	&middot; <%= link_to priority.down_endorsements_count.to_s + ' ' + t('oppose.ed'), opposers_priority_url(priority) %>
 <% end %>
 
+<%= render :partial => "priorities/common_ground", :locals => {:priority => priority } %>
+
 <% if priority.discussions_count > 0 %> 
 	&middot; <%= link_to t('comments.discussions.name', :count => priority.discussions_count), discussions_priority_url(priority) %>
 <% end %>

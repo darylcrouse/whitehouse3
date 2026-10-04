@@ -119,6 +119,7 @@ Rails.application.routes.draw do
       get :finished
       get :ads
       get :top
+      get :common_ground
       get :rising
       get :falling
       get :controversial

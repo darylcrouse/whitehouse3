@@ -17,14 +17,20 @@
 			<td style="padding-left: 3px;"><span class="table_header"><%= t('time.mo') %></span></td>
 			<td style="padding-left: 7px; padding-bottom: 2px;"><nobr><%= paginate @priorities %></nobr></td>
 			<td></td>
-			<td align="right" width="100%"><%= @rss_url %></td>	
+			<td align="right" width="100%"><%= rss_url(@rss_url) %></td>	
 		</tr>
+	<% i = 0 %>
 	<% for priority in @priorities %>
+		<% i += 1 %>
 		<% if @endorsements %>
 			<% endorsement = @endorsements.detect {|e| e.priority_id == priority.id } %>
 		<% end %>
 		<tr>
-			<%= render :partial => "priorities/rank_week_month", :locals => {:priority => priority } %>
+			<%# WH3: the common-ground list is its own ordering — display the
+			    ordinal within the list instead of the (meaningless) global
+			    score position. Legacy tabs keep the global position. %>
+			<% display_position = (params[:action] == 'common_ground' ? i : nil) %>
+			<%= render :partial => "priorities/rank_week_month", :locals => {:priority => priority, :display_position => display_position } %>
 			<td valign="top" style="padding-left: 8px;" colspan="3">
 			<div id="priority_<%= priority.id %>" class="priority_listing">
 				<%= render :partial => "priorities/listing", :locals => {:priority => priority, :endorsement => endorsement, :value => 0} %>

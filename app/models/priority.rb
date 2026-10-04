@@ -18,6 +18,7 @@ class Priority < ActiveRecord::Base
   scope :rising, -> { where("priorities.trending_score > 0").order("priorities.trending_score desc") }
   scope :falling, -> { where("priorities.trending_score < 0").order("priorities.trending_score asc") }
   scope :controversial, -> { where(is_controversial: true).order("priorities.controversial_score desc") }
+  scope :common_ground, -> { where("priorities.common_ground_score > 0").order("priorities.common_ground_score desc, priorities.endorsements_count desc") }
   
   scope :rising_7days, -> { where("priorities.position_7days_change > 0") }
   scope :flat_7days, -> { where("priorities.position_7days_change = 0") }

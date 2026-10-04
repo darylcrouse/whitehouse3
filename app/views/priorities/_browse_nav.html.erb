@@ -1,9 +1,9 @@
 <% if not current_government.is_branches? %>
 	<div id="nav_sub">
 		<% if @priority %>
-		<div id="nav_sub_<% if @priority.new_record? %>1<% elsif @priority.is_finished? %>10<% elsif params[:controller] == 'ads' %>5<% elsif @endorsement %>1<% elsif @priority.is_top? %>4<% elsif @priority.is_obama_endorsed? %>3<% elsif @priority.is_rising? %>7<% elsif @priority.is_new? %>9<% elsif @priority.is_controversial? %>6<% else %>8<% end %>">
+		<div id="nav_sub_<% if @priority.new_record? %>1<% elsif @priority.is_finished? %>11<% elsif params[:controller] == 'ads' %>6<% elsif @endorsement %>1<% elsif @priority.is_top? %>4<% elsif @priority.is_obama_endorsed? %>3<% elsif @priority.is_rising? %>8<% elsif @priority.is_new? %>10<% elsif @priority.is_controversial? %>7<% else %>9<% end %>">
 		<% else %>
-		<div id="nav_sub_<% if ['yours','yours_finished','yours_created','yours_top','yours_lowest','yours_ads'].include?(params[:action]) %>1<% elsif logged_in? and ['network'].include?(params[:action]) %>2<% elsif not logged_in? and ['index'].include?(params[:action]) %>2<% elsif ['obama','not_obama','obama_opposed'].include?(params[:action]) %>3<% elsif ['top'].include?(params[:action]) %>4<% elsif ['ads'].include?(params[:action]) %>5<% elsif ['controversial'].include?(params[:action]) %>6<% elsif ['rising'].include?(params[:action]) %>7<% elsif ['random'].include?(params[:action]) %>8<% elsif ['newest'].include?(params[:action]) %>9<% elsif ['finished'].include?(params[:action]) %>10<% end %>">
+		<div id="nav_sub_<% if ['yours','yours_finished','yours_created','yours_top','yours_lowest','yours_ads'].include?(params[:action]) %>1<% elsif logged_in? and ['network'].include?(params[:action]) %>2<% elsif not logged_in? and ['index'].include?(params[:action]) %>2<% elsif ['obama','not_obama','obama_opposed'].include?(params[:action]) %>3<% elsif ['top'].include?(params[:action]) %>4<% elsif ['common_ground'].include?(params[:action]) %>5<% elsif ['ads'].include?(params[:action]) %>6<% elsif ['controversial'].include?(params[:action]) %>7<% elsif ['rising'].include?(params[:action]) %>8<% elsif ['random'].include?(params[:action]) %>9<% elsif ['newest'].include?(params[:action]) %>10<% elsif ['finished'].include?(params[:action]) %>11<% end %>">
 		<% end %>
 			<ul id="menu_sub">
 				<% if not logged_in? and current_government.homepage == 'index' %>
@@ -39,34 +39,39 @@
 				</li>
 				<li class="tab5">
 					<span class="tab_header">
+						<%= link_to t('menu.priorities.everyone.common_ground'), common_ground_priorities_url %>
+					</span>
+				</li>
+				<li class="tab6">
+					<span class="tab_header">
 						<%= link_to t('menu.priorities.everyone.ads'), ads_priorities_url %>
 					</span>
 				</li>			
-				<li class="tab6">
+				<li class="tab7">
 					<span class="tab_header">
 						<%= link_to t('menu.priorities.everyone.controversial'), controversial_priorities_url %>
 					</span>
 				</li>
-				<li class="tab7">
+				<li class="tab8">
 					<span class="tab_header">
 						<%= link_to t('menu.priorities.everyone.rising'), rising_priorities_url %>
 					</span>
 				</li>
-				<li class="tab8">
+				<li class="tab9">
 					<span class="tab_header">
 						<%= link_to t('menu.priorities.everyone.random'), random_priorities_url %>
 					</span>
 				</li>
-				<li class="tab9">
+				<li class="tab10">
 					<span class="tab_header">
 						<%= link_to t('menu.priorities.everyone.new'), newest_priorities_url %>
 					</span>
 				</li>
-				<li class="tab10">
+				<li class="tab11">
 					<span class="tab_header">
 						<%= link_to t('menu.priorities.everyone.finished'), finished_priorities_url %>
 					</span>
-				</li>														
+				</li>													
 			</ul>
 		</div>
 	</div>
@@ -75,9 +80,9 @@
 
 	<div id="nav_sub">
 		<% if @priority %>
-		<div id="nav_sub_<% if @priority.new_record? %>1<% elsif @priority.is_finished? %>6<% elsif params[:controller] == 'ads' %>5<% elsif @endorsement %>1<% elsif @priority.is_obama_endorsed? %>3<% else %>4<% end %>">
+		<div id="nav_sub_<% if @priority.new_record? %>1<% elsif @priority.is_finished? %>7<% elsif params[:controller] == 'ads' %>6<% elsif @endorsement %>1<% elsif @priority.is_obama_endorsed? %>3<% else %>4<% end %>">
 		<% else %>
-		<div id="nav_sub_<% if ['yours','yours_finished','yours_created','yours_top','yours_lowest','yours_ads'].include?(params[:action]) %>1<% elsif logged_in? and ['network'].include?(params[:action]) %>2<% elsif not logged_in? and ['index'].include?(params[:action]) %>2<% elsif ['obama','not_obama','obama_opposed'].include?(params[:action]) %>3<% elsif ['ads'].include?(params[:action]) %>5<% elsif ['finished'].include?(params[:action]) and ['priorities'].include?(params[:controller]) %>6<% elsif params[:controller] == 'priorities'%>4<% elsif ['branch_priorities'].include?(params[:controller]) %><% branch_row = 6 %><% for branch in current_branches %><% branch_row += 1 %><% if @branch.id == branch.id %><%= branch_row %><% end %><% end %><% end %>">
+		<div id="nav_sub_<% if ['yours','yours_finished','yours_created','yours_top','yours_lowest','yours_ads'].include?(params[:action]) %>1<% elsif logged_in? and ['network'].include?(params[:action]) %>2<% elsif not logged_in? and ['index'].include?(params[:action]) %>2<% elsif ['obama','not_obama','obama_opposed'].include?(params[:action]) %>3<% elsif ['common_ground'].include?(params[:action]) %>5<% elsif ['ads'].include?(params[:action]) %>6<% elsif ['finished'].include?(params[:action]) and ['priorities'].include?(params[:controller]) %>7<% elsif params[:controller] == 'priorities'%>4<% elsif ['branch_priorities'].include?(params[:controller]) %><% branch_row = 7 %><% for branch in current_branches %><% branch_row += 1 %><% if @branch.id == branch.id %><%= branch_row %><% end %><% end %><% end %>">
 		<% end %>
 			<ul id="menu_sub">
 				<% if not logged_in? and current_government.homepage == 'index' %>
@@ -106,7 +111,13 @@
 					</span>
 				</li>
 
-				<% branch_row = 6 %>
+				<li class="tab5">
+					<span class="tab_header">
+						<%= link_to t('menu.priorities.everyone.common_ground'), common_ground_priorities_url %>
+					</span>
+				</li>
+
+				<% branch_row = 7 %>
 				<% for branch in current_branches %>
 					<% branch_row += 1 %>
 					<li class="tab<%= branch_row %>">
@@ -124,13 +135,13 @@
 					</li>
 				<% end %>
 
-				<li class="tab5">
+				<li class="tab6">
 					<span class="tab_header">
 						<%= link_to t('menu.priorities.everyone.ads'), ads_priorities_url %>
 					</span>
 				</li>
 
-				<li class="tab6">
+				<li class="tab7">
 					<span class="tab_header">
 						<%= link_to t('menu.priorities.everyone.finished'), finished_priorities_url %>
 					</span>

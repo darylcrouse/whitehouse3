@@ -262,6 +262,23 @@ class PrioritiesController < ApplicationController
     end
   end
   
+  # GET /priorities/common_ground
+  # WH3: "Only as strong as the weakest group" — rank by agreement across
+  # opinion groups rather than raw totals.
+  def common_ground
+    @page_title = t('priorities.common_ground.title', :target => current_government.target)
+    @rss_url = common_ground_priorities_url(:format => 'rss')
+    @priorities = Priority.published.common_ground.page(params[:page]).per(params[:per_page])
+    get_endorsements
+    respond_to do |format|
+      format.html { render :action => "list" }
+      format.rss { render :action => "list" }
+      format.js { render :layout => false, :text => "document.write('" + js_help.escape_javascript(render_to_string(:layout => false, :template => 'priorities/list_widget_small')) + "');" }
+      format.xml { render :xml => @priorities.to_xml(:except => NB_CONFIG['api_exclude_fields']) }
+      format.json { render :json => @priorities.to_json(:except => NB_CONFIG['api_exclude_fields']) }
+    end
+  end
+
   # GET /priorities/finished
   def finished
     @page_title = t('priorities.finished.title', :target => current_government.target)

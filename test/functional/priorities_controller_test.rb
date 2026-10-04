@@ -43,4 +43,13 @@ class PrioritiesControllerTest < ActionController::TestCase
     delete :destroy, params: { :id => priorities(:one).id }
     assert_response :redirect
   end
+
+  def test_should_get_common_ground
+    CommonGround.recompute!
+    get :common_ground
+    assert_response :success
+    assert_not_nil assigns(:priorities)
+    assert_equal I18n.t('priorities.common_ground.title', :target => Government.current.target),
+                 assigns(:page_title)
+  end
 end

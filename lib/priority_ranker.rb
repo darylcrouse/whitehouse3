@@ -262,6 +262,10 @@ class PriorityRanker
     end
     Priority.connection.execute("update priorities set position = 0, trending_score = 0, is_controversial = false, controversial_score = 0, score = 0 where endorsements_count = 0;")
 
+    # WH3 common-ground score: support in the least-supportive opinion group.
+    # Same cycle as the rest of the ranking so it never drifts.
+    CommonGround.recompute!
+
     # check if there's a new fastest rising priority
     rising = Priority.published.rising.all[0]
     ActivityPriorityRising1.find_or_create_by_priority_id(rising.id) if rising
