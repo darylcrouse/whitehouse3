@@ -79,4 +79,10 @@ Rails.application.configure do
   config.hosts << "rails-update-app-tunnel-4t1xmwuw.devinapps.com"
   config.hosts << "rails-update-app-tunnel-m1zxza73.devinapps.com"
   config.hosts << "spark-080c"
+
+  # The desktop preview pane embeds this app in a frame from a non-http origin,
+  # which Rails' SAMEORIGIN default blocks. Development-only; production keeps
+  # the default header.
+  config.action_dispatch.default_headers =
+    config.action_dispatch.default_headers.except("X-Frame-Options")
 end

@@ -1549,6 +1549,8 @@ en:
         create:
             success: "Welcome back, %{user_name}."
             failed: "You were NOT signed in, please check your name and password, or click on the 'I forgot my password' to get a new password."  
+            failed_passwordless: "That sign-in didn't complete. The code may have expired, or the link was already used. Request a new code and try again."
+            failed_account: "This account can't sign in right now. Please contact the site administrator."
             failed_twitter: "Sign in from Twitter failed."
             try_again: "Oops, try again."
         destroy: "Logged out.  Please come again soon."

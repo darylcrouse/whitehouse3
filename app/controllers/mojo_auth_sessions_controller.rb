@@ -13,7 +13,7 @@ class MojoAuthSessionsController < ApplicationController
     identifier = MojoAuthService.verify_access_token(token)
 
     if identifier.blank?
-      return render json: { ok: false, error: t("sessions.create.failed") },
+      return render json: { ok: false, error: t("sessions.create.failed_passwordless") },
                     status: :unauthorized
     end
 
@@ -29,7 +29,7 @@ class MojoAuthSessionsController < ApplicationController
     end
 
     if user.deleted? || user.suspended?
-      return render json: { ok: false, error: t("sessions.create.failed") },
+      return render json: { ok: false, error: t("sessions.create.failed_account") },
                     status: :forbidden
     end
 

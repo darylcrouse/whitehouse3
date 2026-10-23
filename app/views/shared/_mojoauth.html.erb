@@ -6,7 +6,11 @@
   verifies it server-side, establishes the session, and returns the redirect
   target (honoring a safe session[:return_to]).
 %>
-<div id="mojoauth-login">
+<%# NOTE: this wrapper must NOT use an id the MojoAuth SDK owns. It keeps
+    #mojoauth-login internally; a div with that id made the SDK's loader
+    #cleanup call removeChild on the wrong parent, which silently aborted
+    #every sign-in click before the OTP request. %>
+<div id="wh3-mojoauth">
 	<div id="mojoauth-passwordless-form"></div>
 	<div id="mojoauth-login-error" style="color: #c00; display: none;"></div>
 </div>
