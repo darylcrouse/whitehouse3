@@ -5,7 +5,7 @@
 	<% need = 3 %>
 	<% for legislator in user.legislators.by_state %>
 		<% need -= 1 %>
-		<td valign="top" style="padding-right: 10px;" align="center"><a href="http://www.govtrack.us/congress/person.xpd?id=<%= legislator.govtrack_id %>"><img src="http://www.govtrack.us/data/photos/<%= legislator.govtrack_id %>-100px.jpeg" width="100" border="0" /></a><br/>
+		<td valign="top" style="padding-right: 10px;" align="center"><a href="http://www.govtrack.us/congress/person.xpd?id=<%= legislator.govtrack_id %>"><img src="http://www.govtrack.us/data/photos/<%= legislator.govtrack_id %>-100px.jpeg" width="100" border="0" alt="<%= legislator.fullname %>" /></a><br/>
 		<a href="http://www.govtrack.us/congress/person.xpd?id=<%= legislator.govtrack_id %>"><%= legislator.name_with_title %></a>
 		</td>
 	<% end %>

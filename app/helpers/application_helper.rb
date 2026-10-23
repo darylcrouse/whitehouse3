@@ -112,7 +112,7 @@ module ApplicationHelper
   def rss_url(url)
     return "" unless url
     s = '<span class="rss_feed"><a href="' + url + '">'
-    s += image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0
+    s += image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0, :alt => ""
     s += '</a> <a href="' + url + '">' + t('feeds.rss') + '</a></span>'
     # Rails 2 emitted this raw; Rails 8 escapes plain strings — mark trusted.
     return s.html_safe
@@ -163,6 +163,15 @@ module ApplicationHelper
     s += distance_of_time_in_words_to_now(time).gsub("about","")
     s += " ago" if time < Time.now
     return s
+  end
+
+  # Logins are lowercase identifiers ("admin", "jdoe"); copy that puts them in
+  # a sentence needs a human-cased name. Only touch single all-lowercase words
+  # so real names ("Barack Obama", "McCain") pass through untouched.
+  def wh3_person_name(name)
+    s = name.to_s
+    return s unless s.match?(/\A[a-z]+\z/)
+    s.capitalize
   end
 
 end

@@ -1,7 +1,7 @@
 <% if current_government.official_user_id == user.id %>
-	<div class="heading"><%= t('charts.user.name', :user_name => current_government.official_user_short_name) %></div>
+	<div class="heading"><%= t('charts.user.name', :user_name => wh3_person_name(current_government.official_user_short_name)) %></div>
 <% else %>
-	<div class="heading"><%= t('charts.user.name', :user_name => user.name) %></div>
+	<div class="heading"><%= t('charts.user.name', :user_name => wh3_person_name(user.name)) %></div>
 <% end %>
 
 <% cache("user_priority_chart-#{user.id.to_s}-#{user.endorsements_count.to_s}") do %> 

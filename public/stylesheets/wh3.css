@@ -423,7 +423,7 @@ span.priority_add:has(a[href*="value=-1"]):hover a {
 }
 
 .endorse_or {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--wh3-muted);
@@ -509,7 +509,7 @@ span.priority_remove_oppose a { color: #ffffff; letter-spacing: 0.04em; }
 .priority_endorsement_count a { color: var(--wh3-muted); }
 .priority_endorsement_count a:hover { color: var(--wh3-navy); }
 
-.endorsed, .opposed { border-radius: 2px; padding: 2px 7px; font-size: 11px; letter-spacing: 0.06em; }
+.endorsed, .opposed { border-radius: 2px; padding: 2px 7px; font-size: 12px; letter-spacing: 0.06em; }
 
 /* ---- agenda rows (home) ------------------------------------------------ */
 .home_issue { margin: 0 0 36px; }
@@ -529,7 +529,7 @@ span.priority_remove_oppose a { color: #ffffff; letter-spacing: 0.04em; }
   padding: 16px 0;
   border-bottom: 1px solid #ece8e0;
   color: var(--wh3-bronze);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -728,7 +728,7 @@ ul#priority_menu li .tab_header a:hover {
 
 /* rank row: modernize the legend line */
 .priority_rank_detail .table_header {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
   color: var(--wh3-muted);
@@ -749,7 +749,7 @@ ul#priority_menu li .tab_header a:hover {
   border: 1px solid var(--wh3-gold);
   border-radius: 2px;
   color: #6f5a36;
-  font-size: 0.95em;
+  font-size: 1em;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
@@ -760,7 +760,7 @@ ul#priority_menu li .tab_header a:hover {
 td .table_header,
 .table_header {
   font-family: var(--wh3-sans);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -801,7 +801,7 @@ td .table_header,
 }
 .position_new {
   position: static;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -835,6 +835,11 @@ ins, .highlight { background: #f0e6d2; }
   #contentwrap > table,
   #contentwrap > table > tbody,
   #contentwrap > table > tr { width: 100%; }
+  /* the priority page's two-column table keeps a 2009 intrinsic min-width
+     (sidebar + main) that blows past a 390px viewport; fixed layout lets it
+     collapse now that the cells stack */
+  #contentwrap > table { table-layout: fixed; width: 100% !important; }
+  #content_text { max-width: 100%; overflow-wrap: anywhere; }
   #contentwrap > table > tbody > tr > td,
   #contentwrap > table > tr > td {
     display: block;
@@ -846,6 +851,9 @@ ins, .highlight { background: #f0e6d2; }
   .c-priorities.a-index #hp_intro { padding: 28px 20px 4px; font-size: 30px; }
   .c-priorities.a-index #new_priority { padding: 10px 20px 28px; }
   .c-priorities.a-index #new_priority td:last-child { padding-left: 8px; }
+  /* the idle prompt is a long sentence in a narrow input on phones: never
+     chop it mid-glyph, ellipsize instead (the seeded prompt also shortened) */
+  .c-priorities.a-index input#priority_name { text-overflow: ellipsis; }
 
   #footer { padding: 0 16px; }
 }

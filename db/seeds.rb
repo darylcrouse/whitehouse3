@@ -43,7 +43,7 @@ unless gov
     currency_short_name: 'Cc',
     homepage: 'index',
     mission: 'This is where we decide together what the government should do.',
-    prompt: 'What should the government do better?',
+    prompt: 'What should government do?',
     language_code: 'en',
     color_scheme_id: scheme.id,
     is_suppress_empty_priorities: false

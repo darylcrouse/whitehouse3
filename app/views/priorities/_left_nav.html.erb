@@ -93,6 +93,6 @@
 
 <% end %>
 <p>
-<div class="rss_feed"><a href="<%= url_for activities_priority_url(@priority, :format => "rss") %>"><%= image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0 %></a> <a href="<%= url_for activities_priority_url(@priority, :format => "rss") %>"><%= t('feeds.activity')%></a></div>
-<div class="rss_feed"><a href="<%= url_for comments_priority_url(@priority, :format => "rss") %>"><%= image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0 %></a> <a href="<%= url_for comments_priority_url(@priority, :format => "rss") %>"><%= t('feeds.discussions')%></a></div>	
+<div class="rss_feed"><a href="<%= url_for activities_priority_url(@priority, :format => "rss") %>"><%= image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0, :alt => "" %></a> <a href="<%= url_for activities_priority_url(@priority, :format => "rss") %>"><%= t('feeds.activity')%></a></div>
+<div class="rss_feed"><a href="<%= url_for comments_priority_url(@priority, :format => "rss") %>"><%= image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0, :alt => "" %></a> <a href="<%= url_for comments_priority_url(@priority, :format => "rss") %>"><%= t('feeds.discussions')%></a></div>	
 	

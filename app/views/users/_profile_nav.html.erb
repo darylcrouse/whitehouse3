@@ -61,9 +61,9 @@
 				<%= link_to t('menu.priorities.everyone.ads'), ads_user_url(@user) %><br/>
 				<%= link_to t('menu.briefing.all_activity'), activities_user_url(@user) %>
 				<p>
-				<div class="rss_feed"><a href="<%= url_for activities_user_url(@user, :format => "rss") %>"><%= image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0 %></a> <a href="<%= url_for activities_user_url(@user, :format => "rss") %>"><%= t('feeds.activity') %></a></div>
+				<div class="rss_feed"><a href="<%= url_for activities_user_url(@user, :format => "rss") %>"><%= image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0, :alt => "" %></a> <a href="<%= url_for activities_user_url(@user, :format => "rss") %>"><%= t('feeds.activity') %></a></div>
 				<% if @user.comments_count > 0 %>
-				<div class="rss_feed"><a href="<%= url_for comments_user_url(@user, :format => "rss") %>"><%= image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0 %></a> <a href="<%= url_for comments_user_url(@user, :format => "rss") %>"><%= t('feeds.discussions') %></a></div>
+				<div class="rss_feed"><a href="<%= url_for comments_user_url(@user, :format => "rss") %>"><%= image_tag "feed-icon-14x14.png", :size => "14x14", :border => 0, :alt => "" %></a> <a href="<%= url_for comments_user_url(@user, :format => "rss") %>"><%= t('feeds.discussions') %></a></div>
 				<% end %>
 				<p>		
 			</div>

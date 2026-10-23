@@ -1,4 +1,4 @@
-<img src="/images/icons/comment.png" height="16" width="16" border="0" class="icon">
+<img src="/images/icons/comment.png" height="16" width="16" border="0" class="icon" alt="">
 
 <% if notification.notifiable.activity.has_document? %>
 	<%= t('notification.comment.name', :sender_name => link_to(notification.sender.name, notification.sender), :comment_name => link_to(notification.notifiable.activity.document.name, activity_comments_url(notification.notifiable.activity) + '#' + notification.notifiable.id.to_s))%>
