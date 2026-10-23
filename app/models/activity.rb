@@ -190,7 +190,7 @@ class ActivityInvitationAccepted < Activity
   end  
 end
 
-# Jerry recruited Jonathan to White House 2.
+# Jerry recruited Jonathan to The White House 3.
 class ActivityUserRecruited < Activity
   
   after_create :add_capital

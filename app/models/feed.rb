@@ -17,7 +17,7 @@ class Feed < ActiveRecord::Base
         @response = ''
         begin
           Timeout::timeout(5) do   #times out after 5 seconds
-            open(link, "User-Agent" => "White House 2",
+            open(link, "User-Agent" => "The White House 3",
                 "From" => Government.current.admin_email,
                 "Referer" => "http://<%= Government.current.base_url %>/") do |f|
                 @response = f.read

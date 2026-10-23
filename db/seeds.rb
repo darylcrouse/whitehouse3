@@ -23,8 +23,8 @@ unless gov
   scheme = ColorScheme.create!(name: 'Default')
   gov = Government.new(
     status: 'active',
-    name: 'The White House 2',
-    short_name: 'wh2',
+    name: 'The White House 3',
+    short_name: 'wh3',
     domain_name: 'localhost',
     layout: 'wh2',
     tagline: 'Together we decide what the government should do.',
@@ -35,7 +35,7 @@ unless gov
     is_facebook: false,
     is_legislators: false,
     is_twitter: false,
-    admin_name: 'White House 2 Admin',
+    admin_name: 'White House 3 Admin',
     admin_email: 'admin@example.gov',
     briefing_name: 'Briefing',
     tags_name: 'Issues',
