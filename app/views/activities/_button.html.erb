@@ -2,7 +2,7 @@
 	<div class="green_button" id="activity_add_<%= activity.id.to_s %>">
 		<%= t('following_discussions.new.ing')%> 
 		<span class="big_x">
-		<%= link_to"&nbsp;x", { :url => activity_following_path(activity, following, :region => "activity_show"), :method => :delete }, :class => "priority_remove_link", :title => t('follow.delete.title') %>	
+		<%= link_to"\u00A0x", { :url => activity_following_path(activity, following, :region => "activity_show"), :method => :delete }, :class => "priority_remove_link", :title => t('follow.delete.title') %>	
 		</span>
 	</div>			
 <% else %>

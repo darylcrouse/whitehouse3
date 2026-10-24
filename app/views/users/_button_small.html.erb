@@ -4,12 +4,12 @@
 	<% if following.is_up? %>
 		<span class="priority_remove" id="user_add_<%= user.id.to_s %>">
 			<%= t('follow.ing')%> 
-			<%= link_to"&nbsp;x", { :url => unfollow_user_path(user, :region => "user_left", :value => 1) }, :class => "priority_remove_link", :title => t('follow.delete.title') %>
+			<%= link_to"\u00A0x", { :url => unfollow_user_path(user, :region => "user_left", :value => 1) }, :class => "priority_remove_link", :title => t('follow.delete.title') %>
 		</span>
 	<% else %>
 		<span class="priority_remove_oppose" id="user_add_<%= user.id.to_s %>">
 			<%= t('ignore.ing')%> 
-			<%= link_to"&nbsp;x", { :url => unfollow_user_path(user, :region => "user_left", :value => -1) }, :class => "priority_remove_link", :title => t('ignore.delete.title') %>
+			<%= link_to"\u00A0x", { :url => unfollow_user_path(user, :region => "user_left", :value => -1) }, :class => "priority_remove_link", :title => t('ignore.delete.title') %>
 		</span>
 	<% end %>
 	

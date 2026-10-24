@@ -4,12 +4,12 @@
 	<% if quality.is_helpful? %>
 		<span class="tag_button" id="document_helpful_<%= document.id.to_s %>">
 			<%= t('helpful.caps')%> 
-			<%= link_to"&nbsp;x", { :url => unquality_document_path(document, :region => "document_inline") }, :class => "quality_remove", :title => t('helpful.delete.title') %>
+			<%= link_to"\u00A0x", { :url => unquality_document_path(document, :region => "document_inline") }, :class => "quality_remove", :title => t('helpful.delete.title') %>
 		</span>
 	<% else %>
 		<span class="tag_button" id="document_helpful_<%= document.id.to_s %>">
 			<%= t('unhelpful.caps')%>
-			<%= link_to"&nbsp;x", { :url => unquality_document_path(document, :region => "document_inline") }, :class => "quality_remove", :title => t('unhelpful.delete.title') %>
+			<%= link_to"\u00A0x", { :url => unquality_document_path(document, :region => "document_inline") }, :class => "quality_remove", :title => t('unhelpful.delete.title') %>
 		</span>	
 	<% end %>
 

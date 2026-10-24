@@ -4,12 +4,12 @@
 	<% if endorsement.is_up? %>
 		<span class="priority_remove" id="priority_add_<%= priority.id.to_s %>">
 			<%= t('endorse.you') %>
-			<%= link_to "&nbsp;x", { :url => endorsement_path(endorsement, :region => region), :method => :delete }, :class => "priority_remove_link", :title => t('endorse.delete.title') %>
+			<%= link_to "\u00A0x", { :url => endorsement_path(endorsement, :region => region), :method => :delete }, :class => "priority_remove_link", :title => t('endorse.delete.title') %>
 		</span>
 	<% else %>
 		<span class="priority_remove_oppose" id="priority_add_<%= priority.id.to_s %>">
 			<%= t('oppose.you') %>
-			<%= link_to "&nbsp;x", { :url => endorsement_path(endorsement, :region => region), :method => :delete }, :class => "priority_remove_link", :title => t('oppose.delete.title') %>
+			<%= link_to "\u00A0x", { :url => endorsement_path(endorsement, :region => region), :method => :delete }, :class => "priority_remove_link", :title => t('oppose.delete.title') %>
 		</span>
 	<% end %>
 	
