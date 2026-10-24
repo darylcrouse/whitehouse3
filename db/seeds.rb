@@ -103,21 +103,12 @@ if gov.official_user_id.nil?
   gov.update_columns(official_user_id: admin.id, official_user_short_name: admin.login)
 end
 
+require_relative "demo_priorities"
+
 # ---------------------------------------------------------------------------
 # Priorities
 # ---------------------------------------------------------------------------
-priority_names = [
-  "End the war in Afghanistan responsibly",
-  "Create a public option for health care",
-  "Invest in high-speed rail",
-  "Reform campaign finance",
-  "Protect net neutrality",
-  "Expand renewable energy tax credits",
-  "Repeal the Defense of Marriage Act",
-  "Improve veterans' health services",
-  "Lower the cost of higher education",
-  "Strengthen food safety inspections"
-]
+priority_names = Wh3Demo::Priorities::GENERAL
 
 if Priority.count.zero?
   priority_names.each_with_index do |name, i|
@@ -146,29 +137,7 @@ end
 # so give a few issues enough tagged priorities to qualify.
 # ---------------------------------------------------------------------------
 if Tag.count.zero?
-  issue_seeds = {
-    "Economy" => [
-      "Create a national infrastructure bank",
-      "Simplify the tax code",
-      "Cap credit card interest rates",
-      "Expand unemployment insurance",
-      "Invest in high-speed rail"
-    ],
-    "Health Care" => [
-      "Let Medicare negotiate drug prices",
-      "Expand community health centers",
-      "Fund rural telemedicine",
-      "Strengthen pandemic surveillance",
-      "Reduce emergency room wait times"
-    ],
-    "Energy" => [
-      "Build a modern electric grid",
-      "Extend the clean energy tax credit",
-      "Raise fuel economy standards",
-      "Weatherize low-income housing",
-      "Fund next-generation nuclear research"
-    ]
-  }
+  issue_seeds = Wh3Demo::Priorities::ISSUES
 
   issue_seeds.each do |tag_name, names|
     names.each do |name|

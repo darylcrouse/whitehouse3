@@ -10,6 +10,9 @@
 		<%= paginate (@issues) %>
 		<% end %>
 		<% for tag in @issues %>
+			<%# A tag can resolve the same priority to two slots (its top pick may
+			    also be the most controversial). Show each priority once. %>
+			<% shown_ids = [tag.top_priority_id] %>
 			<div class="home_issue">
 			<div class="home_issue_name"><a href="/issues/<%= tag.slug %>"><%= tag.title %></a></div>
 			
@@ -20,14 +23,16 @@
 			</div>
 			<% end %>
 			
-			<% if tag.controversial_priority %>
+			<% if tag.controversial_priority && !shown_ids.include?(tag.controversial_priority_id) %>
+				<% shown_ids << tag.controversial_priority_id %>
 				<div class="home_issue_priority" id="priority_<%= tag.controversial_priority_id %>">
 				<%= t('priorities.controversial.short')%> <span class="home_issue_priority_name"><%= link_to tag.controversial_priority.name, tag.controversial_priority %></span><br/>
 				<%= render :partial => "priorities/action_show", :locals => {:priority => tag.controversial_priority, :endorsement => (@endorsements.detect {|e| e.priority_id == tag.controversial_priority_id } if @endorsements)}%>		
 				</div>
 			<% end %>
 	
-			<% if tag.rising_priority %>
+			<% if tag.rising_priority && !shown_ids.include?(tag.rising_priority_id) %>
+				<% shown_ids << tag.rising_priority_id %>
 				<div class="home_issue_priority" id="priority_<%= tag.rising_priority_id %>">
 				<%= t('priorities.rising.short')%> <span class="home_issue_priority_name"><%= link_to tag.rising_priority.name, tag.rising_priority %></span><br/>
 			<%= render :partial => "priorities/action_show", :locals => {:priority => tag.rising_priority, :endorsement => (@endorsements.detect {|e| e.priority_id == tag.rising_priority_id } if @endorsements)}%>		
