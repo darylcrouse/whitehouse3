@@ -74,14 +74,21 @@ class MojoAuthSessionsController < ApplicationController
 
     status, data = MojoAuthService.verify_email_otp(state_id, params[:code])
 
-    unless status == 200 && data["oauth"].is_a?(Hash)
+    unless status == 200
       Rails.logger.info("[mojoauth] verify rejected for #{email}: HTTP #{status} #{data['message']}")
       return render json: { ok: false, error: t("sessions.new.passwordless.bad_code") },
                     status: :unauthorized
     end
 
+    # A 200 from the provider means it accepted the code. We deliberately do
+    # not require a particular payload shape here: the docs are thin and
+    # guessing wrong would strand the user exactly like the widget did. Log the
+    # key names (never values) so the first real sign-in confirms the contract.
+    Rails.logger.info("[mojoauth] code verified; response keys=#{data.keys.sort.inspect} " \
+                      "oauth=#{data['oauth'].is_a?(Hash)}")
+
     # Prefer the identifier MojoAuth echoes back, falling back to the address
-    # the code was sent to.
+    # the code was sent to (which is the address the provider just proved).
     identifier = data.dig("user", "identifier").presence || email
     reset_session_otp!
 

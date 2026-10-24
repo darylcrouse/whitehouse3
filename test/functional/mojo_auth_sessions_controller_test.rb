@@ -143,6 +143,21 @@ class MojoAuthSessionsControllerTest < ActionController::TestCase
     assert_equal 'johndoe2', created.login
   end
 
+  def test_verify_accepts_success_with_an_unexpected_payload_shape
+    quentin = users(:quentin)
+    @request.session[:mojo_state_id] = 'abc123'
+    @request.session[:mojo_state_at] = Time.now.to_i
+    @request.session[:mojo_email] = quentin.email
+
+    # Provider accepted the code; the body shape is not part of our contract.
+    with_stub(:verify_email_otp, [200, { 'something_new' => true }]) do
+      post :verify, params: { :code => '123456' }
+    end
+
+    assert_response :success
+    assert_equal quentin.id, session[:user_id]
+  end
+
   def test_verify_signs_in_and_provisions_on_first_login
     quentin = users(:quentin)
     @request.session[:mojo_state_id] = 'abc123'
