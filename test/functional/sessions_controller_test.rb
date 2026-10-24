@@ -70,16 +70,16 @@ class SessionsControllerTest < ActionController::TestCase
     token
   end
 
-  # Regression guard: the MojoAuth SDK owns the id "mojoauth-login" internally
-  # and does document.getElementById('mojoauth-login') when it swaps the email
-  # form for the OTP screen. A wrapper div with that same id made its cleanup
-  # removeChild the wrong node, so every sign-in click died silently before any
-  # OTP request was sent. Our markup must never claim that id.
-  def test_login_page_does_not_collide_with_mojoauth_sdk_ids
+  # Regression guard: the hosted MojoAuth widget used to own this card and it
+  # carried a webauthn/passkey step that silently dead-ends on http origins.
+  # We render our own OTP form now; the widget must not come back.
+  def test_login_page_renders_own_otp_form_not_the_widget
     get :new
     assert_response :success
-    assert_match(/id="mojoauth-passwordless-form"/, @response.body)
-    assert_no_match(/id="mojoauth-login"/, @response.body)
+    assert_match(/id="wh3-auth-email"/, @response.body)
+    assert_match(/data-step="code"/, @response.body)
+    assert_no_match(/cdn\.mojoauth\.com/, @response.body)
+    assert_no_match(/mojoauth-passwordless-form/, @response.body)
   end
 
   def cookie_for(user)

@@ -321,6 +321,8 @@ end
   get "/signup", to: "users#new", as: "signup"
   get "/login", to: "sessions#new", as: "login"
   post "/auth/mojoauth", to: "mojo_auth_sessions#create", as: "mojoauth_session"
+  post "/auth/mojoauth/start", to: "mojo_auth_sessions#start", as: "mojoauth_start"
+  post "/auth/mojoauth/verify", to: "mojo_auth_sessions#verify", as: "mojoauth_verify"
   delete "/logout", to: "sessions#destroy", as: "logout"
   # Legacy links used plain GET for logout (Rails 2 map.logout).
   get "/logout", to: "sessions#destroy"

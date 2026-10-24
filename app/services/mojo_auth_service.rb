@@ -71,6 +71,50 @@ class MojoAuthService
       nil
     end
 
+    # --- email OTP, driven by our own form -------------------------------
+    #
+    # The hosted widget insists on a WebAuthn (passkey) enrolment step after
+    # the OTP whenever the project has webauthn enabled, and that step cannot
+    # work on an insecure origin (plain http on a LAN address) - the button
+    # silently does nothing. These two calls run the same OTP flow server
+    # side, so the browser never touches the passkey code path and the API
+    # key never reaches the client.
+    #
+    # Returns [status_code, parsed_body]. Never raises for HTTP failures.
+    def request_email_otp(email)
+      mojo_post("/users/emailotp?language=en", { email: email.to_s.strip.downcase })
+    end
+
+    def verify_email_otp(state_id, otp)
+      mojo_post("/users/emailotp/verify", { state_id: state_id.to_s, otp: otp.to_s.strip })
+    end
+
+    def mojo_post(path, body)
+      return [0, {}] if !enabled?
+
+      uri = URI("#{API_BASE}#{path}")
+      request = Net::HTTP::Post.new(uri)
+      request["X-API-Key"] = api_key
+      request["Content-Type"] = "application/json"
+      request["Accept"] = "application/json"
+      request.body = body.to_json
+
+      response = Net::HTTP.start(uri.hostname, uri.port,
+                                 use_ssl: true,
+                                 open_timeout: 5,
+                                 read_timeout: 10) { |http| http.request(request) }
+
+      parsed = begin
+        JSON.parse(response.body.to_s)
+      rescue JSON::ParserError
+        {}
+      end
+      [response.code.to_i, parsed]
+    rescue StandardError => e
+      Rails.logger.warn("[mojoauth] #{path} error: #{e.class}: #{e.message}")
+      [0, {}]
+    end
+
     private
 
     def load_config

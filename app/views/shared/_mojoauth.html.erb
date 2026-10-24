@@ -1,52 +1,162 @@
 <%#
-  Shared MojoAuth passwordless widget.
-  The SDK renders its card into the fixed container id "mojoauth-passwordless-form"
-  (one widget instance per page). Callers must gate on MojoAuthService.enabled?.
-  On success the browser POSTs the access token to /auth/mojoauth, which
-  verifies it server-side, establishes the session, and returns the redirect
-  target (honoring a safe session[:return_to]).
+  Passwordless sign-in (email OTP), driven by our own endpoints.
+
+  We do NOT embed the MojoAuth widget: with webauthn enabled on the project it
+  forces a passkey enrolment step after the code, and that step cannot work on
+  an insecure origin (plain http on a LAN address) - its Continue button does
+  nothing. These forms post to MojoAuthSessionsController#start / #verify,
+  which call the MojoAuth REST API server side.
+
+  Step 1 (email) and step 2 (code) live in one card; the script swaps them.
 %>
-<%# NOTE: this wrapper must NOT use an id the MojoAuth SDK owns. It keeps
-    #mojoauth-login internally; a div with that id made the SDK's loader
-    #cleanup call removeChild on the wrong parent, which silently aborted
-    #every sign-in click before the OTP request. %>
-<div id="wh3-mojoauth">
-	<div id="mojoauth-passwordless-form"></div>
-	<div id="mojoauth-login-error" style="color: #c00; display: none;"></div>
+<div id="wh3-mojoauth" class="wh3-auth"
+     data-start-url="<%= mojoauth_start_path %>"
+     data-verify-url="<%= mojoauth_verify_path %>">
+
+	<form class="wh3-auth-step" data-step="email" novalidate>
+		<label class="wh3-auth-label" for="wh3-auth-email"><%= t('sessions.new.passwordless.email_label') %></label>
+		<div class="wh3-auth-row">
+			<input type="email" id="wh3-auth-email" name="email" autocomplete="email"
+			       placeholder="<%= t('sessions.new.passwordless.email_placeholder') %>"
+			       spellcheck="false" autocapitalize="none" required>
+			<button type="submit" class="suggest_button"><%= t('sessions.new.passwordless.send_code') %></button>
+		</div>
+	</form>
+
+	<form class="wh3-auth-step" data-step="code" hidden>
+		<p class="wh3-auth-hint"><%= t('sessions.new.passwordless.sent_to') %> <b data-email></b></p>
+		<label class="wh3-auth-label" for="wh3-auth-code"><%= t('sessions.new.passwordless.code_label') %></label>
+		<div class="wh3-auth-row">
+			<input type="text" id="wh3-auth-code" name="code" inputmode="numeric"
+			       autocomplete="one-time-code" maxlength="8" pattern="[0-9 ]*"
+			       placeholder="<%= t('sessions.new.passwordless.code_placeholder') %>" required>
+			<button type="submit" class="suggest_button"><%= t('sessions.new.passwordless.verify') %></button>
+		</div>
+		<p class="wh3-auth-links">
+			<a href="#" data-resend><%= t('sessions.new.passwordless.resend') %></a>
+			<span aria-hidden="true">&middot;</span>
+			<a href="#" data-change><%= t('sessions.new.passwordless.change_email') %></a>
+		</p>
+	</form>
+
+	<div class="wh3-auth-error" role="alert" hidden></div>
+	<p class="wh3-auth-foot"><%= t('sessions.new.passwordless.foot') %></p>
 </div>
-<script src="https://cdn.mojoauth.com/js/mojoauth.min.js" type="text/javascript" charset="UTF-8"></script>
+
 <script type="text/javascript">
 // <![CDATA[
 (function () {
-	var target = document.getElementById('mojoauth-passwordless-form');
-	if (!target || typeof MojoAuth === 'undefined') return;
+	var root = document.getElementById('wh3-mojoauth');
+	if (!root) return;
 
-	var mojoauth = new MojoAuth(<%= raw MojoAuthService.api_key.to_json %>, {
-		source: [{ type: "email", feature: "otp" }]
-	});
+	var startUrl = root.getAttribute('data-start-url');
+	var verifyUrl = root.getAttribute('data-verify-url');
+	var emailStep = root.querySelector('[data-step="email"]');
+	var codeStep = root.querySelector('[data-step="code"]');
+	var emailInput = root.querySelector('#wh3-auth-email');
+	var codeInput = root.querySelector('#wh3-auth-code');
+	var errorBox = root.querySelector('.wh3-auth-error');
+	var emailLabel = root.querySelector('[data-email]');
 
-	function showError(message) {
-		var el = document.getElementById('mojoauth-login-error');
-		if (!el) return;
-		el.innerHTML = message || "Sign-in failed \u2014 please try again.";
-		el.style.display = 'block';
+	function showError(msg) {
+		errorBox.textContent = msg || <%= raw t('sessions.new.passwordless.generic_error').to_json %>;
+		errorBox.hidden = false;
+	}
+	function clearError() { errorBox.hidden = true; errorBox.textContent = ''; }
+
+	function busy(form, on) {
+		var btn = form.querySelector('button[type="submit"]');
+		if (!btn) return;
+		if (on) {
+			btn.setAttribute('data-label', btn.textContent);
+			btn.disabled = true;
+			btn.textContent = <%= raw t('sessions.new.passwordless.working').to_json %>;
+		} else {
+			btn.disabled = false;
+			if (btn.getAttribute('data-label')) btn.textContent = btn.getAttribute('data-label');
+		}
 	}
 
-	mojoauth.signIn().then(function (response) {
-		var token = response && response.oauth && response.oauth.access_token;
-		if (!token) { showError(); return; }
-		fetch(<%= raw mojoauth_session_path.to_json %>, {
-			method: "POST",
-			headers: { "Content-Type": "application/json", "Accept": "application/json" },
-			body: JSON.stringify({ access_token: token })
-		}).then(function (r) { return r.json(); }).then(function (data) {
+	function post(url, payload) {
+		var meta = document.querySelector('meta[name="csrf-token"]');
+		var token = meta ? meta.getAttribute('content') : '';
+		return fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+				'X-CSRF-Token': token,
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			credentials: 'same-origin',
+			body: JSON.stringify(payload)
+		}).then(function (r) {
+			return r.json().catch(function () { return {}; });
+		});
+	}
+
+	function sendCode(email) {
+		return post(startUrl, { email: email }).then(function (data) {
 			if (data && data.ok) {
-				window.location.href = data.redirect || "/";
-			} else {
-				showError(data && data.error);
+				emailLabel.textContent = data.email || email;
+				emailStep.hidden = true;
+				codeStep.hidden = false;
+				codeInput.value = '';
+				codeInput.focus();
+				clearError();
+				return true;
 			}
-		}).catch(function () { showError(); });
-	}).catch(function () {});
+			showError(data && data.error);
+			return false;
+		}).catch(function () { showError(); return false; });
+	}
+
+	emailStep.addEventListener('submit', function (e) {
+		e.preventDefault();
+		var email = (emailInput.value || '').trim();
+		if (!email) { showError(<%= raw t('sessions.new.passwordless.invalid_email').to_json %>); return; }
+		clearError();
+		busy(emailStep, true);
+		sendCode(email).then(function () { busy(emailStep, false); });
+	});
+
+	codeStep.addEventListener('submit', function (e) {
+		e.preventDefault();
+		var code = (codeInput.value || '').replace(/\s+/g, '');
+		if (!code) { showError(<%= raw t('sessions.new.passwordless.bad_code').to_json %>); return; }
+		clearError();
+		busy(codeStep, true);
+		post(verifyUrl, { code: code }).then(function (data) {
+			busy(codeStep, false);
+			if (data && data.ok) {
+				window.location.href = data.redirect || '/';
+				return;
+			}
+			showError(data && data.error);
+			if (data && data.restart) {
+				emailStep.hidden = false;
+				codeStep.hidden = true;
+			}
+		}).catch(function () { busy(codeStep, false); showError(); });
+	});
+
+	var resend = root.querySelector('[data-resend]');
+	if (resend) resend.addEventListener('click', function (e) {
+		e.preventDefault();
+		clearError();
+		busy(codeStep, true);
+		sendCode((emailLabel.textContent || '').trim()).then(function () { busy(codeStep, false); });
+	});
+
+	var change = root.querySelector('[data-change]');
+	if (change) change.addEventListener('click', function (e) {
+		e.preventDefault();
+		clearError();
+		codeStep.hidden = true;
+		emailStep.hidden = false;
+		emailInput.focus();
+		emailInput.select();
+	});
 })();
 // ]]>
 </script>

@@ -857,3 +857,52 @@ ins, .highlight { background: #f0e6d2; }
 
   #footer { padding: 0 16px; }
 }
+
+/* ---- passwordless sign-in card ----------------------------------------- */
+.wh3-auth {
+  max-width: 560px;
+  padding: 26px 26px 20px;
+  background: #ffffff;
+  border: 1px solid var(--wh3-hairline);
+  border-radius: 6px;
+}
+.wh3-auth-step + .wh3-auth-step { margin-top: 8px; }
+.wh3-auth-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wh3-bronze);
+  margin-bottom: 6px;
+}
+.wh3-auth-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.wh3-auth-row input {
+  flex: 1 1 240px;
+  min-height: 46px;
+  padding: 0 14px;
+  font-size: 16px;
+  border: 1px solid var(--wh3-hairline);
+  border-radius: 2px;
+  background: #fff;
+  color: var(--wh3-ink);
+}
+.wh3-auth-row input:focus {
+  outline: none;
+  border-color: var(--wh3-navy);
+  box-shadow: 0 0 0 3px rgba(27, 60, 90, 0.12);
+}
+.wh3-auth-row button { flex: none; min-height: 46px; }
+.wh3-auth-hint { font-size: 13px; color: var(--wh3-muted); margin: 0 0 12px; }
+.wh3-auth-hint b { color: var(--wh3-ink); }
+.wh3-auth-links { font-size: 13px; margin: 12px 0 0; color: var(--wh3-muted); }
+.wh3-auth-links a { color: var(--wh3-navy); }
+.wh3-auth-error {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-left: 3px solid #a33a3a;
+  background: #fbf3f2;
+  color: #7d2b2b;
+  font-size: 14px;
+}
+.wh3-auth-foot { margin: 16px 0 0; font-size: 12px; color: var(--wh3-muted); }
